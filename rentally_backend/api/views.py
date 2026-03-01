@@ -1,14 +1,15 @@
+# Rentally Backend - Property Rental API (Mongolia)
+# Improves: bug fixes, validation, Mongolia localization support
+
 from django.db import connection
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes, force_str
 # from django.utils.http import urlsafe_b64_encode, urlsafe_b64_decode
+import base64
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-# from django.utils.http import urlsafe_b64_encode, urlsafe_b64_decode
-import base64
-
 
 User = get_user_model()
 
@@ -757,8 +758,12 @@ class ListingImageAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
+        listing_id = request.query_params.get("listing_id")
         with connection.cursor() as c:
-            c.execute("SELECT * FROM listing_images")
+            if listing_id:
+                c.execute("SELECT * FROM listing_images WHERE listing_id = %s ORDER BY sort_order", [listing_id])
+            else:
+                c.execute("SELECT * FROM listing_images")
             columns = [col[0] for col in c.description]
             rows = [dict(zip(columns, row)) for row in c.fetchall()]
         return Response(rows)
@@ -1107,6 +1112,15 @@ class RegisterAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        from django.contrib.auth.password_validation import validate_password
+        try:
+            validate_password(password)
+        except Exception as e:
+            return Response(
+                {"detail": list(e.messages) if hasattr(e, "messages") else str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         user = User.objects.create_user(
             username=username,
             email=email,
@@ -1125,14 +1139,16 @@ class RegisterAPIView(APIView):
 
 class RequestPasswordResetAPIView(APIView):
     """
-    Request a password reset for a Django auth user.
-    In a real app you would EMAIL the (uid, token) link.
-    For now we just return them in the response so you can test via Postman.
+    Request a password reset. Sends reset link to user's email via Gmail.
+    Configure EMAIL_HOST_USER and EMAIL_HOST_PASSWORD in .env.
     """
 
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        from django.conf import settings
+        from .email_utils import send_password_reset_email
+
         email = request.data.get("email")
         if not email:
             return Response(
@@ -1145,22 +1161,34 @@ class RequestPasswordResetAPIView(APIView):
         except User.DoesNotExist:
             # Don't leak whether the email exists
             return Response(
-                {"detail": "If an account exists for this email, a reset token was generated."},
+                {"detail": "If an account exists for this email, a reset link was sent."},
                 status=status.HTTP_200_OK,
             )
 
         token_generator = PasswordResetTokenGenerator()
-        uid = urlsafe_b64_encode(force_bytes(user.pk))
+        uid = urlsafe_b64_encode(force_bytes(user.pk)).decode()
         token = token_generator.make_token(user)
 
-        # In production you would send an email containing a link like:
-        # f"https://your-frontend/reset-password?uid={uid}&token={token}"
+        try:
+            send_password_reset_email(email, uid, token)
+        except Exception as e:
+            if settings.DEBUG and settings.EMAIL_HOST_USER:
+                # In DEBUG, return token for Postman testing if email fails
+                return Response(
+                    {
+                        "detail": "Email failed; token returned for testing.",
+                        "uid": uid,
+                        "token": token,
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            return Response(
+                {"detail": "Could not send email. Please try again later."},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
         return Response(
-            {
-                "uid": uid,
-                "token": token,
-                "detail": "Use uid and token with /auth/reset-password/ to set a new password.",
-            },
+            {"detail": "If an account exists for this email, a reset link was sent."},
             status=status.HTTP_200_OK,
         )
 
@@ -1184,7 +1212,8 @@ class ResetPasswordAPIView(APIView):
             )
 
         try:
-            user_id = force_str(urlsafe_b64_decode(uid))
+            uid_bytes = uid.encode() if isinstance(uid, str) else uid
+            user_id = force_str(urlsafe_b64_decode(uid_bytes))
             user = User.objects.get(pk=user_id)
         except (User.DoesNotExist, ValueError, TypeError):
             return Response(
@@ -1199,10 +1228,62 @@ class ResetPasswordAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # Validate new password
+        from django.contrib.auth.password_validation import validate_password
+        try:
+            validate_password(new_password, user)
+        except Exception as e:
+            return Response(
+                {"detail": list(e.messages) if hasattr(e, "messages") else str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         user.set_password(new_password)
         user.save()
 
         return Response(
             {"detail": "Password has been reset successfully."},
+            status=status.HTTP_200_OK,
+        )
+
+
+class ChangePasswordAPIView(APIView):
+    """
+    Change password for authenticated user (requires current password).
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        from django.contrib.auth.password_validation import validate_password
+
+        current_password = request.data.get("current_password")
+        new_password = request.data.get("new_password")
+
+        if not current_password or not new_password:
+            return Response(
+                {"detail": "current_password and new_password are required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not request.user.check_password(current_password):
+            return Response(
+                {"detail": "Current password is incorrect."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            validate_password(new_password, request.user)
+        except Exception as e:
+            return Response(
+                {"detail": list(e.messages) if hasattr(e, "messages") else str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        request.user.set_password(new_password)
+        request.user.save()
+
+        return Response(
+            {"detail": "Password has been changed successfully."},
             status=status.HTTP_200_OK,
         )

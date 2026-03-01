@@ -167,6 +167,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER or 'webmaster@localhost'
+# Frontend base URL for password reset links
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
 
 # ----------------------
 # UPLOAD LIMITS
@@ -184,3 +186,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # JWT SETTINGS
 # ----------------------
 JWT_ACCESS_TOKEN_LIFETIME = 3600  # 1 hour
+
+# ----------------------
+# CORS (Frontend dev & mobile)
+# ----------------------
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173').split(',')
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True  # Dev only; restrict in production

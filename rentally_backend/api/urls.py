@@ -1,4 +1,10 @@
 from django.urls import path
+from .mongolia_views import (
+    MongoliaCitiesAPIView,
+    UtilityEstimateAPIView,
+    SeasonalTrendsAPIView,
+    PopularNeighborhoodsAPIView,
+)
 from .views import (
     ListingAPIView,
     ListingDetailAPIView,
@@ -29,6 +35,7 @@ from .views import (
     RegisterAPIView,
     RequestPasswordResetAPIView,
     ResetPasswordAPIView,
+    ChangePasswordAPIView,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -118,10 +125,17 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 #     DELETE /users/<pk>/                    -> delete user
 
 urlpatterns = [
+    # Mongolia-specific (localization, trends, estimates)
+    path("mongolia/cities/", MongoliaCitiesAPIView.as_view(), name="mongolia-cities"),
+    path("mongolia/utility-estimate/", UtilityEstimateAPIView.as_view(), name="mongolia-utility-estimate"),
+    path("mongolia/seasonal-trends/", SeasonalTrendsAPIView.as_view(), name="mongolia-seasonal-trends"),
+    path("mongolia/neighborhoods/", PopularNeighborhoodsAPIView.as_view(), name="mongolia-neighborhoods"),
+
     # Auth / JWT
     path("auth/register/", RegisterAPIView.as_view(), name="auth-register"),
     path("auth/forgot-password/", RequestPasswordResetAPIView.as_view(), name="auth-forgot-password"),
     path("auth/reset-password/", ResetPasswordAPIView.as_view(), name="auth-reset-password"),
+    path("auth/change-password/", ChangePasswordAPIView.as_view(), name="auth-change-password"),
     
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
