@@ -4,12 +4,16 @@ Real estate rental platform optimized for the Mongolian market: listings, search
 
 ## Features
 
-- **Property listings** – Search, filter by category/region
-- **Detail page** – Dabang-style UI: image gallery, price (MNT), specs, pricing info, map
+- **Property listings** – Search, filter by category/region/price/tag
+- **List + map split layout** – Leaflet map with markers, property type tabs
+- **Detail page** – Dabang-style UI: gallery, price (MNT), specs, utility estimate, text inquiry
 - **Mongolia localization** – Cyrillic UI, MNT prices, major cities (Улаанбаатар, Эрдэнет, Дархан, etc.)
-- **Mongolia-specific APIs** – Utility cost estimates, seasonal rental trends, popular neighborhoods
-- **Auth** – Register, JWT login, password reset
-- **Mobile-first** – Responsive design for Android/iOS
+- **Mongolia-specific APIs** – Utility estimates, seasonal trends, popular neighborhoods, popular areas
+- **Auth** – Register, broker register, JWT login, password reset via Gmail
+- **Our house** – My listings (owner_id filter)
+- **Watchlist** – Favorites
+- **Text inquiry** – Messaging UI for listing contact
+- **Mobile-first** – Responsive design
 
 ## Project Structure
 
@@ -85,7 +89,7 @@ If you need migrations, you can add Django models and run `python manage.py make
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/listings/` | GET, POST | List/create listings (search, category, region) |
+| `/api/listings/` | GET, POST | List/create (search, category, region, owner_id, min_price, max_price, tag) |
 | `/api/listings/<id>/` | GET, PUT, DELETE | Listing detail |
 | `/api/categories/` | GET, POST | Categories |
 | `/api/regions/` | GET, POST | Regions |
@@ -93,6 +97,8 @@ If you need migrations, you can add Django models and run `python manage.py make
 | `/api/mongolia/utility-estimate/?area_sqm=60` | GET | Utility cost estimate (MNT) |
 | `/api/mongolia/seasonal-trends/` | GET | Seasonal rental trends |
 | `/api/mongolia/neighborhoods/` | GET | Popular neighborhoods |
+| `/api/mongolia/popular-areas/` | GET | Popular areas (listing count by region) |
+| `/api/auth/broker-register/` | POST | Broker registration |
 | `/api/auth/register/` | POST | Register |
 | `/api/token/` | POST | JWT login |
 

@@ -2,11 +2,12 @@
 """
 Mongolia-specific API endpoints for Rentally.
 
-Provides: cities/regions, utility estimates, seasonal trends, popular neighborhoods.
-All responses support Mongolian localization (Cyrillic labels).
+Provides: cities/regions, utility estimates, seasonal trends, popular neighborhoods,
+popular areas (by listing count).
 """
 
 from datetime import datetime
+from django.db import connection
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -109,3 +110,28 @@ class PopularNeighborhoodsAPIView(APIView):
         return Response({
             "neighborhoods": POPULAR_NEIGHBORHOODS,
         })
+
+
+class PopularAreasAPIView(APIView):
+    """
+    Popular areas ranked by listing count (and optionally bookings).
+    Returns regions with most listings for map highlights.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        try:
+            with connection.cursor() as c:
+                c.execute("""
+                    SELECT r.id, r.name, COUNT(l.id) as listing_count
+                    FROM regions r
+                    LEFT JOIN listings l ON l.region_id = r.id
+                    GROUP BY r.id, r.name
+                    HAVING COUNT(l.id) > 0
+                    ORDER BY listing_count DESC
+                    LIMIT 20
+                """)
+                rows = [{"id": r[0], "name": r[1], "listing_count": r[2]} for r in c.fetchall()]
+        except Exception:
+            rows = []
+        return Response({"areas": rows})

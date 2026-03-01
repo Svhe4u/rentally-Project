@@ -4,6 +4,7 @@ from .mongolia_views import (
     UtilityEstimateAPIView,
     SeasonalTrendsAPIView,
     PopularNeighborhoodsAPIView,
+    PopularAreasAPIView,
 )
 from .views import (
     ListingAPIView,
@@ -33,6 +34,7 @@ from .views import (
     UserAccountAPIView,
     UserAccountDetailAPIView,
     RegisterAPIView,
+    BrokerRegisterAPIView,
     RequestPasswordResetAPIView,
     ResetPasswordAPIView,
     ChangePasswordAPIView,
@@ -130,9 +132,11 @@ urlpatterns = [
     path("mongolia/utility-estimate/", UtilityEstimateAPIView.as_view(), name="mongolia-utility-estimate"),
     path("mongolia/seasonal-trends/", SeasonalTrendsAPIView.as_view(), name="mongolia-seasonal-trends"),
     path("mongolia/neighborhoods/", PopularNeighborhoodsAPIView.as_view(), name="mongolia-neighborhoods"),
+    path("mongolia/popular-areas/", PopularAreasAPIView.as_view(), name="mongolia-popular-areas"),
 
     # Auth / JWT
     path("auth/register/", RegisterAPIView.as_view(), name="auth-register"),
+    path("auth/broker-register/", BrokerRegisterAPIView.as_view(), name="auth-broker-register"),
     path("auth/forgot-password/", RequestPasswordResetAPIView.as_view(), name="auth-forgot-password"),
     path("auth/reset-password/", ResetPasswordAPIView.as_view(), name="auth-reset-password"),
     path("auth/change-password/", ChangePasswordAPIView.as_view(), name="auth-change-password"),

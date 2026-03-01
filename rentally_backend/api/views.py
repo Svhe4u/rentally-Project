@@ -5,8 +5,7 @@ from django.db import connection
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes, force_str
-# from django.utils.http import urlsafe_b64_encode, urlsafe_b64_decode
-import base64
+from django.utils.http import urlsafe_b64_encode, urlsafe_b64_decode
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -24,6 +23,10 @@ class ListingAPIView(APIView):
         search = request.query_params.get('search')
         category = request.query_params.get('category')
         region = request.query_params.get('region')
+        owner_id = request.query_params.get('owner_id')  # Our house - my listings
+        min_price = request.query_params.get('min_price')
+        max_price = request.query_params.get('max_price')
+        tag = request.query_params.get('tag')  # e.g. parking, short_term
 
         query = "SELECT * FROM listings WHERE 1=1"
         params = []
@@ -32,18 +35,35 @@ class ListingAPIView(APIView):
             query += " AND (title ILIKE %s OR description ILIKE %s)"
             params += [f"%{search}%", f"%{search}%"]
         if category:
-            # category query param represents category_id
             query += " AND category_id = %s"
             params.append(category)
         if region:
-            # region query param represents region_id
             query += " AND region_id = %s"
             params.append(region)
+        if owner_id:
+            query += " AND owner_id = %s"
+            params.append(owner_id)
+        if min_price:
+            query += " AND price >= %s"
+            params.append(min_price)
+        if max_price:
+            query += " AND price <= %s"
+            params.append(max_price)
 
         with connection.cursor() as c:
             c.execute(query, params)
             columns = [col[0] for col in c.description]
             listings = [dict(zip(columns, row)) for row in c.fetchall()]
+
+        # Tag filter: listings with matching extra_features key/value
+        if tag:
+            with connection.cursor() as c2:
+                c2.execute(
+                    "SELECT listing_id FROM listing_extra_features WHERE key ILIKE %s OR value ILIKE %s",
+                    [f"%{tag}%", f"%{tag}%"],
+                )
+                tagged_ids = {r[0] for r in c2.fetchall()}
+            listings = [x for x in listings if x.get("id") in tagged_ids]
 
         return Response(listings)
 
@@ -838,8 +858,23 @@ class MessageAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
+        receiver_id = request.query_params.get('receiver_id')
+        sender_id = request.query_params.get('sender_id')
+        listing_id = request.query_params.get('listing_id')
+        query = "SELECT * FROM messages WHERE 1=1"
+        params = []
+        if receiver_id:
+            query += " AND receiver_id = %s"
+            params.append(receiver_id)
+        if sender_id:
+            query += " AND sender_id = %s"
+            params.append(sender_id)
+        if listing_id:
+            query += " AND listing_id = %s"
+            params.append(listing_id)
+        query += " ORDER BY id DESC"
         with connection.cursor() as c:
-            c.execute("SELECT * FROM messages")
+            c.execute(query, params)
             columns = [col[0] for col in c.description]
             rows = [dict(zip(columns, row)) for row in c.fetchall()]
         return Response(rows)
@@ -1132,6 +1167,79 @@ class RegisterAPIView(APIView):
                 "id": user.id,
                 "username": user.username,
                 "email": user.email,
+                "role": "user",
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class BrokerRegisterAPIView(APIView):
+    """
+    Register as broker. Same as RegisterAPIView but returns role=broker.
+    Optionally syncs to custom users table with role=broker if it exists.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        # Reuse RegisterAPIView logic
+        from django.contrib.auth.password_validation import validate_password
+        username = request.data.get("username")
+        email = request.data.get("email")
+        password = request.data.get("password")
+        phone = request.data.get("phone", "")
+
+        if not username or not email or not password:
+            return Response(
+                {"detail": "username, email and password are required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if User.objects.filter(username=username).exists():
+            return Response(
+                {"detail": "Username already taken"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if User.objects.filter(email=email).exists():
+            return Response(
+                {"detail": "Email already in use"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            validate_password(password)
+        except Exception as e:
+            return Response(
+                {"detail": list(e.messages) if hasattr(e, "messages") else str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+        )
+
+        # Sync to custom users table with role=broker if table exists
+        try:
+            from django.contrib.auth.hashers import make_password
+            with connection.cursor() as c:
+                c.execute(
+                    """
+                    INSERT INTO users (username, email, password_hash, phone, role, is_verified)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    """,
+                    [username, email, make_password(password), phone, "broker", False],
+                )
+        except Exception:
+            pass  # Custom users table may not exist or have different schema
+
+        return Response(
+            {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "role": "broker",
             },
             status=status.HTTP_201_CREATED,
         )
