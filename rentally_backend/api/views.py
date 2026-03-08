@@ -5,10 +5,12 @@ from django.db import connection
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_b64_encode, urlsafe_b64_decode
+# from django.utils.http import urlsafe_b64_encode, urlsafe_b64_decode
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
 
 User = get_user_model()
 
