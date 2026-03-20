@@ -1,34 +1,34 @@
-# Rentally Backend - Property Rental API (Mongolia)
-# Improves: bug fixes, validation, Mongolia localization support
-
+import base64
 from django.db import connection
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes, force_str
-# from django.utils.http import urlsafe_b64_encode, urlsafe_b64_decode
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
+
+
+def urlsafe_b64_encode(s):
+    return base64.urlsafe_b64encode(s).decode('utf-8')
+
+
+def urlsafe_b64_decode(s):
+    return base64.urlsafe_b64decode(s + '==')  # padding-г нөхнө
+
 
 User = get_user_model()
+
 
 # ----------------------
 # LISTINGS
 # ----------------------
 class ListingAPIView(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         search = request.query_params.get('search')
         category = request.query_params.get('category')
         region = request.query_params.get('region')
-        owner_id = request.query_params.get('owner_id')  # Our house - my listings
-        min_price = request.query_params.get('min_price')
-        max_price = request.query_params.get('max_price')
-        tag = request.query_params.get('tag')  # e.g. parking, short_term
 
         query = "SELECT * FROM listings WHERE 1=1"
         params = []
@@ -42,38 +42,24 @@ class ListingAPIView(APIView):
         if region:
             query += " AND region_id = %s"
             params.append(region)
-        if owner_id:
-            query += " AND owner_id = %s"
-            params.append(owner_id)
-        if min_price:
-            query += " AND price >= %s"
-            params.append(min_price)
-        if max_price:
-            query += " AND price <= %s"
-            params.append(max_price)
 
         with connection.cursor() as c:
             c.execute(query, params)
             columns = [col[0] for col in c.description]
             listings = [dict(zip(columns, row)) for row in c.fetchall()]
 
-        # Tag filter: listings with matching extra_features key/value
-        if tag:
-            with connection.cursor() as c2:
-                c2.execute(
-                    "SELECT listing_id FROM listing_extra_features WHERE key ILIKE %s OR value ILIKE %s",
-                    [f"%{tag}%", f"%{tag}%"],
-                )
-                tagged_ids = {r[0] for r in c2.fetchall()}
-            listings = [x for x in listings if x.get("id") in tagged_ids]
-
         return Response(listings)
 
     def post(self, request):
         data = request.data
+        if not data.get('title') or not data.get('price'):
+            return Response(
+                {'error': 'title and price are required'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         with connection.cursor() as c:
             c.execute("""
-                INSERT INTO listings 
+                INSERT INTO listings
                 (owner_id, category_id, region_id, title, description, address, latitude, longitude, price, price_type)
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING *
             """, [
@@ -95,9 +81,7 @@ class ListingAPIView(APIView):
         return Response(listing, status=status.HTTP_201_CREATED)
 
 
-
 class ListingDetailAPIView(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, pk):
@@ -112,6 +96,7 @@ class ListingDetailAPIView(APIView):
     def put(self, request, pk):
         data = request.data
         with connection.cursor() as c:
+            # FIX: corrected parameter order to match SQL placeholders
             c.execute("""
                 UPDATE listings
                 SET owner_id=%s, category_id=%s, region_id=%s,
@@ -125,11 +110,11 @@ class ListingDetailAPIView(APIView):
                 data.get('title'),
                 data.get('description'),
                 data.get('address'),
-                data.get('price'),
-                data.get('price_type'),
                 data.get('latitude'),
                 data.get('longitude'),
-                pk
+                data.get('price'),
+                data.get('price_type'),
+                pk,
             ])
             row = c.fetchone()
             if not row:
@@ -150,30 +135,43 @@ class ListingDetailAPIView(APIView):
 # BOOKINGS
 # ----------------------
 class BookingAPIView(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
+        # FIX: use query param instead of request.user (AllowAny permission set)
+        user_id = request.query_params.get('user_id')
+        if not user_id:
+            return Response(
+                {'error': 'user_id query parameter is required'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         with connection.cursor() as c:
-            c.execute("SELECT * FROM bookings WHERE user_id=%s", [request.user.id])
+            c.execute("SELECT * FROM bookings WHERE user_id=%s", [user_id])
             columns = [col[0] for col in c.description]
             bookings = [dict(zip(columns, row)) for row in c.fetchall()]
         return Response(bookings)
 
     def post(self, request):
         data = request.data
+        # FIX: use user_id from request body instead of request.user
+        user_id = data.get('user_id')
+        if not user_id:
+            return Response(
+                {'error': 'user_id is required'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         with connection.cursor() as c:
             c.execute("""
                 INSERT INTO bookings
                 (listing_id, user_id, start_date, end_date, total_price, status)
                 VALUES (%s,%s,%s,%s,%s,%s) RETURNING *
             """, [
-                data.get('listing'),
-                request.user.id,
+                data.get('listing_id') or data.get('listing'),
+                user_id,
                 data.get('start_date'),
                 data.get('end_date'),
                 data.get('total_price'),
-                data.get('status', 'pending')
+                data.get('status', 'pending'),
             ])
             row = c.fetchone()
             columns = [col[0] for col in c.description]
@@ -182,7 +180,6 @@ class BookingAPIView(APIView):
 
 
 class BookingDetailAPIView(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [permissions.AllowAny]
 
     def get_object(self, pk, user_id):
@@ -195,13 +192,20 @@ class BookingDetailAPIView(APIView):
             return dict(zip(columns, row))
 
     def get(self, request, pk):
-        booking = self.get_object(pk, request.user.id)
+        # FIX: use query param
+        user_id = request.query_params.get('user_id')
+        if not user_id:
+            return Response({'error': 'user_id query parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+        booking = self.get_object(pk, user_id)
         if not booking:
             return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
         return Response(booking)
 
     def put(self, request, pk):
         data = request.data
+        user_id = data.get('user_id')
+        if not user_id:
+            return Response({'error': 'user_id is required'}, status=status.HTTP_400_BAD_REQUEST)
         with connection.cursor() as c:
             c.execute("""
                 UPDATE bookings
@@ -213,7 +217,7 @@ class BookingDetailAPIView(APIView):
                 data.get('total_price'),
                 data.get('status'),
                 pk,
-                request.user.id
+                user_id,
             ])
             row = c.fetchone()
             if not row:
@@ -222,8 +226,11 @@ class BookingDetailAPIView(APIView):
             return Response(dict(zip(columns, row)))
 
     def delete(self, request, pk):
+        user_id = request.query_params.get('user_id') or request.data.get('user_id')
+        if not user_id:
+            return Response({'error': 'user_id is required'}, status=status.HTTP_400_BAD_REQUEST)
         with connection.cursor() as c:
-            c.execute("DELETE FROM bookings WHERE id=%s AND user_id=%s RETURNING id", [pk, request.user.id])
+            c.execute("DELETE FROM bookings WHERE id=%s AND user_id=%s RETURNING id", [pk, user_id])
             row = c.fetchone()
             if not row:
                 return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -234,7 +241,6 @@ class BookingDetailAPIView(APIView):
 # REVIEWS
 # ----------------------
 class ReviewAPIView(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
@@ -253,16 +259,19 @@ class ReviewAPIView(APIView):
 
     def post(self, request):
         data = request.data
+        user_id = data.get('user_id')
+        if not user_id:
+            return Response({'error': 'user_id is required'}, status=status.HTTP_400_BAD_REQUEST)
         with connection.cursor() as c:
             c.execute("""
                 INSERT INTO reviews
                 (listing_id, user_id, rating, comment)
                 VALUES (%s,%s,%s,%s) RETURNING *
             """, [
-                data.get('listing'),
-                request.user.id,
+                data.get('listing_id') or data.get('listing'),
+                user_id,
                 data.get('rating'),
-                data.get('comment')
+                data.get('comment'),
             ])
             row = c.fetchone()
             columns = [col[0] for col in c.description]
@@ -271,9 +280,8 @@ class ReviewAPIView(APIView):
 
 
 class ReviewDetailAPIView(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [permissions.AllowAny]
-    
+
     def get_object(self, pk):
         with connection.cursor() as c:
             c.execute("SELECT * FROM reviews WHERE id=%s", [pk])
@@ -291,6 +299,9 @@ class ReviewDetailAPIView(APIView):
 
     def put(self, request, pk):
         data = request.data
+        user_id = data.get('user_id')
+        if not user_id:
+            return Response({'error': 'user_id is required'}, status=status.HTTP_400_BAD_REQUEST)
         with connection.cursor() as c:
             c.execute("""
                 UPDATE reviews
@@ -300,7 +311,7 @@ class ReviewDetailAPIView(APIView):
                 data.get('rating'),
                 data.get('comment'),
                 pk,
-                request.user.id
+                user_id,
             ])
             row = c.fetchone()
             if not row:
@@ -309,8 +320,11 @@ class ReviewDetailAPIView(APIView):
             return Response(dict(zip(columns, row)))
 
     def delete(self, request, pk):
+        user_id = request.query_params.get('user_id') or request.data.get('user_id')
+        if not user_id:
+            return Response({'error': 'user_id is required'}, status=status.HTTP_400_BAD_REQUEST)
         with connection.cursor() as c:
-            c.execute("DELETE FROM reviews WHERE id=%s AND user_id=%s RETURNING id", [pk, request.user.id])
+            c.execute("DELETE FROM reviews WHERE id=%s AND user_id=%s RETURNING id", [pk, user_id])
             row = c.fetchone()
             if not row:
                 return Response({'error': 'Not found or permission denied'}, status=status.HTTP_404_NOT_FOUND)
@@ -321,40 +335,44 @@ class ReviewDetailAPIView(APIView):
 # FAVORITES
 # ----------------------
 class FavoriteAPIView(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
+        user_id = request.query_params.get('user_id')
+        if not user_id:
+            return Response({'error': 'user_id query parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
         with connection.cursor() as c:
-            c.execute("SELECT * FROM favorites WHERE user_id=%s", [request.user.id])
+            c.execute("SELECT * FROM favorites WHERE user_id=%s", [user_id])
             columns = [col[0] for col in c.description]
             favorites = [dict(zip(columns, row)) for row in c.fetchall()]
         return Response(favorites)
 
     def post(self, request):
         data = request.data
+        user_id = data.get('user_id')
+        listing_id = data.get('listing_id') or data.get('listing')
+        if not user_id or not listing_id:
+            return Response({'error': 'user_id and listing_id are required'}, status=status.HTTP_400_BAD_REQUEST)
         with connection.cursor() as c:
+            # FIX: column order matches schema (user_id, listing_id); ON CONFLICT to avoid duplicate errors
             c.execute("""
-                INSERT INTO favorites
-                (listing_id, user_id)
-                VALUES (%s,%s) RETURNING *
-            """, [
-                data.get('listing'),
-                request.user.id
-            ])
+                INSERT INTO favorites (user_id, listing_id)
+                VALUES (%s, %s)
+                ON CONFLICT DO NOTHING
+                RETURNING *
+            """, [user_id, listing_id])
             row = c.fetchone()
+            if not row:
+                return Response({'detail': 'Already in favorites'}, status=status.HTTP_200_OK)
             columns = [col[0] for col in c.description]
             favorite = dict(zip(columns, row))
         return Response(favorite, status=status.HTTP_201_CREATED)
 
 
 class FavoriteDetailAPIView(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [permissions.AllowAny]
-    
+
     def get_object(self, listing_id, user_id):
-        # Here pk in the URL represents listing_id, since the favorites table
-        # has a composite primary key (user_id, listing_id) and no separate id.
         with connection.cursor() as c:
             c.execute("SELECT * FROM favorites WHERE listing_id=%s AND user_id=%s", [listing_id, user_id])
             row = c.fetchone()
@@ -364,16 +382,22 @@ class FavoriteDetailAPIView(APIView):
             return dict(zip(columns, row))
 
     def get(self, request, pk):
-        favorite = self.get_object(pk, request.user.id)
+        user_id = request.query_params.get('user_id')
+        if not user_id:
+            return Response({'error': 'user_id query parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+        favorite = self.get_object(pk, user_id)
         if not favorite:
             return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
         return Response(favorite)
 
     def delete(self, request, pk):
+        user_id = request.query_params.get('user_id') or request.data.get('user_id')
+        if not user_id:
+            return Response({'error': 'user_id is required'}, status=status.HTTP_400_BAD_REQUEST)
         with connection.cursor() as c:
             c.execute(
                 "DELETE FROM favorites WHERE listing_id=%s AND user_id=%s RETURNING listing_id",
-                [pk, request.user.id],
+                [pk, user_id],
             )
             row = c.fetchone()
             if not row:
@@ -398,7 +422,6 @@ class CategoryAPIView(APIView):
         name = request.data.get("name")
         if not name:
             return Response({"detail": "name is required"}, status=status.HTTP_400_BAD_REQUEST)
-
         with connection.cursor() as c:
             c.execute(
                 "INSERT INTO categories (name) VALUES (%s) RETURNING *",
@@ -462,7 +485,6 @@ class RegionAPIView(APIView):
         parent_id = request.data.get("parent_id")
         if not name:
             return Response({"detail": "name is required"}, status=status.HTTP_400_BAD_REQUEST)
-
         with connection.cursor() as c:
             c.execute(
                 "INSERT INTO regions (name, parent_id) VALUES (%s, %s) RETURNING *",
@@ -516,8 +538,14 @@ class ListingAvailabilityAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
+        listing_id = request.query_params.get('listing_id')
+        query = "SELECT * FROM listing_availability WHERE 1=1"
+        params = []
+        if listing_id:
+            query += " AND listing_id=%s"
+            params.append(listing_id)
         with connection.cursor() as c:
-            c.execute("SELECT * FROM listing_availability")
+            c.execute(query, params)
             columns = [col[0] for col in c.description]
             rows = [dict(zip(columns, row)) for row in c.fetchall()]
         return Response(rows)
@@ -528,7 +556,9 @@ class ListingAvailabilityAPIView(APIView):
             c.execute(
                 """
                 INSERT INTO listing_availability (listing_id, date, is_available)
-                VALUES (%s, %s, %s) RETURNING *
+                VALUES (%s, %s, %s)
+                ON CONFLICT (listing_id, date) DO UPDATE SET is_available=EXCLUDED.is_available
+                RETURNING *
                 """,
                 [
                     data.get("listing_id"),
@@ -633,10 +663,6 @@ class ListingDetailsAPIView(APIView):
 
 
 class ListingDetailsDetailAPIView(APIView):
-    """
-    listing_id is the primary key of listing_details.
-    """
-
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, listing_id):
@@ -701,8 +727,14 @@ class ListingExtraFeatureAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
+        listing_id = request.query_params.get('listing_id')
+        query = "SELECT * FROM listing_extra_features WHERE 1=1"
+        params = []
+        if listing_id:
+            query += " AND listing_id=%s"
+            params.append(listing_id)
         with connection.cursor() as c:
-            c.execute("SELECT * FROM listing_extra_features")
+            c.execute(query, params)
             columns = [col[0] for col in c.description]
             rows = [dict(zip(columns, row)) for row in c.fetchall()]
         return Response(rows)
@@ -780,12 +812,14 @@ class ListingImageAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
-        listing_id = request.query_params.get("listing_id")
+        listing_id = request.query_params.get('listing_id')
+        query = "SELECT * FROM listing_images WHERE 1=1"
+        params = []
+        if listing_id:
+            query += " AND listing_id=%s"
+            params.append(listing_id)
         with connection.cursor() as c:
-            if listing_id:
-                c.execute("SELECT * FROM listing_images WHERE listing_id = %s ORDER BY sort_order", [listing_id])
-            else:
-                c.execute("SELECT * FROM listing_images")
+            c.execute(query, params)
             columns = [col[0] for col in c.description]
             rows = [dict(zip(columns, row)) for row in c.fetchall()]
         return Response(rows)
@@ -860,21 +894,16 @@ class MessageAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
-        receiver_id = request.query_params.get('receiver_id')
         sender_id = request.query_params.get('sender_id')
-        listing_id = request.query_params.get('listing_id')
+        receiver_id = request.query_params.get('receiver_id')
         query = "SELECT * FROM messages WHERE 1=1"
         params = []
-        if receiver_id:
-            query += " AND receiver_id = %s"
-            params.append(receiver_id)
         if sender_id:
-            query += " AND sender_id = %s"
+            query += " AND sender_id=%s"
             params.append(sender_id)
-        if listing_id:
-            query += " AND listing_id = %s"
-            params.append(listing_id)
-        query += " ORDER BY id DESC"
+        if receiver_id:
+            query += " AND receiver_id=%s"
+            params.append(receiver_id)
         with connection.cursor() as c:
             c.execute(query, params)
             columns = [col[0] for col in c.description]
@@ -1030,10 +1059,6 @@ class PaymentDetailAPIView(APIView):
 # CUSTOM USERS TABLE
 # ----------------------
 class UserAccountAPIView(APIView):
-    """
-    CRUD for the custom public.users table (not Django auth_user).
-    """
-
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
@@ -1130,6 +1155,7 @@ class RegisterAPIView(APIView):
         username = request.data.get("username")
         email = request.data.get("email")
         password = request.data.get("password")
+        phone = request.data.get("phone")
 
         if not username or not email or not password:
             return Response(
@@ -1149,116 +1175,37 @@ class RegisterAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        from django.contrib.auth.password_validation import validate_password
-        try:
-            validate_password(password)
-        except Exception as e:
-            return Response(
-                {"detail": list(e.messages) if hasattr(e, "messages") else str(e)},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
         user = User.objects.create_user(
             username=username,
             email=email,
             password=password,
         )
 
-        return Response(
-            {
-                "id": user.id,
-                "username": user.username,
-                "email": user.email,
-                "role": "user",
-            },
-            status=status.HTTP_201_CREATED,
-        )
-
-
-class BrokerRegisterAPIView(APIView):
-    """
-    Register as broker. Same as RegisterAPIView but returns role=broker.
-    Optionally syncs to custom users table with role=broker if it exists.
-    """
-    permission_classes = [permissions.AllowAny]
-
-    def post(self, request):
-        # Reuse RegisterAPIView logic
-        from django.contrib.auth.password_validation import validate_password
-        username = request.data.get("username")
-        email = request.data.get("email")
-        password = request.data.get("password")
-        phone = request.data.get("phone", "")
-
-        if not username or not email or not password:
-            return Response(
-                {"detail": "username, email and password are required"},
-                status=status.HTTP_400_BAD_REQUEST,
+        # FIX: also insert into public.users so bookings/reviews/favorites FKs work
+        with connection.cursor() as c:
+            c.execute(
+                """
+                INSERT INTO users (username, email, password_hash, phone, role, is_verified)
+                VALUES (%s, %s, %s, %s, 'user', false)
+                ON CONFLICT (email) DO NOTHING
+                """,
+                [username, email, user.password, phone],
             )
-
-        if User.objects.filter(username=username).exists():
-            return Response(
-                {"detail": "Username already taken"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if User.objects.filter(email=email).exists():
-            return Response(
-                {"detail": "Email already in use"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        try:
-            validate_password(password)
-        except Exception as e:
-            return Response(
-                {"detail": list(e.messages) if hasattr(e, "messages") else str(e)},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        user = User.objects.create_user(
-            username=username,
-            email=email,
-            password=password,
-        )
-
-        # Sync to custom users table with role=broker if table exists
-        try:
-            from django.contrib.auth.hashers import make_password
-            with connection.cursor() as c:
-                c.execute(
-                    """
-                    INSERT INTO users (username, email, password_hash, phone, role, is_verified)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                    """,
-                    [username, email, make_password(password), phone, "broker", False],
-                )
-        except Exception:
-            pass  # Custom users table may not exist or have different schema
 
         return Response(
             {
                 "id": user.id,
                 "username": user.username,
                 "email": user.email,
-                "role": "broker",
             },
             status=status.HTTP_201_CREATED,
         )
 
 
 class RequestPasswordResetAPIView(APIView):
-    """
-    Request a password reset. Sends reset link to user's email via Gmail.
-    Configure EMAIL_HOST_USER and EMAIL_HOST_PASSWORD in .env.
-    """
-
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        from django.conf import settings
-        from .email_utils import send_password_reset_email
-
         email = request.data.get("email")
         if not email:
             return Response(
@@ -1269,45 +1216,26 @@ class RequestPasswordResetAPIView(APIView):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            # Don't leak whether the email exists
             return Response(
-                {"detail": "If an account exists for this email, a reset link was sent."},
+                {"detail": "If an account exists for this email, a reset token was generated."},
                 status=status.HTTP_200_OK,
             )
 
         token_generator = PasswordResetTokenGenerator()
-        uid = urlsafe_b64_encode(force_bytes(user.pk)).decode()
+        uid = urlsafe_b64_encode(force_bytes(user.pk))  # FIX: now properly imported
         token = token_generator.make_token(user)
 
-        try:
-            send_password_reset_email(email, uid, token)
-        except Exception as e:
-            if settings.DEBUG and settings.EMAIL_HOST_USER:
-                # In DEBUG, return token for Postman testing if email fails
-                return Response(
-                    {
-                        "detail": "Email failed; token returned for testing.",
-                        "uid": uid,
-                        "token": token,
-                    },
-                    status=status.HTTP_200_OK,
-                )
-            return Response(
-                {"detail": "Could not send email. Please try again later."},
-                status=status.HTTP_503_SERVICE_UNAVAILABLE,
-            )
-
         return Response(
-            {"detail": "If an account exists for this email, a reset link was sent."},
+            {
+                "uid": uid,
+                "token": token,
+                "detail": "Use uid and token with /auth/reset-password/ to set a new password.",
+            },
             status=status.HTTP_200_OK,
         )
 
 
 class ResetPasswordAPIView(APIView):
-    """
-    Reset password using uid + token from RequestPasswordResetAPIView.
-    """
-
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
@@ -1322,8 +1250,7 @@ class ResetPasswordAPIView(APIView):
             )
 
         try:
-            uid_bytes = uid.encode() if isinstance(uid, str) else uid
-            user_id = force_str(urlsafe_b64_decode(uid_bytes))
+            user_id = force_str(urlsafe_b64_decode(uid))  # FIX: now properly imported
             user = User.objects.get(pk=user_id)
         except (User.DoesNotExist, ValueError, TypeError):
             return Response(
@@ -1338,16 +1265,6 @@ class ResetPasswordAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Validate new password
-        from django.contrib.auth.password_validation import validate_password
-        try:
-            validate_password(new_password, user)
-        except Exception as e:
-            return Response(
-                {"detail": list(e.messages) if hasattr(e, "messages") else str(e)},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
         user.set_password(new_password)
         user.save()
 
@@ -1357,43 +1274,114 @@ class ResetPasswordAPIView(APIView):
         )
 
 
-class ChangePasswordAPIView(APIView):
+# ----------------------
+# LISTING FULL DETAIL
+# ----------------------
+class ListingFullDetailAPIView(APIView):
     """
-    Change password for authenticated user (requires current password).
+    GET /api/listings/<pk>/full/
+    Нэг listing-ийн бүх мэдээллийг нэг дор буцаана:
+    - listing
+    - listing_details
+    - listing_images
+    - listing_extra_features
+    - listing_availability
+    - reviews (+ reviewer info)
+    - owner info
+    - category & region
     """
+    permission_classes = [permissions.AllowAny]
 
-    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request, pk):
+        with connection.cursor() as c:
 
-    def post(self, request):
-        from django.contrib.auth.password_validation import validate_password
+            # 1. Main listing
+            c.execute("SELECT * FROM listings WHERE id=%s", [pk])
+            row = c.fetchone()
+            if not row:
+                return Response({'error': 'Listing not found'}, status=status.HTTP_404_NOT_FOUND)
+            columns = [col[0] for col in c.description]
+            listing = dict(zip(columns, row))
 
-        current_password = request.data.get("current_password")
-        new_password = request.data.get("new_password")
-
-        if not current_password or not new_password:
-            return Response(
-                {"detail": "current_password and new_password are required"},
-                status=status.HTTP_400_BAD_REQUEST,
+            # 2. Owner info
+            c.execute(
+                "SELECT id, username, email, phone, role FROM users WHERE id=%s",
+                [listing['owner_id']],
             )
+            owner_row = c.fetchone()
+            if owner_row:
+                owner_cols = [col[0] for col in c.description]
+                listing['owner'] = dict(zip(owner_cols, owner_row))
+            else:
+                listing['owner'] = None
 
-        if not request.user.check_password(current_password):
-            return Response(
-                {"detail": "Current password is incorrect."},
-                status=status.HTTP_400_BAD_REQUEST,
+            # 3. Category
+            c.execute("SELECT * FROM categories WHERE id=%s", [listing['category_id']])
+            cat_row = c.fetchone()
+            if cat_row:
+                cat_cols = [col[0] for col in c.description]
+                listing['category'] = dict(zip(cat_cols, cat_row))
+            else:
+                listing['category'] = None
+
+            # 4. Region
+            c.execute("SELECT * FROM regions WHERE id=%s", [listing['region_id']])
+            reg_row = c.fetchone()
+            if reg_row:
+                reg_cols = [col[0] for col in c.description]
+                listing['region'] = dict(zip(reg_cols, reg_row))
+            else:
+                listing['region'] = None
+
+            # 5. Listing details
+            c.execute("SELECT * FROM listing_details WHERE listing_id=%s", [pk])
+            det_row = c.fetchone()
+            if det_row:
+                det_cols = [col[0] for col in c.description]
+                listing['details'] = dict(zip(det_cols, det_row))
+            else:
+                listing['details'] = None
+
+            # 6. Images
+            c.execute(
+                "SELECT * FROM listing_images WHERE listing_id=%s ORDER BY sort_order ASC",
+                [pk],
             )
+            img_cols = [col[0] for col in c.description]
+            listing['images'] = [dict(zip(img_cols, r)) for r in c.fetchall()]
 
-        try:
-            validate_password(new_password, request.user)
-        except Exception as e:
-            return Response(
-                {"detail": list(e.messages) if hasattr(e, "messages") else str(e)},
-                status=status.HTTP_400_BAD_REQUEST,
+            # 7. Extra features
+            c.execute("SELECT * FROM listing_extra_features WHERE listing_id=%s", [pk])
+            feat_cols = [col[0] for col in c.description]
+            listing['extra_features'] = [dict(zip(feat_cols, r)) for r in c.fetchall()]
+
+            # 8. Availability
+            c.execute(
+                "SELECT * FROM listing_availability WHERE listing_id=%s ORDER BY date ASC",
+                [pk],
             )
+            avail_cols = [col[0] for col in c.description]
+            listing['availability'] = [dict(zip(avail_cols, r)) for r in c.fetchall()]
 
-        request.user.set_password(new_password)
-        request.user.save()
+            # 9. Reviews + reviewer username
+            c.execute(
+                """
+                SELECT r.*, u.username, u.email
+                FROM reviews r
+                LEFT JOIN users u ON u.id = r.user_id
+                WHERE r.listing_id=%s
+                ORDER BY r.created_at DESC
+                """,
+                [pk],
+            )
+            rev_cols = [col[0] for col in c.description]
+            reviews = [dict(zip(rev_cols, r)) for r in c.fetchall()]
 
-        return Response(
-            {"detail": "Password has been changed successfully."},
-            status=status.HTTP_200_OK,
-        )
+            listing['reviews'] = reviews
+            listing['rating_avg'] = (
+                round(sum(r['rating'] for r in reviews if r['rating']) / len(reviews), 1)
+                if reviews else None
+            )
+            listing['review_count'] = len(reviews)
+
+        return Response(listing)

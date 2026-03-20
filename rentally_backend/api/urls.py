@@ -38,6 +38,7 @@ from .views import (
     RequestPasswordResetAPIView,
     ResetPasswordAPIView,
     ChangePasswordAPIView,
+    ListingFullDetailAPIView,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -226,5 +227,7 @@ urlpatterns = [
 
     # Custom users table
     path("users/", UserAccountAPIView.as_view(), name="useraccount-list"),
-    path("users/<int:pk>/", UserAccountDetailAPIView.as_view(), name="useraccount-detail"),
+    path("users/<int:pk>/", UserAccountDetailAPIView.as_view(), name="useraccount-detail")
+
+    path("listings/<int:pk>/full/", ListingFullDetailAPIView.as_view(), name="listing-full-detail"),
 ]
