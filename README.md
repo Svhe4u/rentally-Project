@@ -83,6 +83,7 @@ API base: http://127.0.0.1:8000/api/
 cd rentally_frontend
 npm install
 npx expo install react-dom react-native-web
+npx expo install react-native-webview
 npm run dev
 npm start
 ```

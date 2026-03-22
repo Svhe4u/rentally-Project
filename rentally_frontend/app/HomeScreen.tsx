@@ -6,8 +6,6 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-  Button,
-  Alert,
 } from 'react-native';
 import { Colors } from '../constants/colors';
 import BottomNav, { TabName } from '../components/BottomNav';
@@ -165,19 +163,6 @@ export default function HomeScreen({ onNavigate }: Props) {
             <TouchableOpacity style={styles.tagOutline}>
               <Text style={styles.tagOutlineTxt}>#Хотын төвд</Text>
             </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Actions section */}
-        <View style={styles.actionSection}>
-          <Text style={styles.actionLabel}>Хурдан үйлдэл</Text>
-          <View style={styles.actionRow}>
-            <View style={styles.actionBtnWrapper}>
-              <Button title="Надад санал болгох" onPress={() => Alert.alert('Санал болгох', 'Таны хүсэлтийг хүлээж авлаа')} color={Colors.primary} />
-            </View>
-            <View style={styles.actionBtnWrapper}>
-              <Button title="Бусадтай хуваалцах" onPress={() => Alert.alert('Хуваалцах', 'Линк хуулагдлаа')} color="#f39c12" />
-            </View>
           </View>
         </View>
 
@@ -347,9 +332,4 @@ const styles = StyleSheet.create({
   menuTitle: { fontSize: 14, fontWeight: '700', color: Colors.text },
   menuSub: { fontSize: 11, color: '#bbb', fontWeight: '600', marginTop: 1 },
   menuChev: { fontSize: 16, color: '#ccc' },
-
-  actionSection: { marginHorizontal: 12, marginBottom: 16, marginTop: 10 },
-  actionLabel: { fontSize: 14, fontWeight: '800', color: Colors.text, marginBottom: 10 },
-  actionRow: { flexDirection: 'row', gap: 10, justifyContent: 'space-between' },
-  actionBtnWrapper: { flex: 1, borderRadius: 8, overflow: 'hidden' },
 });
