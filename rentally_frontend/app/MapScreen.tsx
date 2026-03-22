@@ -332,24 +332,42 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
         </TouchableOpacity>
       </View>
 
-      {/* Listing popup */}
-      {selListing && (
-        <View style={s.card}>
-          <View style={s.cardLeft}>
-            <View style={s.badge}><Text style={s.badgeTxt}>{selListing.rooms} өрөө · {selListing.area}м²</Text></View>
-            <Text style={s.cardTitle}>{selListing.title}</Text>
-            <Text style={s.cardMeta}>{DISTRICTS.find(d=>d.id===selListing.district)?.name}</Text>
-          </View>
-          <View style={s.cardRight}>
-            <Text style={s.cardPrice}>{selListing.price}</Text>
-            <Text style={s.cardSub}>/сар</Text>
-            <TouchableOpacity style={s.cardBtn} onPress={() => selListing && onOpenDetail?.(selListing.id)}><Text style={s.cardBtnTxt}>Харах →</Text></TouchableOpacity>
-          </View>
-          <TouchableOpacity style={s.cardX} onPress={() => setSelListing(null)}>
-            <Text style={s.cardXTxt}>✕</Text>
+      {/* Listing bottom-sheet modal */}
+      <Modal
+        visible={!!selListing}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setSelListing(null)}
+      >
+        <TouchableOpacity style={s.overlay} activeOpacity={1} onPress={() => setSelListing(null)}>
+          <TouchableOpacity activeOpacity={1} style={s.cardSheet}>
+            <View style={s.handle} />
+            {selListing && (
+              <>
+                <View style={s.cardRow}>
+                  <View style={s.cardLeft}>
+                    <View style={s.badge}>
+                      <Text style={s.badgeTxt}>{selListing.rooms} өрөө · {selListing.area}м²</Text>
+                    </View>
+                    <Text style={s.cardTitle}>{selListing.title}</Text>
+                    <Text style={s.cardMeta}>{DISTRICTS.find(d=>d.id===selListing.district)?.name}</Text>
+                  </View>
+                  <View style={s.cardRight}>
+                    <Text style={s.cardPrice}>{selListing.price}</Text>
+                    <Text style={s.cardSub}>/сар</Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={s.cardBtn}
+                  onPress={() => { setSelListing(null); onOpenDetail?.(selListing.id); }}
+                >
+                  <Text style={s.cardBtnTxt}>Харах →</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </TouchableOpacity>
-        </View>
-      )}
+        </TouchableOpacity>
+      </Modal>
 
       {/* District modal */}
       <Modal visible={districtModal} transparent animationType="slide" onRequestClose={() => setDistrictModal(false)}>
@@ -427,19 +445,18 @@ const s = StyleSheet.create({
   countTxt:{fontSize:13,fontWeight:'900',color:'#111'},
   aiBtn:{position:'absolute',top:12,right:12,backgroundColor:'#fff',borderRadius:20,paddingVertical:9,paddingHorizontal:14,shadowColor:'#000',shadowOffset:{width:0,height:3},shadowOpacity:0.15,shadowRadius:8,elevation:5},
   aiBtnTxt:{fontSize:13,fontWeight:'800',color:'#2e55fa'},
-  card:{backgroundColor:'#fff',marginHorizontal:12,marginBottom:8,borderRadius:18,padding:14,flexDirection:'row',alignItems:'center',shadowColor:'#000',shadowOffset:{width:0,height:-2},shadowOpacity:0.1,shadowRadius:12,elevation:8,gap:12},
-  cardLeft:{flex:1,gap:3},
+  cardSheet:{backgroundColor:'#fff',borderTopLeftRadius:24,borderTopRightRadius:24,paddingTop:10,paddingHorizontal:20,paddingBottom:36,gap:14},
+  cardRow:{flexDirection:'row',alignItems:'center',gap:12},
+  cardLeft:{flex:1,gap:4},
   badge:{backgroundColor:'#eef1ff',borderRadius:8,paddingVertical:3,paddingHorizontal:8,alignSelf:'flex-start'},
   badgeTxt:{fontSize:11,fontWeight:'800',color:'#2e55fa'},
-  cardTitle:{fontSize:14,fontWeight:'800',color:'#111'},
-  cardMeta:{fontSize:12,color:'#888'},
-  cardRight:{alignItems:'flex-end',gap:3},
-  cardPrice:{fontSize:17,fontWeight:'900',color:'#2e55fa'},
+  cardTitle:{fontSize:16,fontWeight:'900',color:'#111'},
+  cardMeta:{fontSize:13,color:'#888'},
+  cardRight:{alignItems:'flex-end',gap:2},
+  cardPrice:{fontSize:20,fontWeight:'900',color:'#2e55fa'},
   cardSub:{fontSize:11,color:'#aaa'},
-  cardBtn:{backgroundColor:'#2e55fa',borderRadius:12,paddingVertical:8,paddingHorizontal:14,marginTop:4},
-  cardBtnTxt:{color:'#fff',fontSize:12,fontWeight:'800'},
-  cardX:{position:'absolute',top:10,right:10,width:24,height:24,borderRadius:12,backgroundColor:'#f4f5f7',alignItems:'center',justifyContent:'center'},
-  cardXTxt:{fontSize:11,color:'#888'},
+  cardBtn:{backgroundColor:'#2e55fa',borderRadius:14,paddingVertical:14,alignItems:'center'},
+  cardBtnTxt:{color:'#fff',fontSize:15,fontWeight:'900'},
   overlay:{flex:1,backgroundColor:'rgba(0,0,0,0.45)',justifyContent:'flex-end'},
   sheet:{backgroundColor:'#fff',borderTopLeftRadius:24,borderTopRightRadius:24,paddingTop:10,paddingBottom:36,maxHeight:'65%'},
   handle:{width:38,height:4,borderRadius:2,backgroundColor:'#e0e0e0',alignSelf:'center',marginBottom:14},
