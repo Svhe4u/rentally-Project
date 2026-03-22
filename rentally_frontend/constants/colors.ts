@@ -1,0 +1,18 @@
+export const Colors = {
+  primary: '#2e55fa',
+  yellow: '#f0ad00',
+  kakao: '#FEE500',
+  facebook: '#1877F2',
+  red: '#ff3b5c',
+  bg: '#f4f5f7',
+  white: '#ffffff',
+  black: '#000000',
+  text: '#111111',
+  textMuted: '#888888',
+  textLight: '#aaaaaa',
+  border: '#e8e8ec',
+  cardBg: '#ffffff',
+  iconBg: '#f0f3ff',
+  darkBg: '#111827',
+  darkBg2: '#1f3a5f',
+};

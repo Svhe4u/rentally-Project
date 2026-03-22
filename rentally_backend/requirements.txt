@@ -18,3 +18,8 @@ whitenoise>=6.6,<7
 
 # Utilities
 python-dotenv>=1.0,<2
+
+# Email
+django-anymail>=10.0,<11
+
+

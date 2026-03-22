@@ -59,6 +59,19 @@ cp .env.example .env   # Create from template
 python manage.py migrate   # If using Django migrations
 python manage.py seed_mongolia   # Seed cities/categories
 python manage.py runserver
+
+pip install django
+pip install djangorestframework
+pip install djangorestframework-simplejwt
+pip install django-cors-headers
+pip install python-dotenv
+pip install dj-database-url
+pip install psycopg2-binary
+pip install whitenoise
+pip install cloudinary
+pip install django-cloudinary-storage
+
+
 ```
 
 Backend: http://127.0.0.1:8000  
@@ -69,7 +82,9 @@ API base: http://127.0.0.1:8000/api/
 ```bash
 cd rentally_frontend
 npm install
+npx expo install react-dom react-native-web
 npm run dev
+npm start
 ```
 
 Frontend: http://localhost:5173 (proxies /api to backend)
@@ -126,4 +141,4 @@ If you need migrations, you can add Django models and run `python manage.py make
 
 ## License
 
-MIT
+
