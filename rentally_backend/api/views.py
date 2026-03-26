@@ -1040,6 +1040,75 @@ class MessageDetailAPIView(APIView):
 
 
 # ============================================================
+# MESSAGE THREADS (INBOX)
+# ============================================================
+
+class MessageThreadsAPIView(APIView):
+    """
+    GET /api/messages/threads/?user_id=1
+    Returns unique conversation threads for a user, with the most recent
+    message, partner info, and listing context per thread.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        user_id = request.query_params.get("user_id")
+        if not user_id:
+            return _bad_request("user_id is required")
+
+        with connection.cursor() as c:
+            # Find all unique partners the user has messaged with (as sender or receiver)
+            c.execute(
+                """
+                WITH thread_list AS (
+                    SELECT
+                        DISTINCT
+                        CASE
+                            WHEN sender_id = %s THEN receiver_id
+                            ELSE sender_id
+                        END AS partner_id,
+                        MAX(created_at) AS last_message_at
+                    FROM messages
+                    WHERE sender_id = %s OR receiver_id = %s
+                    GROUP BY partner_id
+                    ORDER BY last_message_at DESC
+                )
+                SELECT
+                    tl.partner_id,
+                    tl.last_message_at,
+                    m.id               AS last_message_id,
+                    m.message          AS last_message_text,
+                    m.sender_id,
+                    m.receiver_id,
+                    m.listing_id,
+                    m.created_at       AS last_message_created,
+                    u.username         AS partner_name,
+                    u.email            AS partner_email,
+                    l.title            AS listing_title,
+                    l.price            AS listing_price,
+                    l.price_type       AS listing_price_type,
+                    li.image_url       AS listing_thumb
+                FROM thread_list tl
+                JOIN messages m ON (
+                    m.created_at = tl.last_message_at
+                    AND (
+                        (m.sender_id = %s AND m.receiver_id = tl.partner_id)
+                        OR (m.receiver_id = %s AND m.sender_id = tl.partner_id)
+                    )
+                )
+                LEFT JOIN users u ON u.id = tl.partner_id
+                LEFT JOIN listings l ON l.id = m.listing_id
+                LEFT JOIN listing_images li ON li.listing_id = m.listing_id AND li.sort_order = 0
+                ORDER BY tl.last_message_at DESC
+                """,
+                [user_id, user_id, user_id, user_id, user_id],
+            )
+            cols = [col[0] for col in c.description]
+            threads = [dict(zip(cols, row)) for row in c.fetchall()]
+            return Response(threads)
+
+
+# ============================================================
 # PAYMENTS
 # ============================================================
 

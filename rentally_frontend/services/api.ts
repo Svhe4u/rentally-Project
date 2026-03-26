@@ -186,6 +186,28 @@ export const FavoriteAPI = {
     request(`/favorites/${listing_id}/?user_id=${user_id}`, { method: 'DELETE' }),
 };
 
+// ─── MESSAGE THREADS ─────────────────────────────────────────
+export interface MessageThread {
+  partner_id: number;
+  partner_name: string;
+  partner_email?: string;
+  last_message_id: number;
+  last_message_text: string;
+  last_message_created: string;
+  sender_id: number;
+  receiver_id: number;
+  listing_id: number | null;
+  listing_title?: string;
+  listing_price?: number;
+  listing_price_type?: string;
+  listing_thumb?: string;
+}
+
+export const MessageThreadAPI = {
+  list: (userId: number) =>
+    request<MessageThread[]>(`/messages/threads/?user_id=${userId}`),
+};
+
 // ─── MESSAGES ────────────────────────────────────────────────
 export const MessageAPI = {
   thread: (sender_id: number, receiver_id: number) =>

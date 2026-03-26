@@ -39,6 +39,7 @@ from .views import (
     # Messages
     MessageAPIView,
     MessageDetailAPIView,
+    MessageThreadsAPIView,
     # Payments
     PaymentAPIView,
     PaymentDetailAPIView,
@@ -133,7 +134,8 @@ urlpatterns = [
     # -------------------------------------------------------------------------
     # Messages
     # -------------------------------------------------------------------------
-    path("messages/",          MessageAPIView.as_view(),       name="message-list"),
+    path("messages/",          MessageAPIView.as_view(),        name="message-list"),
+    path("messages/threads/",  MessageThreadsAPIView.as_view(), name="message-threads"),
     path("messages/<int:pk>/", MessageDetailAPIView.as_view(), name="message-detail"),
 
     # -------------------------------------------------------------------------
