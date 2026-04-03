@@ -6,9 +6,12 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { MessageThreadAPI, MessageThread } from '../services/api';
+import BottomNav, { TabName } from '../components/BottomNav';
+
+
 
 interface Props {
-  onNavigate: (screen: string, params?: any) => void;
+  onNavigate: (target: TabName | string, params?: any) => void;
   userId?: number;
 }
 
@@ -104,6 +107,9 @@ export default function MessagesScreen({ onNavigate, userId = 1 }: Props) {
     <SafeAreaView style={s.safe}>
       {/* Header */}
       <View style={s.header}>
+        {/* <TouchableOpacity style={s.backBtn} onPress={() => onNavigate('home')}>
+          <Ionicons name="chevron-back" size={24} color={Colors.primary} />
+        </TouchableOpacity> */}
         <Text style={s.headerTitle}>💬 Мессежүүд</Text>
         <TouchableOpacity style={s.addBtn}>
           <Ionicons name="add" size={24} color={Colors.primary} />
@@ -139,6 +145,7 @@ export default function MessagesScreen({ onNavigate, userId = 1 }: Props) {
           }
         />
       )}
+      <BottomNav active="message" onNavigate={onNavigate} />
     </SafeAreaView>
   );
 }
@@ -152,7 +159,8 @@ const s = StyleSheet.create({
     backgroundColor: Colors.white,
     borderBottomWidth: 1, borderBottomColor: Colors.border,
   },
-  headerTitle: { fontSize: 18, fontWeight: '900', color: Colors.text ,textAlign:'center'},
+  backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  headerTitle: { fontSize: 18, fontWeight: '900', color: Colors.text, flex: 1, textAlign: 'center' },
   addBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
   loadingTxt: { fontSize: 14, color: Colors.textMuted, fontWeight: '600' },
