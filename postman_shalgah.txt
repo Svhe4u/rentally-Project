@@ -1,0 +1,197 @@
+1. Бүртгэл (Buyer болон Broker)
+
+  POST /api/auth/register/
+
+  Body (Buyer):
+  {
+      "username": "buyer123",
+      "email": "buyer@example.com",
+      "password": "securepass123",
+      "password2": "securepass123",
+      "role": "user",
+      "first_name": "Бат",
+      "last_name": "Болд"
+  }
+
+  Body (Broker):
+  {
+      "username": "broker123",
+      "email": "broker@example.com",
+      "password": "securepass123",
+      "password2": "securepass123",
+      "role": "broker",
+      "company_name": "ABC Real Estate",
+      "registration_number": "REG123456",
+      "description": "Манай компани...",
+      "first_name": "Сараа",
+      "last_name": "Дорж"
+  }
+
+  Response:
+  {
+      "user": {
+          "id": 1,
+          "username": "broker123",
+          "email": "broker@example.com",
+          "role": "broker",
+          "is_verified": false
+      },
+      "tokens": {
+          "access": "eyJ0eXAiOiJKV1QiLCJhbGci...",
+          "refresh": "eyJ0eXAiOiJKV1QiLCJhbGci..."
+      },
+      "message": "Бүртгэл амжилттай. \"broker\" role сонгосон бол админ баталгаажуулалт хүлээнэ."
+  }
+
+  ---
+  2. Нэвтрэх (Role-той)
+
+  POST /api/auth/login/
+
+  Body:
+  {
+      "username": "buyer123",
+      "password": "securepass123"
+  }
+
+  Response:
+  {
+      "user": {
+          "id": 1,
+          "username": "buyer123",
+          "email": "buyer@example.com",
+          "role": "user",
+          "is_verified": true
+      },
+      "tokens": {
+          "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+          "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+      }
+  }
+
+  ---
+  3. Нууц үг солих
+
+  POST /api/auth/change-password/
+  Authorization: Bearer <access_token>
+
+  Body:
+  {
+      "old_password": "securepass123",
+      "new_password": "newpass456",
+      "new_password2": "newpass456"
+  }
+
+  ---
+  4. Role мэдээлэл авах
+
+  GET /api/auth/role/
+  Authorization: Bearer <access_token>
+
+  Response:
+  {
+      "user_id": 1,
+      "username": "buyer123",
+      "role": "broker",
+      "is_verified": false,
+      "broker_status": "pending",
+      "company_name": "ABC Real Estate"
+  }
+
+  ---
+  Token Claim дотор:
+
+  JWT Token decode хийвэл:
+  {
+      "token_type": "access",
+      "exp": 1698765432,
+      "user_id": 1,
+      "username": "buyer123",
+      "role": "broker",
+      "email": "broker@example.com"
+  }
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  1. Authentication (JWT)
+
+  POST /api/token/           - Login (JWT token авах)
+  POST /api/token/refresh/   - Token шинэчлэх
+
+  2. Public Endpoints (Token шаардахгүй)
+
+  GET  /api/listings/              - Бүх зарууд
+  GET  /api/listings/<id>/         - Зарын дэлгэрэнгүй
+  GET  /api/listings/trending/     - Трэнд зарууд
+  GET  /api/listings/popular/      - Популяр зарууд
+  GET  /api/categories/            - Ангилалууд
+  GET  /api/regions/              - Байршлууд
+  GET  /api/reviews/?listing_id=1  - Зарын сэтгэгдлүүд
+  GET  /api/areas/popular/         - Популяр дүүрэг
+  GET  /api/brokers/              - Брокерууд
+  GET  /api/users/<id>/            - Хэрэглэгчийн профайл
+
+  3. Protected Endpoints (Token шаардлагатай)
+
+  GET    /api/profile/                    - Миний профайл
+  PUT    /api/profile/                    - Профайл шинэчлэх
+  POST   /api/listings/                   - Зар нэмэх
+  PUT    /api/listings/<id>/             - Зар засах
+  DELETE /api/listings/<id>/             - Зар устгах
+  GET    /api/bookings/                  - Миний захиалгууд
+  POST   /api/bookings/                  - Захиалга үүсгэх
+  GET    /api/favorites/                 - Дуртай зарууд
+  POST   /api/favorites/                 - Дуртайд нэмэх
+  GET    /api/messages/                  - Мессежүүд
+  POST   /api/messages/                  - Мессеж илгээх
+  GET    /api/payments/                  - Төлбөрүүд
+  POST   /api/payments/                  - Төлбөр үүсгэх
+
+  🧪 Postman тест хийх дараалал:
+
+  Алхам 1: Environment үүсгэх
+
+  Postman-ийн Environment-д эдгээр хувьсагчдыг нэм:
+  - base_url: http://localhost:8000
+  - access_token: (хоосон)
+  - refresh_token: (хоосон)
+
+  Алхам 2: Token авах
+
+  POST {{base_url}}/api/token/
+  Content-Type: application/json
+
+  Body (raw JSON):
+  {
+      "username": "таны_username",
+      "password": "таны_password"
+  }
+
+  Response дээр access token-ыг Environment-ийн access_token хувьсагчид хадгал.
+
+  Алхам 3: Authenticated хүсэлт илгээх
+
+  Header-үүд:
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+
+  Жишээ зарууд харах:
+  GET {{base_url}}/api/listings/
+
+  Зар нэмэх:
+  POST {{base_url}}/api/listings/
+  Authorization: Bearer {{access_token}}
+  Content-Type: application/json
+
+  Body:
+  {
+      "title": "Тест зар",
+      "description": "Тайлбар",
+      "address": "Улаанбаатар",
+      "price": "500000",
+      "category_id": 1,
+      "region_id": 1
+  }

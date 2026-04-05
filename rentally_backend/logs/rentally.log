@@ -1,0 +1,39 @@
+INFO 2026-04-05 20:18:55,426 autoreload 21944 4524 Watching for file changes with StatReloader
+INFO 2026-04-05 20:19:05,000 autoreload 19832 23372 Watching for file changes with StatReloader
+INFO 2026-04-05 20:20:29,822 autoreload 22776 3500 Watching for file changes with StatReloader
+INFO 2026-04-05 20:20:54,080 autoreload 17692 1416 Watching for file changes with StatReloader
+INFO 2026-04-05 20:21:44,799 autoreload 22632 22692 Watching for file changes with StatReloader
+INFO 2026-04-05 20:22:22,402 autoreload 22632 22692 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-05 20:22:23,093 autoreload 15888 22240 Watching for file changes with StatReloader
+INFO 2026-04-05 20:22:35,731 autoreload 15888 22240 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-05 20:22:36,395 autoreload 11116 23348 Watching for file changes with StatReloader
+INFO 2026-04-05 20:22:45,839 middleware 11116 16648 GET / 404 - 0.032s
+WARNING 2026-04-05 20:22:45,841 log 11116 16648 "GET / HTTP/1.1" 404 2314
+INFO 2026-04-05 20:22:45,974 middleware 11116 16648 GET /favicon.ico 404 - 0.004s
+WARNING 2026-04-05 20:22:45,975 log 11116 16648 "GET /favicon.ico HTTP/1.1" 404 2365
+INFO 2026-04-05 20:22:48,740 middleware 11116 16648 GET /api 404 - 0.003s
+WARNING 2026-04-05 20:22:48,741 log 11116 16648 "GET /api HTTP/1.1" 404 2341
+INFO 2026-04-05 20:22:51,655 middleware 11116 16648 GET /api/ 404 - 0.007s
+WARNING 2026-04-05 20:22:51,656 log 11116 16648 "GET /api/ HTTP/1.1" 404 10262
+INFO 2026-04-05 20:27:27,445 middleware 11116 5568 POST /api/token/ 500 - 2.158s
+ERROR 2026-04-05 20:27:27,446 log 11116 5568 "POST /api/token/ HTTP/1.1" 500 183978
+INFO 2026-04-05 20:31:54,260 autoreload 11116 23348 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-05 20:31:55,161 autoreload 6436 22148 Watching for file changes with StatReloader
+INFO 2026-04-05 20:32:05,038 autoreload 6436 22148 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-05 20:32:05,724 autoreload 13192 8212 Watching for file changes with StatReloader
+INFO 2026-04-05 20:32:11,397 autoreload 13192 8212 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\rentally_backend\settings.py changed, reloading.
+INFO 2026-04-05 20:32:12,089 autoreload 19044 13232 Watching for file changes with StatReloader
+INFO 2026-04-05 20:32:23,979 autoreload 19044 13232 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-05 20:32:24,624 autoreload 21812 22632 Watching for file changes with StatReloader
+INFO 2026-04-05 20:32:34,438 autoreload 21812 22632 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\rentally_backend\settings.py changed, reloading.
+INFO 2026-04-05 20:32:35,118 autoreload 17372 20612 Watching for file changes with StatReloader
+INFO 2026-04-05 20:32:46,978 autoreload 17372 20612 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-05 20:32:47,664 autoreload 9268 21488 Watching for file changes with StatReloader
+INFO 2026-04-05 20:35:59,061 middleware 9268 16560 POST /api/ 404 - 0.006s
+WARNING 2026-04-05 20:35:59,063 log 9268 16560 "POST /api/ HTTP/1.1" 404 11355
+INFO 2026-04-05 20:46:05,054 middleware 9268 16560 POST /api/mongolian/cities/ 404 - 0.009s
+WARNING 2026-04-05 20:46:05,057 log 9268 16560 "POST /api/mongolian/cities/ HTTP/1.1" 404 11406
+INFO 2026-04-05 20:46:16,456 middleware 9268 16560 POST /api/mongolia/cities/ 500 - 2.118s
+ERROR 2026-04-05 20:46:16,457 log 9268 16560 "POST /api/mongolia/cities/ HTTP/1.1" 500 183949
+INFO 2026-04-05 20:46:22,403 middleware 9268 16560 GET /api/mongolia/cities/ 500 - 2.049s
+ERROR 2026-04-05 20:46:22,403 log 9268 16560 "GET /api/mongolia/cities/ HTTP/1.1" 500 183756

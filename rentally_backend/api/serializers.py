@@ -6,6 +6,9 @@ Handles validation, data transformation, and nested relationships.
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from django.utils import timezone
+from django.db.models import Avg
+from decimal import Decimal
 
 from .models import (
     UserProfile, BrokerProfile, Category, Region, Listing, ListingImage,
@@ -17,26 +20,36 @@ from .models import (
 # AUTH SERIALIZERS
 # ─────────────────────────────────────────────────────────────────────────
 
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     """Serializer for user registration."""
-    
+
     password = serializers.CharField(write_only=True, min_length=8)
     password2 = serializers.CharField(write_only=True)
-    
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password', 'password2', 'first_name', 'last_name']
-    
+
     def validate(self, data):
-        if data['password'] != data.pop('password2'):
-            raise serializers.ValidationError("Passwords do not match")
-        if User.objects.filter(username=data['username']).exists():
-            raise serializers.ValidationError("Username already exists")
-        if User.objects.filter(email=data['email']).exists():
-            raise serializers.ValidationError("Email already exists")
+        # Validate passwords match first
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({"password2": "Нууц үг таарахгүй байна."})
         return data
-    
+
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError("Энэ хэрэглэгчийн нэр бүртгэгдсэн байна.")
+        return value
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Энэ имэйл хаяг бүртгэгдсэн байна.")
+        return value
+
     def create(self, validated_data):
+        # Remove password2 before creating user
+        validated_data.pop('password2', None)
         user = User(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -50,27 +63,44 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for user profile."""
-    
+
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.CharField(source='user.email', read_only=True)
-    
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
+
     class Meta:
         model = UserProfile
-        fields = ['username', 'email', 'role', 'phone', 'address', 'profile_picture', 'is_verified']
+        fields = ['username', 'email', 'first_name', 'last_name', 'role', 'phone', 'address', 'profile_picture', 'is_verified', 'created_at']
+        read_only_fields = ['role', 'is_verified', 'created_at']
+
+    def validate_phone(self, value):
+        """Validate Mongolian phone number."""
+        if value:
+            import re
+            # Remove all non-digit characters
+            digits = re.sub(r'\D', '', value)
+            # Check if it starts with country code or not
+            if len(digits) < 8:
+                raise serializers.ValidationError("Утасны дугаар хэт богино байна.")
+            if len(digits) > 12:
+                raise serializers.ValidationError("Утасны дугаар хэт урт байна.")
+        return value
 
 
 class BrokerProfileSerializer(serializers.ModelSerializer):
     """Serializer for broker profile."""
-    
+
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.CharField(source='user.email', read_only=True)
-    
+
     class Meta:
         model = BrokerProfile
         fields = [
             'username', 'email', 'company_name', 'registration_number',
-            'description', 'website', 'status', 'verified_at'
+            'description', 'website', 'status', 'verified_at', 'created_at'
         ]
+        read_only_fields = ['status', 'verified_at', 'created_at']
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -79,7 +109,7 @@ class BrokerProfileSerializer(serializers.ModelSerializer):
 
 class ListingDetailSerializer(serializers.ModelSerializer):
     """Serializer for listing details."""
-    
+
     class Meta:
         model = ListingDetail
         fields = ['bedrooms', 'bathrooms', 'area_sqm', 'utilities_estimated', 'heating_type', 'air_type']
@@ -87,7 +117,7 @@ class ListingDetailSerializer(serializers.ModelSerializer):
 
 class ListingImageSerializer(serializers.ModelSerializer):
     """Serializer for listing images."""
-    
+
     class Meta:
         model = ListingImage
         fields = ['id', 'image_url', 'alt_text', 'is_primary', 'order']
@@ -95,7 +125,7 @@ class ListingImageSerializer(serializers.ModelSerializer):
 
 class ListingFeatureSerializer(serializers.ModelSerializer):
     """Serializer for listing features."""
-    
+
     class Meta:
         model = ListingFeature
         fields = ['id', 'name', 'value']
@@ -103,11 +133,11 @@ class ListingFeatureSerializer(serializers.ModelSerializer):
 
 class ListingSerializer(serializers.ModelSerializer):
     """Serializer for listing basic info."""
-    
+
     owner_username = serializers.CharField(source='owner.username', read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
     region_name = serializers.CharField(source='region.name', read_only=True)
-    
+
     class Meta:
         model = Listing
         fields = [
@@ -121,24 +151,26 @@ class ListingSerializer(serializers.ModelSerializer):
 
 class ListingDetailedSerializer(ListingSerializer):
     """Detailed serializer including nested relationships."""
-    
+
     images = ListingImageSerializer(many=True, read_only=True)
     features = ListingFeatureSerializer(many=True, read_only=True)
     detail = ListingDetailSerializer(read_only=True)
     review_count = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField()
-    
+
     class Meta(ListingSerializer.Meta):
         fields = ListingSerializer.Meta.fields + ['images', 'features', 'detail', 'review_count', 'average_rating']
-    
+
     def get_review_count(self, obj):
+        """Review тоог annotate-аас эсвэл count-аас авна."""
+        if hasattr(obj, '_prefetched_objects_cache') and 'reviews' in obj._prefetched_objects_cache:
+            return len(obj._prefetched_objects_cache['reviews'])
         return obj.reviews.count()
-    
+
     def get_average_rating(self, obj):
-        reviews = obj.reviews.all()
-        if not reviews:
-            return None
-        return sum(r.rating for r in reviews) / len(reviews)
+        """Aggregate ашиглан дундаж үнэлгээг тооцно."""
+        avg = obj.reviews.aggregate(avg=Avg('rating'))['avg']
+        return round(float(avg), 1) if avg is not None else None
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -147,31 +179,63 @@ class ListingDetailedSerializer(ListingSerializer):
 
 class BookingSerializer(serializers.ModelSerializer):
     """Serializer for bookings."""
-    
+
     listing_title = serializers.CharField(source='listing.title', read_only=True)
     user_username = serializers.CharField(source='user.username', read_only=True)
     days_remaining = serializers.SerializerMethodField()
-    
+    duration_days = serializers.SerializerMethodField()
+
     class Meta:
         model = Booking
         fields = [
             'id', 'listing', 'listing_title', 'user', 'user_username',
-            'start_date', 'end_date', 'total_price', 'status', 'notes',
+            'start_date', 'end_date', 'duration_days', 'total_price', 'status', 'notes',
             'created_at', 'updated_at', 'days_remaining'
         ]
-        read_only_fields = ['created_at', 'updated_at']
-    
+        read_only_fields = ['created_at', 'updated_at', 'total_price']
+
     def validate(self, data):
-        if data['end_date'] <= data['start_date']:
-            raise serializers.ValidationError("End date must be after start date")
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+
+        if start_date and end_date:
+            if end_date <= start_date:
+                raise serializers.ValidationError({"end_date": "Дуусах огноо эхлэх огнооноос хойш байх ёстой."})
+
+            # Check if booking is in the past
+            if start_date < timezone.now():
+                raise serializers.ValidationError({"start_date": "Эхлэх огноо өнгөрсөн цаг байж болохгүй."})
+
         return data
-    
+
+    def get_duration_days(self, obj):
+        """Хэд хоног захиалсан."""
+        if obj.start_date and obj.end_date:
+            return (obj.end_date - obj.start_date).days
+        return 0
+
     def get_days_remaining(self, obj):
-        from datetime import datetime, timezone
-        now = datetime.now(timezone.utc)
+        """Хэд хоног үлдсэн."""
+        now = timezone.now()
         if obj.end_date > now:
             return (obj.end_date - now).days
         return 0
+
+
+class BookingCreateSerializer(serializers.Serializer):
+    """Validate booking create payload."""
+
+    listing_id = serializers.IntegerField(required=True)
+    start_date = serializers.DateTimeField(required=True)
+    end_date = serializers.DateTimeField(required=True)
+    notes = serializers.CharField(required=False, allow_blank=True)
+
+    def validate(self, data):
+        if data['end_date'] <= data['start_date']:
+            raise serializers.ValidationError({"end_date": "Дуусах огноо эхлэх огнооноос хойш байх ёстой."})
+        if data['start_date'] < timezone.now():
+            raise serializers.ValidationError({"start_date": "Эхлэх огноо өнгөрсөн цаг байж болохгүй."})
+        return data
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -180,10 +244,10 @@ class BookingSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     """Serializer for reviews."""
-    
+
     user_username = serializers.CharField(source='user.username', read_only=True)
     listing_title = serializers.CharField(source='listing.title', read_only=True)
-    
+
     class Meta:
         model = Review
         fields = [
@@ -191,12 +255,30 @@ class ReviewSerializer(serializers.ModelSerializer):
             'rating', 'comment', 'is_verified_booking', 'helpful_count',
             'created_at', 'updated_at'
         ]
-        read_only_fields = ['helpful_count', 'created_at', 'updated_at']
-    
+        read_only_fields = ['helpful_count', 'created_at', 'updated_at', 'is_verified_booking']
+
     def validate_rating(self, value):
         if not (1 <= value <= 5):
-            raise serializers.ValidationError("Rating must be between 1 and 5")
+            raise serializers.ValidationError("Үнэлгээ 1-5 хооронд байх ёстой.")
         return value
+
+    def validate(self, data):
+        """Check if user has already reviewed this listing."""
+        request = self.context.get('request')
+        if request and request.method == 'POST':
+            user = request.user
+            listing = data.get('listing')
+            if Review.objects.filter(user=user, listing=listing).exists():
+                raise serializers.ValidationError("Та энэ зарын талаар өмнө үнэлгээ өгсөн байна.")
+        return data
+
+
+class ReviewCreateSerializer(serializers.Serializer):
+    """Validate review create payload."""
+
+    listing_id = serializers.IntegerField(required=True)
+    rating = serializers.IntegerField(min_value=1, max_value=5, required=True)
+    comment = serializers.CharField(allow_blank=True, required=False)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -205,22 +287,33 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class FavoriteSerializer(serializers.ModelSerializer):
     """Serializer for favorites."""
-    
+
     listing_title = serializers.CharField(source='listing.title', read_only=True)
     listing_price = serializers.DecimalField(source='listing.price', max_digits=10, decimal_places=2, read_only=True)
     listing_address = serializers.CharField(source='listing.address', read_only=True)
     listing_image = serializers.SerializerMethodField()
-    
+    listing_status = serializers.CharField(source='listing.status', read_only=True)
+
     class Meta:
         model = Favorite
-        fields = ['id', 'listing', 'listing_title', 'listing_price', 'listing_address', 'listing_image', 'created_at']
+        fields = ['id', 'listing', 'listing_title', 'listing_price', 'listing_address', 'listing_image', 'listing_status', 'created_at']
         read_only_fields = ['created_at']
-    
+
     def get_listing_image(self, obj):
         image = obj.listing.images.filter(is_primary=True).first()
         if image:
             return image.image_url
+        # Return first image if no primary
+        first_image = obj.listing.images.first()
+        if first_image:
+            return first_image.image_url
         return None
+
+
+class FavoriteToggleSerializer(serializers.Serializer):
+    """Serializer for toggling favorite."""
+
+    listing_id = serializers.IntegerField(required=True)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -229,18 +322,48 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     """Serializer for messages."""
-    
+
     sender_username = serializers.CharField(source='sender.username', read_only=True)
     recipient_username = serializers.CharField(source='recipient.username', read_only=True)
     listing_title = serializers.CharField(source='listing.title', read_only=True, allow_null=True)
-    
+    sender_avatar = serializers.SerializerMethodField()
+
     class Meta:
         model = Message
         fields = [
-            'id', 'sender', 'sender_username', 'recipient', 'recipient_username',
+            'id', 'sender', 'sender_username', 'sender_avatar', 'recipient', 'recipient_username',
             'listing', 'listing_title', 'content', 'is_read', 'read_at', 'created_at'
         ]
-        read_only_fields = ['read_at', 'created_at']
+        read_only_fields = ['read_at', 'created_at', 'is_read']
+
+    def get_sender_avatar(self, obj):
+        if hasattr(obj.sender, 'profile') and obj.sender.profile.profile_picture:
+            return obj.sender.profile.profile_picture
+        return None
+
+    def validate_content(self, value):
+        """Message content validation."""
+        if not value or not str(value).strip():
+            raise serializers.ValidationError("Мессеж хоосон байж болохгүй.")
+        if len(str(value)) > 2000:
+            raise serializers.ValidationError("Мессеж 2000 тэмдэгтээс хэтрэхгүй.")
+        return value.strip()
+
+    def validate(self, data):
+        """Prevent sending to self."""
+        request = self.context.get('request')
+        if request:
+            if data.get('recipient') == request.user:
+                raise serializers.ValidationError({"recipient": "Өөртөө мессеж илгээх боломжгүй."})
+        return data
+
+
+class MessageCreateSerializer(serializers.Serializer):
+    """Serializer for creating messages."""
+
+    recipient_id = serializers.IntegerField(required=True)
+    content = serializers.CharField(required=True, max_length=2000)
+    listing_id = serializers.IntegerField(required=False, allow_null=True)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -249,18 +372,28 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     """Serializer for categories."""
-    
+
+    listing_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'icon', 'description']
+        fields = ['id', 'name', 'slug', 'icon', 'description', 'listing_count']
+
+    def get_listing_count(self, obj):
+        return obj.listing_set.filter(status='active').count()
 
 
 class RegionSerializer(serializers.ModelSerializer):
     """Serializer for regions."""
-    
+
+    listing_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Region
-        fields = ['id', 'name', 'slug', 'country']
+        fields = ['id', 'name', 'slug', 'country', 'listing_count']
+
+    def get_listing_count(self, obj):
+        return obj.listing_set.filter(status='active').count()
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -269,38 +402,84 @@ class RegionSerializer(serializers.ModelSerializer):
 
 class PaymentSerializer(serializers.ModelSerializer):
     """Serializer for payments."""
-    
+
     booking_id = serializers.IntegerField(source='booking.id', read_only=True)
-    
+    listing_title = serializers.CharField(source='booking.listing.title', read_only=True)
+
     class Meta:
         model = Payment
         fields = [
-            'id', 'booking', 'booking_id', 'amount', 'currency', 'status',
+            'id', 'booking', 'booking_id', 'listing_title', 'amount', 'currency', 'status',
             'payment_method', 'transaction_id', 'created_at', 'completed_at'
         ]
-        read_only_fields = ['created_at', 'completed_at']
+        read_only_fields = ['created_at', 'completed_at', 'status']
 
 
-# ---------------------------------------------------------------------------
-# Request validation serializers (for POST/PUT)
-# ---------------------------------------------------------------------------
+class PaymentCreateSerializer(serializers.Serializer):
+    """Validate payment create payload."""
 
-class ListingCreateSerializer(serializers.Serializer):
-    """Validate listing create/update payload."""
-    owner_id = serializers.IntegerField(required=True)
-    category_id = serializers.IntegerField(allow_null=True)
-    region_id = serializers.IntegerField(allow_null=True)
-    title = serializers.CharField(max_length=255)
-    description = serializers.CharField(allow_blank=True, required=False)
-    address = serializers.CharField(allow_blank=True, required=False)
-    latitude = serializers.FloatField(allow_null=True, required=False)
-    longitude = serializers.FloatField(allow_null=True, required=False)
-    price = serializers.DecimalField(max_digits=14, decimal_places=0)  # MNT
-    price_type = serializers.CharField(max_length=50, required=False, default="monthly")
+    booking_id = serializers.IntegerField(required=True)
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2, required=True)
+    payment_method = serializers.CharField(required=False, default='card')
 
 
-class ReviewCreateSerializer(serializers.Serializer):
-    """Validate review create/update payload."""
-    listing = serializers.IntegerField()
-    rating = serializers.IntegerField(min_value=1, max_value=5)
-    comment = serializers.CharField(allow_blank=True, required=False)
+class PaymentProcessSerializer(serializers.Serializer):
+    """Serializer for processing payments."""
+
+    transaction_id = serializers.CharField(required=True)
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# SEARCH & FILTER SERIALIZERS
+# ─────────────────────────────────────────────────────────────────────────
+
+class ListingSearchSerializer(serializers.Serializer):
+    """Serializer for validating search parameters."""
+
+    search = serializers.CharField(required=False, allow_blank=True)
+    category_id = serializers.IntegerField(required=False, allow_null=True)
+    region_id = serializers.IntegerField(required=False, allow_null=True)
+    min_price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, allow_null=True)
+    max_price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, allow_null=True)
+    is_featured = serializers.BooleanField(required=False, default=False)
+    page = serializers.IntegerField(required=False, default=1, min_value=1)
+    page_size = serializers.IntegerField(required=False, default=20, min_value=1, max_value=100)
+
+
+class ContactBrokerSerializer(serializers.Serializer):
+    """Serializer for contacting broker."""
+
+    listing_id = serializers.IntegerField(required=True)
+    message = serializers.CharField(required=True, min_length=10, max_length=2000)
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    """Serializer for password change."""
+
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, min_length=8)
+    new_password2 = serializers.CharField(required=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['new_password2']:
+            raise serializers.ValidationError({"new_password2": "Нууц үг таарахгүй байна."})
+        return data
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    """Serializer for password reset request."""
+
+    email = serializers.EmailField(required=True)
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """Serializer for password reset confirmation."""
+
+    token = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, min_length=8)
+    new_password2 = serializers.CharField(required=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['new_password2']:
+            raise serializers.ValidationError({"new_password2": "Нууц үг таарахгүй байна."})
+        return data

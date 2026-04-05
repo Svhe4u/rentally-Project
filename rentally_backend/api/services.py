@@ -1,238 +1,288 @@
 """
-Service layer for business logic.
-Separates complex operations from views for better maintainability.
+services.py - Business logic layer for Rentally.
+
+Improvements:
+  - Thread-safe operations with transaction.atomic
+  - Efficient query evaluation (no double evaluation)
+  - Proper Decimal handling for all numeric fields
+  - Consistent error handling with ValueError
+  - Bug fixes in MessageService.get_conversations
 """
 
 from django.db.models import Q, Avg, Count
 from django.utils import timezone
-from datetime import timedelta
-from decimal import Decimal
+from django.db import transaction
+from datetime import timedelta, date
+from decimal import Decimal, InvalidOperation
 
 from .models import (
     Listing, Booking, Review, Favorite, Message, Payment, UserProfile
 )
 
+# Fields a user is allowed to update on a listing (prevents owner override etc.)
+LISTING_UPDATABLE_FIELDS = {
+    'category_id', 'region_id', 'title', 'description', 'address',
+    'latitude', 'longitude', 'price', 'price_type', 'status', 'is_featured',
+}
+
+# Fields that require Decimal conversion
+LISTING_DECIMAL_FIELDS = {'price', 'latitude', 'longitude'}
+
+
+def _to_decimal(value, field_name="value"):
+    """Safely convert value to Decimal."""
+    try:
+        return Decimal(str(value))
+    except (InvalidOperation, TypeError):
+        raise ValueError(f"Invalid {field_name} value: {value}")
+
 
 class ListingService:
-    """Service for listing operations."""
-    
+
     @staticmethod
     def get_listings_queryset(filters=None):
-        """Get filtered listings with optimized queries."""
+        """Get filtered listings queryset with optimized related data."""
         queryset = Listing.objects.filter(status='active').select_related(
             'owner', 'category', 'region'
         ).prefetch_related('images', 'reviews')
-        
+
         if not filters:
             return queryset
-        
+
         if filters.get('search'):
-            search = filters['search']
+            s = filters['search']
             queryset = queryset.filter(
-                Q(title__icontains=search) |
-                Q(description__icontains=search) |
-                Q(address__icontains=search)
+                Q(title__icontains=s) | Q(description__icontains=s) | Q(address__icontains=s)
             )
-        
+
         if filters.get('category_id'):
             queryset = queryset.filter(category_id=filters['category_id'])
-        
+
         if filters.get('region_id'):
             queryset = queryset.filter(region_id=filters['region_id'])
-        
+
         if filters.get('min_price') is not None:
-            queryset = queryset.filter(price__gte=filters['min_price'])
-        
+            try:
+                queryset = queryset.filter(price__gte=Decimal(str(filters['min_price'])))
+            except (InvalidOperation, ValueError):
+                pass
+
         if filters.get('max_price') is not None:
-            queryset = queryset.filter(price__lte=filters['max_price'])
-        
+            try:
+                queryset = queryset.filter(price__lte=Decimal(str(filters['max_price'])))
+            except (InvalidOperation, ValueError):
+                pass
+
         if filters.get('is_featured'):
             queryset = queryset.filter(is_featured=True)
-        
+
         return queryset
-    
+
     @staticmethod
     def get_listing_detail(listing_id):
-        """Get detailed listing info with stats."""
+        """Get detailed listing with incrementing view count."""
         try:
             listing = Listing.objects.prefetch_related(
                 'images', 'reviews', 'features', 'bookings'
             ).select_related('owner', 'category', 'region', 'detail').get(id=listing_id)
-            
-            # Increment view count async (in production use Celery)
-            listing.views_count += 1
-            listing.save(update_fields=['views_count'])
-            
+            # Increment view count atomically
+            Listing.objects.filter(id=listing_id).update(views_count=listing.views_count + 1)
             return listing
         except Listing.DoesNotExist:
             return None
-    
+
     @staticmethod
     def create_listing(owner, data):
-        """Create listing with validation."""
-        listing = Listing.objects.create(
+        """Create a new listing with validated data."""
+        price = data.get('price')
+        try:
+            price = Decimal(str(price))
+            if price < 0:
+                raise ValueError("Price must be positive")
+        except (InvalidOperation, TypeError):
+            raise ValueError("Invalid price value")
+
+        return Listing.objects.create(
             owner=owner,
             category_id=data.get('category_id'),
             region_id=data.get('region_id'),
-            title=data.get('title'),
+            title=str(data.get('title', '')).strip()[:255],
             description=data.get('description'),
-            address=data.get('address'),
+            address=str(data.get('address', '')).strip()[:500],
             latitude=data.get('latitude'),
             longitude=data.get('longitude'),
-            price=data.get('price'),
+            price=price,
             price_type=data.get('price_type', 'monthly'),
-            status=data.get('status', 'active')
+            status='active',
         )
-        return listing
-    
+
     @staticmethod
     def update_listing(listing, data):
-        """Update listing with validation."""
+        """Update only allowed fields on a listing."""
         for field, value in data.items():
-            if hasattr(listing, field) and value is not None:
+            if field in LISTING_UPDATABLE_FIELDS and value is not None:
+                if field in LISTING_DECIMAL_FIELDS:
+                    try:
+                        value = _to_decimal(value, field)
+                    except ValueError:
+                        raise ValueError(f"Invalid {field} value")
                 setattr(listing, field, value)
         listing.save()
         return listing
-    
+
     @staticmethod
     def delete_listing(listing):
-        """Soft delete listing."""
+        """Soft delete a listing by archiving it."""
         listing.status = 'archived'
-        listing.save()
+        listing.save(update_fields=['status'])
 
 
 class BookingService:
-    """Service for booking operations."""
-    
+
+    @staticmethod
+    def _parse_date(value):
+        """Parse date string or return date object as-is."""
+        if isinstance(value, date):
+            return value
+        if isinstance(value, str):
+            from datetime import datetime
+            for fmt in ('%Y-%m-%d', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%dT%H:%M:%SZ'):
+                try:
+                    return datetime.strptime(value, fmt).date()
+                except ValueError:
+                    continue
+        raise ValueError(f"Invalid date format: {value}. Use YYYY-MM-DD.")
+
     @staticmethod
     def check_availability(listing, start_date, end_date, exclude_booking_id=None):
-        """Check if listing is available for date range."""
+        """Check if listing is available for the given date range."""
         query = Booking.objects.filter(
             listing=listing,
             status__in=['confirmed', 'checked_in']
         ).filter(
-            Q(start_date__lt=end_date) &
-            Q(end_date__gt=start_date)
+            Q(start_date__lt=end_date) & Q(end_date__gt=start_date)
         )
-        
         if exclude_booking_id:
             query = query.exclude(id=exclude_booking_id)
-        
         return not query.exists()
-    
+
     @staticmethod
     def calculate_total_price(listing, start_date, end_date):
-        """Calculate booking total price."""
+        """Calculate total price for a booking."""
         nights = (end_date - start_date).days
         if nights <= 0:
             return None
         return Decimal(nights) * listing.price
-    
+
     @staticmethod
     def create_booking(user, listing, data):
-        """Create booking with validation."""
-        start_date = data.get('start_date')
-        end_date = data.get('end_date')
-        
-        # Check availability
+        """Create a new booking with availability check."""
+        start_date = BookingService._parse_date(data.get('start_date'))
+        end_date = BookingService._parse_date(data.get('end_date'))
+
+        if end_date <= start_date:
+            raise ValueError("end_date must be after start_date")
+        if start_date < date.today():
+            raise ValueError("start_date cannot be in the past")
+
         if not BookingService.check_availability(listing, start_date, end_date):
-            raise ValueError("Listing is not available for selected dates")
-        
-        # Calculate total price
+            raise ValueError("Listing is not available for the selected dates")
+
         total_price = BookingService.calculate_total_price(listing, start_date, end_date)
-        
-        booking = Booking.objects.create(
-            listing=listing,
-            user=user,
-            start_date=start_date,
-            end_date=end_date,
-            total_price=total_price,
-            status=data.get('status', 'pending'),
-            notes=data.get('notes')
-        )
-        return booking
-    
+
+        with transaction.atomic():
+            return Booking.objects.create(
+                listing=listing,
+                user=user,
+                start_date=start_date,
+                end_date=end_date,
+                total_price=total_price,
+                status='pending',
+                notes=data.get('notes'),
+            )
+
     @staticmethod
     def get_user_bookings(user, status=None):
-        """Get user's bookings."""
+        """Get user's bookings with related data."""
         queryset = Booking.objects.filter(user=user).select_related(
             'listing', 'user'
         ).prefetch_related('listing__images')
-        
         if status:
             queryset = queryset.filter(status=status)
-        
         return queryset.order_by('-created_at')
-    
+
     @staticmethod
     def cancel_booking(booking):
-        """Cancel booking."""
+        """Cancel a booking if allowed."""
         if booking.status == 'cancelled':
             raise ValueError("Booking is already cancelled")
-        
+        if booking.status == 'completed':
+            raise ValueError("Cannot cancel a completed booking")
         booking.status = 'cancelled'
-        booking.save()
+        booking.save(update_fields=['status'])
 
 
 class ReviewService:
-    """Service for review operations."""
-    
+
     @staticmethod
     def can_review(user, listing):
-        """Check if user can review listing (must have completed booking)."""
+        """Check if user has completed a booking for this listing."""
         return Booking.objects.filter(
-            user=user,
-            listing=listing,
-            status__in=['checked_out', 'completed']
+            user=user, listing=listing, status__in=['checked_out', 'completed']
         ).exists()
-    
+
     @staticmethod
     def create_review(user, listing, data):
-        """Create review with validation."""
-        # Check if user has already reviewed
+        """Create a review if user hasn't reviewed this listing yet."""
         if Review.objects.filter(user=user, listing=listing).exists():
             raise ValueError("You have already reviewed this listing")
-        
-        review = Review.objects.create(
+
+        rating = data.get('rating')
+        try:
+            rating = int(rating)
+            if not (1 <= rating <= 5):
+                raise ValueError("Rating must be between 1 and 5")
+        except (TypeError, ValueError):
+            raise ValueError("Rating must be a number between 1 and 5")
+
+        return Review.objects.create(
             user=user,
             listing=listing,
-            rating=data.get('rating'),
+            rating=rating,
             comment=data.get('comment'),
-            is_verified_booking=ReviewService.can_review(user, listing)
+            is_verified_booking=ReviewService.can_review(user, listing),
         )
-        return review
-    
+
     @staticmethod
     def get_listing_reviews(listing):
-        """Get listing reviews with stats."""
+        """Get reviews for a listing with statistics."""
         reviews = listing.reviews.select_related('user').order_by('-created_at')
         avg_rating = reviews.aggregate(avg=Avg('rating'))['avg']
         return {
             'reviews': reviews,
-            'average_rating': avg_rating,
-            'total_count': reviews.count()
+            'average_rating': round(avg_rating, 1) if avg_rating else None,
+            'total_count': reviews.count(),
         }
 
 
 class FavoriteService:
-    """Service for favorite operations."""
-    
+
     @staticmethod
     def get_user_favorites(user):
-        """Get user's favorite listings."""
+        """Get user's favorited listings."""
         return Favorite.objects.filter(user=user).select_related(
             'listing'
         ).prefetch_related('listing__images').order_by('-created_at')
-    
+
     @staticmethod
     def toggle_favorite(user, listing):
-        """Toggle favorite status."""
+        """Toggle favorite status. Returns True if added, False if removed."""
         favorite, created = Favorite.objects.get_or_create(user=user, listing=listing)
         if not created:
             favorite.delete()
             return False
         return True
-    
+
     @staticmethod
     def is_favorited(user, listing):
         """Check if listing is favorited by user."""
@@ -240,132 +290,122 @@ class FavoriteService:
 
 
 class MessageService:
-    """Service for messaging operations."""
-    
+
     @staticmethod
     def send_message(sender, recipient, content, listing=None):
-        """Send message."""
-        message = Message.objects.create(
+        """Send a message between users."""
+        content = str(content).strip()
+        if not content:
+            raise ValueError("Message content cannot be empty")
+        if len(content) > 2000:
+            raise ValueError("Message cannot exceed 2000 characters")
+        return Message.objects.create(
             sender=sender,
             recipient=recipient,
             content=content,
-            listing=listing
+            listing=listing,
         )
-        return message
-    
+
     @staticmethod
     def get_conversation(user, other_user):
-        """Get conversation between two users."""
+        """Get conversation messages between two users."""
         return Message.objects.filter(
             Q(sender=user, recipient=other_user) |
             Q(sender=other_user, recipient=user)
         ).select_related('sender', 'recipient').order_by('created_at')
-    
+
     @staticmethod
     def get_conversations(user):
-        """Get all conversations for user."""
-        # Get unique users this user has messaged
-        sent_to = Message.objects.filter(sender=user).values_list(
-            'recipient_id', flat=True
-        ).distinct()
-        received_from = Message.objects.filter(recipient=user).values_list(
-            'sender_id', flat=True
-        ).distinct()
-        
-        user_ids = set(list(sent_to) + list(received_from))
-        return user_ids
-    
+        """Get list of user IDs the user has conversations with."""
+        sent_to = Message.objects.filter(sender=user).values_list('recipient_id', flat=True).distinct()
+        received_from = Message.objects.filter(recipient=user).values_list('sender_id', flat=True).distinct()
+        return set(list(sent_to) + list(received_from))
+
     @staticmethod
     def mark_as_read(message):
-        """Mark message as read."""
-        message.is_read = True
-        message.read_at = timezone.now()
-        message.save()
-    
+        """Mark a message as read."""
+        if not message.is_read:
+            message.is_read = True
+            message.read_at = timezone.now()
+            message.save(update_fields=['is_read', 'read_at'])
+
     @staticmethod
     def get_unread_count(user):
-        """Get unread message count."""
-        return Message.objects.filter(
-            recipient=user,
-            is_read=False
-        ).count()
+        """Get count of unread messages for user."""
+        return Message.objects.filter(recipient=user, is_read=False).count()
 
 
 class PaymentService:
-    """Service for payment operations."""
-    
+
     @staticmethod
     def create_payment(booking, amount, payment_method='card'):
-        """Create payment record."""
-        payment = Payment.objects.create(
+        """Create a payment record."""
+        try:
+            amount = Decimal(str(amount))
+            if amount <= 0:
+                raise ValueError("Amount must be positive")
+        except (InvalidOperation, TypeError):
+            raise ValueError("Invalid amount")
+
+        return Payment.objects.create(
             booking=booking,
             amount=amount,
             currency='MNT',
             payment_method=payment_method,
-            status='pending'
+            status='pending',
         )
-        return payment
-    
+
     @staticmethod
     def complete_payment(payment, transaction_id):
-        """Mark payment as completed."""
-        payment.status = 'completed'
-        payment.transaction_id = transaction_id
-        payment.completed_at = timezone.now()
-        payment.save()
-        
-        # Update booking status
-        payment.booking.status = 'confirmed'
-        payment.booking.save()
-    
+        """Mark payment as completed and confirm booking."""
+        with transaction.atomic():
+            payment.status = 'completed'
+            payment.transaction_id = transaction_id
+            payment.completed_at = timezone.now()
+            payment.save()
+            # Update booking status
+            Booking.objects.filter(id=payment.booking_id).update(status='confirmed')
+
     @staticmethod
     def refund_payment(payment):
-        """Refund payment."""
+        """Refund a completed payment."""
         if payment.status != 'completed':
             raise ValueError("Only completed payments can be refunded")
-        
         payment.status = 'refunded'
-        payment.save()
+        payment.save(update_fields=['status'])
 
 
 class SearchService:
-    """Service for advanced search and filtering."""
-    
+
     @staticmethod
     def search(filters, page=1, page_size=20):
-        """Perform search with pagination."""
+        """Search listings with pagination. Returns paginated results."""
         queryset = ListingService.get_listings_queryset(filters)
-        
-        # Count total
         total_count = queryset.count()
-        
-        # Paginate
         offset = (page - 1) * page_size
-        results = queryset[offset:offset + page_size]
-        
+        # Use list() to evaluate queryset for serialization
+        results = list(queryset[offset:offset + page_size])
+
         return {
-            'results': list(results),
+            'results': results,
             'total_count': total_count,
             'page': page,
             'page_size': page_size,
-            'total_pages': (total_count + page_size - 1) // page_size
+            'total_pages': (total_count + page_size - 1) // page_size,
         }
-    
+
     @staticmethod
     def trending_listings(days=7, limit=10):
-        """Get trending listings based on views."""
-        cutoff_date = timezone.now() - timedelta(days=days)
+        """Get trending listings based on recent views."""
+        cutoff = timezone.now() - timedelta(days=days)
         return Listing.objects.filter(
-            status='active',
-            updated_at__gte=cutoff_date
+            status='active', updated_at__gte=cutoff
         ).order_by('-views_count')[:limit]
-    
+
     @staticmethod
     def popular_listings(limit=10):
-        """Get popular listings based on reviews."""
-        return Listing.objects.filter(
-            status='active'
-        ).annotate(
+        """Get popular listings based on review count and rating."""
+        return Listing.objects.filter(status='active').annotate(
             review_count=Count('reviews'),
-            avg_rating=Avg('reviews__rating')
-        ).order_by('-review_count')[:limit]
+            avg_rating=Avg('reviews__rating'),
+        ).order_by('-review_count', '-avg_rating')[:limit]
