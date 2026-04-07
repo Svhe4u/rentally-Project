@@ -37,3 +37,99 @@ INFO 2026-04-05 20:46:16,456 middleware 9268 16560 POST /api/mongolia/cities/ 50
 ERROR 2026-04-05 20:46:16,457 log 9268 16560 "POST /api/mongolia/cities/ HTTP/1.1" 500 183949
 INFO 2026-04-05 20:46:22,403 middleware 9268 16560 GET /api/mongolia/cities/ 500 - 2.049s
 ERROR 2026-04-05 20:46:22,403 log 9268 16560 "GET /api/mongolia/cities/ HTTP/1.1" 500 183756
+INFO 2026-04-07 20:55:58,753 autoreload 18928 25352 Watching for file changes with StatReloader
+INFO 2026-04-07 20:56:11,658 middleware 18928 25140 GET / 404 - 0.024s
+WARNING 2026-04-07 20:56:11,660 log 18928 25140 "GET / HTTP/1.1" 404 2314
+INFO 2026-04-07 20:56:15,457 middleware 18928 25140 GET / 404 - 0.003s
+WARNING 2026-04-07 20:56:15,457 log 18928 25140 "GET / HTTP/1.1" 404 2314
+INFO 2026-04-07 20:56:19,665 middleware 18928 25140 GET /api/users/ 404 - 0.004s
+WARNING 2026-04-07 20:56:19,666 log 18928 25140 "GET /api/users/ HTTP/1.1" 404 11372
+INFO 2026-04-07 20:56:30,862 middleware 18928 25140 GET /api/ auth/register 404 - 0.006s
+WARNING 2026-04-07 20:56:30,863 log 18928 25140 "GET /api/%20auth/register HTTP/1.1" 404 11398
+INFO 2026-04-07 20:56:34,376 middleware 18928 25140 GET /api/ auth/register/ 404 - 0.004s
+WARNING 2026-04-07 20:56:34,377 log 18928 25140 "GET /api/%20auth/register/ HTTP/1.1" 404 11401
+INFO 2026-04-07 20:56:52,379 middleware 18928 25140 POST /api/ auth/register/ 404 - 0.004s
+WARNING 2026-04-07 20:56:52,380 log 18928 25140 "POST /api/%20auth/register/ HTTP/1.1" 404 11402
+INFO 2026-04-07 20:57:04,289 middleware 18928 26608 GET / 404 - 0.005s
+WARNING 2026-04-07 20:57:04,290 log 18928 26608 "GET / HTTP/1.1" 404 2314
+INFO 2026-04-07 20:57:04,439 middleware 18928 26608 GET /favicon.ico 404 - 0.003s
+WARNING 2026-04-07 20:57:04,440 log 18928 26608 "GET /favicon.ico HTTP/1.1" 404 2365
+INFO 2026-04-07 20:57:07,750 middleware 18928 26608 GET /api 404 - 0.003s
+WARNING 2026-04-07 20:57:07,751 log 18928 26608 "GET /api HTTP/1.1" 404 2341
+INFO 2026-04-07 20:57:10,977 middleware 18928 26608 GET /api/ 404 - 0.004s
+WARNING 2026-04-07 20:57:10,978 log 18928 26608 "GET /api/ HTTP/1.1" 404 11354
+INFO 2026-04-07 20:57:19,703 middleware 18928 26608 GET /api/ 404 - 0.003s
+WARNING 2026-04-07 20:57:19,704 log 18928 26608 "GET /api/ HTTP/1.1" 404 11354
+INFO 2026-04-07 20:57:23,687 middleware 18928 26608 GET /api/auth/register/ 500 - 2.218s
+ERROR 2026-04-07 20:57:23,688 log 18928 26608 "GET /api/auth/register/ HTTP/1.1" 500 185854
+INFO 2026-04-07 21:14:22,531 autoreload 18928 25352 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-07 21:14:23,609 autoreload 6648 25632 Watching for file changes with StatReloader
+INFO 2026-04-07 21:14:34,479 autoreload 6648 25632 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-07 21:14:35,190 autoreload 20564 21548 Watching for file changes with StatReloader
+INFO 2026-04-07 21:15:57,023 autoreload 20564 21548 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-07 21:15:57,852 autoreload 5344 18684 Watching for file changes with StatReloader
+INFO 2026-04-07 21:16:05,370 autoreload 5344 18684 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-07 21:16:06,124 autoreload 4624 18712 Watching for file changes with StatReloader
+INFO 2026-04-07 21:16:11,566 autoreload 4624 18712 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-07 21:16:12,330 autoreload 21436 9332 Watching for file changes with StatReloader
+INFO 2026-04-07 21:16:20,869 autoreload 21436 9332 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-07 21:16:21,642 autoreload 24068 2560 Watching for file changes with StatReloader
+INFO 2026-04-07 21:16:35,349 autoreload 24068 2560 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-07 21:16:36,085 autoreload 22388 22052 Watching for file changes with StatReloader
+INFO 2026-04-07 21:18:02,078 autoreload 22388 22052 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-07 21:18:02,870 autoreload 18076 8248 Watching for file changes with StatReloader
+INFO 2026-04-07 21:19:58,669 autoreload 18076 8248 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-07 21:19:59,412 autoreload 20220 25168 Watching for file changes with StatReloader
+INFO 2026-04-07 21:21:55,162 autoreload 21840 20540 Watching for file changes with StatReloader
+INFO 2026-04-07 21:22:17,392 autoreload 26084 8940 Watching for file changes with StatReloader
+INFO 2026-04-07 21:23:23,553 middleware 26084 26172 POST /api/auth/register/ 500 - 2.111s
+ERROR 2026-04-07 21:23:23,554 log 26084 26172 "POST /api/auth/register/ HTTP/1.1" 500 183900
+INFO 2026-04-07 21:25:54,012 autoreload 26084 8940 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\rentally_backend\settings.py changed, reloading.
+INFO 2026-04-07 21:25:54,794 autoreload 21952 26088 Watching for file changes with StatReloader
+INFO 2026-04-07 21:26:13,887 autoreload 21676 21256 Watching for file changes with StatReloader
+INFO 2026-04-07 21:26:27,406 middleware 21676 19316 GET /api/auth/register/ 405 - 0.002s
+WARNING 2026-04-07 21:26:27,407 log 21676 19316 "GET /api/auth/register/ HTTP/1.1" 405 58
+INFO 2026-04-07 21:26:33,542 middleware 21676 19316 POST /api/auth/register/ 400 - 0.001s
+WARNING 2026-04-07 21:26:33,543 log 21676 19316 "POST /api/auth/register/ HTTP/1.1" 400 119
+INFO 2026-04-07 21:27:58,607 middleware 21676 19316 POST /api/brokers/apply/ 401 - 0.001s
+WARNING 2026-04-07 21:27:58,607 log 21676 19316 "POST /api/brokers/apply/ HTTP/1.1" 401 76
+INFO 2026-04-07 21:28:36,115 middleware 21676 19316 POST /api/brokers/apply/ 401 - 0.000s
+WARNING 2026-04-07 21:28:36,115 log 21676 19316 "POST /api/brokers/apply/ HTTP/1.1" 401 76
+INFO 2026-04-07 21:30:04,424 middleware 21676 19316 POST /api/auth/register/  404 - 0.007s
+WARNING 2026-04-07 21:30:04,424 log 21676 19316 "POST /api/auth/register/%20 HTTP/1.1" 404 11558
+INFO 2026-04-07 21:30:10,996 middleware 21676 19316 POST /api/auth/register/  404 - 0.003s
+WARNING 2026-04-07 21:30:10,996 log 21676 19316 "POST /api/auth/register/%20 HTTP/1.1" 404 11558
+INFO 2026-04-07 21:30:30,937 middleware 21676 19316 POST /api/auth/register/  404 - 0.003s
+WARNING 2026-04-07 21:30:30,938 log 21676 19316 "POST /api/auth/register/%20 HTTP/1.1" 404 11558
+INFO 2026-04-07 21:30:31,334 middleware 21676 19316 POST /api/auth/register/  404 - 0.004s
+WARNING 2026-04-07 21:30:31,335 log 21676 19316 "POST /api/auth/register/%20 HTTP/1.1" 404 11558
+INFO 2026-04-07 21:30:31,486 middleware 21676 19316 POST /api/auth/register/  404 - 0.003s
+WARNING 2026-04-07 21:30:31,487 log 21676 19316 "POST /api/auth/register/%20 HTTP/1.1" 404 11558
+INFO 2026-04-07 21:30:31,646 middleware 21676 19316 POST /api/auth/register/  404 - 0.003s
+WARNING 2026-04-07 21:30:31,647 log 21676 19316 "POST /api/auth/register/%20 HTTP/1.1" 404 11558
+INFO 2026-04-07 21:30:31,778 middleware 21676 19316 POST /api/auth/register/  404 - 0.003s
+WARNING 2026-04-07 21:30:31,778 log 21676 19316 "POST /api/auth/register/%20 HTTP/1.1" 404 11558
+INFO 2026-04-07 21:30:43,886 middleware 21676 19316 POST /api/auth/register/ 400 - 2.298s
+WARNING 2026-04-07 21:30:43,886 log 21676 19316 "POST /api/auth/register/ HTTP/1.1" 400 41
+INFO 2026-04-07 21:31:49,898 middleware 21676 19316 POST /api/auth/register/ 500 - 0.650s
+ERROR 2026-04-07 21:31:49,898 log 21676 19316 "POST /api/auth/register/ HTTP/1.1" 500 144771
+INFO 2026-04-07 21:32:16,990 autoreload 21676 21256 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\rentally_backend\settings.py changed, reloading.
+INFO 2026-04-07 21:32:17,699 autoreload 18896 20388 Watching for file changes with StatReloader
+INFO 2026-04-07 21:32:31,267 middleware 18896 21920 POST /api/auth/register/ 500 - 3.566s
+ERROR 2026-04-07 21:32:31,267 log 18896 21920 "POST /api/auth/register/ HTTP/1.1" 500 224288
+INFO 2026-04-07 21:48:13,771 middleware 18896 21920 POST /api/auth/register/ 400 - 2.103s
+WARNING 2026-04-07 21:48:13,774 log 18896 21920 "POST /api/auth/register/ HTTP/1.1" 400 132
+INFO 2026-04-07 21:49:02,444 middleware 18896 21920 POST /api/auth/register/ 500 - 2.091s
+ERROR 2026-04-07 21:49:02,444 log 18896 21920 "POST /api/auth/register/ HTTP/1.1" 500 224231
+INFO 2026-04-07 21:51:15,093 autoreload 18896 20388 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\auth_views.py changed, reloading.
+INFO 2026-04-07 21:51:15,996 autoreload 5540 17660 Watching for file changes with StatReloader
+INFO 2026-04-07 21:51:36,127 autoreload 5540 17660 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-07 21:51:36,841 autoreload 14048 26480 Watching for file changes with StatReloader
+INFO 2026-04-07 21:52:28,935 autoreload 14048 26480 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\rentally_backend\settings.py changed, reloading.
+INFO 2026-04-07 21:52:29,661 autoreload 25800 25236 Watching for file changes with StatReloader
+INFO 2026-04-07 21:53:03,204 autoreload 25800 25236 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-07 21:53:03,896 autoreload 24224 19680 Watching for file changes with StatReloader
+INFO 2026-04-07 21:53:23,331 autoreload 24224 19680 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\auth_views.py changed, reloading.
+INFO 2026-04-07 21:53:23,985 autoreload 22236 18272 Watching for file changes with StatReloader
+INFO 2026-04-07 21:54:51,901 autoreload 22236 18272 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\models.py changed, reloading.
+INFO 2026-04-07 21:54:52,620 autoreload 21800 14488 Watching for file changes with StatReloader
