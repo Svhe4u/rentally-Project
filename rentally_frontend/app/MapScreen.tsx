@@ -1,16 +1,19 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, SafeAreaView,
-  TextInput, ScrollView, Modal, FlatList, Platform,
+  TextInput, ScrollView, Modal, FlatList, Platform, ActivityIndicator,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '../constants/colors';
+import { ListingAPI, Listing as BackendListing } from '../services/api';
 import BottomNav, { TabName } from '../components/BottomNav';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyAhcTN2Y9g3NpsaRus5Yc7rSvTsnhdE5FY';
 
 interface Props { onNavigate: (tab: TabName) => void; onOpenDetail?: (id: number) => void; }
-interface Listing { id:number; title:string; price:string; lat:number; lng:number; district:string; committee:string; rooms:number; area:number; }
-interface District { id:string; name:string; lat:number; lng:number; zoom:number; }
-interface Committee { id:string; name:string; districtId:string; lat:number; lng:number; }
+interface MapListing { id:number; title:string; price:string; lat:number; lng:number; district:string; committee:string; rooms:number; area:number; }
+interface District { id: number | string; name: string; lat: number; lng: number; zoom: number; }
+interface Committee { id: number | string; name: string; districtId: string | number; lat: number; lng: number; }
 
 const UB = { lat: 47.9077, lng: 106.8832 };
 
@@ -41,21 +44,8 @@ const COMMITTEES: Committee[] = [
   { id:'sk_5',  name:'5-р хороо',  districtId:'songino',    lat:47.935, lng:106.760 },
 ];
 
-const MOCK_LISTINGS: Listing[] = [
-  { id:1,  title:'2 өрөө орон сууц',   price:'900,000 ₮',   lat:47.9200, lng:106.9600, district:'bayanzurkh', committee:'bz_15', rooms:2, area:55 },
-  { id:2,  title:'1 өрөө орон сууц',   price:'650,000 ₮',   lat:47.9190, lng:106.8380, district:'sukhbaatar', committee:'sb_1',  rooms:1, area:32 },
-  { id:3,  title:'Гэр хороолол байр',  price:'500,000 ₮',   lat:47.8620, lng:106.9000, district:'khan_uul',   committee:'ku_1',  rooms:1, area:28 },
-  { id:4,  title:'3 өрөө тансаг байр', price:'1,200,000 ₮', lat:47.9080, lng:106.8200, district:'bayangol',   committee:'bg_7',  rooms:3, area:80 },
-  { id:5,  title:'2 өрөө орон сууц',   price:'850,000 ₮',   lat:47.9300, lng:106.8680, district:'chingeltei', committee:'ct_1',  rooms:2, area:60 },
-  { id:6,  title:'Студи апартмент',    price:'550,000 ₮',   lat:47.9150, lng:106.9750, district:'bayanzurkh', committee:'bz_3',  rooms:1, area:25 },
-  { id:7,  title:'2 өрөө шинэ байр',   price:'950,000 ₮',   lat:47.9160, lng:106.8450, district:'sukhbaatar', committee:'sb_4',  rooms:2, area:58 },
-  { id:8,  title:'1 өрөө затвор',      price:'700,000 ₮',   lat:47.9050, lng:106.8230, district:'bayangol',   committee:'bg_1',  rooms:1, area:38 },
-  { id:9,  title:'2 өрөө Сонгино',     price:'620,000 ₮',   lat:47.9410, lng:106.7480, district:'songino',    committee:'sk_1',  rooms:2, area:50 },
-  { id:10, title:'1 өрөө Чингэлтэй',  price:'720,000 ₮',   lat:47.9290, lng:106.8720, district:'chingeltei', committee:'ct_3',  rooms:1, area:35 },
-];
-
 // ─── Build Google Maps HTML ────────────────────────────────────
-function buildMapHTML(listings: Listing[], center:{lat:number,lng:number}, initZoom:number) {
+function buildMapHTML(listings: MapListing[], center:{lat:number,lng:number}, initZoom:number) {
   const listingsJSON = JSON.stringify(listings);
   return `<!DOCTYPE html>
 <html>
@@ -64,10 +54,17 @@ function buildMapHTML(listings: Listing[], center:{lat:number,lng:number}, initZ
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body,#map{width:100%;height:100%;overflow:hidden}
-.pp{background:#2e55fa;color:#fff;padding:5px 11px;border-radius:20px;font-size:12px;font-weight:900;border:2.5px solid #fff;box-shadow:0 3px 10px rgba(46,85,250,0.5);cursor:pointer;white-space:nowrap;font-family:system-ui,sans-serif;transition:transform .15s}
-.pp:hover{transform:scale(1.08)}
-.pp.hot{background:#ff3b5c}
+html,body,#map{width:100%;height:100%;overflow:hidden;background:#f8f9fa}
+.pp{
+  background:#ffffff;color:#1a1a1a;padding:6px 14px;border-radius:22px;
+  font-size:14px;font-weight:800;border:1px solid rgba(0,0,0,0.08);
+  box-shadow:0 4px 12px rgba(0,0,0,0.12);cursor:pointer;
+  white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  display:flex;align-items:center;justify-content:center;
+}
+.pp:active{transform:scale(0.92)}
+.pp.hot{background:#222;color:#fff;border-color:#000;z-index:999 !important;box-shadow:0 8px 16px rgba(0,0,0,0.25);transform:scale(1.1)}
 </style>
 </head>
 <body>
@@ -84,15 +81,17 @@ function notify(obj){
 function initMap(){
   map=new google.maps.Map(document.getElementById('map'),{
     center:{lat:${center.lat},lng:${center.lng}},zoom:${initZoom},
-    disableDefaultUI:true,zoomControl:true,gestureHandling:'greedy',clickableIcons:false,
+    disableDefaultUI:true,zoomControl:false,gestureHandling:'greedy',clickableIcons:false,
     styles:[
+      {featureType:'all',elementType:'labels.text.fill',stylers:[{color:'#7c93a3'}]},
+      {featureType:'all',elementType:'labels.text.stroke',stylers:[{visibility:'off'}]},
+      {featureType:'landscape',elementType:'geometry',stylers:[{color:'#f5f5f5'}]},
       {featureType:'poi',stylers:[{visibility:'off'}]},
-      {featureType:'landscape',elementType:'geometry',stylers:[{color:'#eaf2e5'}]},
       {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},
-      {featureType:'road.arterial',elementType:'geometry',stylers:[{color:'#fde9a2'}]},
-      {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#fbcb7e'}]},
-      {featureType:'water',elementType:'geometry',stylers:[{color:'#aad3df'}]},
-      {featureType:'building',elementType:'geometry.fill',stylers:[{color:'#dce9d5'}]},
+      {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#ffffff'}]},
+      {featureType:'road.highway',elementType:'labels',stylers:[{visibility:'off'}]},
+      {featureType:'water',elementType:'geometry',stylers:[{color:'#deebf4'}]},
+      {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#92998d'}]}
     ]
   });
   map.addListener('zoom_changed',function(){notify({type:'zoom',zoom:map.getZoom()});renderPins();});
@@ -110,7 +109,7 @@ function renderPins(){
   var z=map.getZoom();
   listings.forEach(function(L){
     var hot=L.id===activeId;
-    if(z>=14){
+    if(z>=13){
       var ov=new google.maps.OverlayView();
       ov._L=L;ov._hot=hot;
       ov.onAdd=function(){
@@ -120,19 +119,26 @@ function renderPins(){
         var self=this;
         el.addEventListener('click',function(e){e.stopPropagation();activeId=self._L.id;notify({type:'click',listing:self._L});renderPins();});
         this._el=el;
+        if(this._hot)this._el.style.zIndex="999";
         this.getPanes().overlayMouseTarget.appendChild(el);
       };
       ov.draw=function(){
         var pt=this.getProjection().fromLatLngToDivPixel(new google.maps.LatLng(this._L.lat,this._L.lng));
-        if(pt&&this._el){this._el.style.position='absolute';this._el.style.left=(pt.x-40)+'px';this._el.style.top=(pt.y-18)+'px';}
+        if(pt&&this._el){
+          this._el.style.position='absolute';
+          this._el.style.left=(pt.x-35)+'px';
+          this._el.style.top=(pt.y-18)+'px';
+        }
       };
       ov.onRemove=function(){if(this._el&&this._el.parentNode)this._el.parentNode.removeChild(this._el);};
       ov.setMap(map);overlays.push(ov);
     } else {
       var mk=new google.maps.Marker({
         position:{lat:L.lat,lng:L.lng},map:map,
-        icon:{path:google.maps.SymbolPath.CIRCLE,scale:hot?20:15,fillColor:hot?'#ff3b5c':'#2e55fa',fillOpacity:1,strokeColor:'#fff',strokeWeight:3},
-        label:{text:'₮',color:'#fff',fontWeight:'900',fontSize:'11px'}
+        icon:{
+          path:'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
+          fillColor:hot?'#000':'#2e55fa',fillOpacity:1,strokeColor:'#fff',strokeWeight:2,scale:0.7,anchor:new google.maps.Point(0,0)
+        }
       });
       (function(m,l){m.addListener('click',function(){activeId=l.id;notify({type:'click',listing:l});renderPins();});})(mk,L);
       overlays.push(mk);
@@ -140,7 +146,7 @@ function renderPins(){
   });
 }
 window.goTo=function(lat,lng,zoom){map.panTo({lat:lat,lng:lng});if(zoom)map.setZoom(zoom);};
-window.updateListings=function(data){listings=data;activeId=null;renderPins();};
+window.updateListings=function(data){listings=data;renderPins();};
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap&language=mn"></script>
 </body>
@@ -173,11 +179,45 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
   const [committeeModal, setCommitteeModal] = useState(false);
   const [selDistrict, setSelDistrict] = useState<District | null>(null);
   const [selCommittee, setSelCommittee] = useState<Committee | null>(null);
-  const [selListing, setSelListing] = useState<Listing | null>(null);
+  const [selListing, setSelListing] = useState<MapListing | null>(null);
   const [roomFilter, setRoomFilter] = useState<number | null>(null);
-  const [listings, setListings] = useState<Listing[]>(MOCK_LISTINGS);
+  const [listings, setListings] = useState<MapListing[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const isWeb = Platform.OS === 'web';
+
+  // ── Fetch real data from Backend ────────────────────────────
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const params: any = { search: query };
+      if (selDistrict) params.region_id = selDistrict.id;
+      
+      const res = await ListingAPI.list(params);
+      
+      const serverItems = res.results || [];
+      const mapped = serverItems.map((l: BackendListing) => ({
+        id: l.id,
+        title: l.title,
+        price: (l.price || 0).toLocaleString() + ' ₮', 
+        lat: l.latitude || UB.lat, 
+        lng: l.longitude || UB.lng,
+        district: l.region_id?.toString() || '',
+        committee: '', 
+        rooms: l.bedrooms || 1,
+        area: l.area_sqm ? Math.round(Number(l.area_sqm)) : 0
+      }));
+      
+      setListings(mapped);
+      evalInMap(`window.updateListings && window.updateListings(${JSON.stringify(mapped)})`);
+    } catch (e) {
+      console.error('Fetch error:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchData(); }, [selDistrict, selCommittee, roomFilter]);
 
   // ── Listen for postMessage from iframe (web only) ────────────
   useEffect(() => {
@@ -188,16 +228,6 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
     window.addEventListener('message', handler);
     return () => window.removeEventListener('message', handler);
   }, []);
-
-  // ── Filter listings ──────────────────────────────────────────
-  useEffect(() => {
-    let res = MOCK_LISTINGS;
-    if (selDistrict)  res = res.filter(l => l.district === selDistrict.id);
-    if (selCommittee) res = res.filter(l => l.committee === selCommittee.id);
-    if (roomFilter)   res = res.filter(l => l.rooms === roomFilter);
-    setListings(res);
-    evalInMap(`window.updateListings && window.updateListings(${JSON.stringify(res)})`);
-  }, [selDistrict, selCommittee, roomFilter]);
 
   const evalInMap = (js: string) => {
     if (isWeb) {
@@ -274,14 +304,14 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
 
   return (
     <SafeAreaView style={s.safe}>
-      {/* Search bar */}
-      <View style={s.topBar}>
+      {/* Floating Top UI */}
+      <View style={s.floatingTop}>
         <View style={s.searchRow}>
-          <Text style={s.searchIcon}>🔍</Text>
+          <Ionicons name="search" size={18} color={Colors.textMuted} />
           <TextInput
             style={s.input}
-            placeholder="Дүүрэг, хороо хайх..."
-            placeholderTextColor="#aaa"
+            placeholder="Хаана байр хайж байна?"
+            placeholderTextColor="#888"
             value={query}
             onChangeText={setQuery}
             onSubmitEditing={doSearch}
@@ -289,81 +319,95 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
           />
           {query.length > 0 && (
             <TouchableOpacity onPress={() => setQuery('')}>
-              <Text style={s.xBtn}>✕</Text>
+              <Ionicons name="close-circle" size={18} color="#ccc" />
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={s.searchBtn} onPress={doSearch}>
-            <Text style={s.searchBtnTxt}>Хайх</Text>
-          </TouchableOpacity>
         </View>
+
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={s.chipBar} contentContainerStyle={s.chipScroll}>
+          <TouchableOpacity style={[s.chip, !!selDistrict && s.chipOn]} onPress={() => setDistrictModal(true)}>
+            <Text style={[s.chipTxt, !!selDistrict && s.chipTxtOn]}>{selDistrict?.name ?? 'Дүүрэг'}</Text>
+            <Ionicons name="chevron-down" size={12} color={selDistrict ? Colors.primary : Colors.textMuted} />
+          </TouchableOpacity>
+          <TouchableOpacity style={[s.chip, !!selCommittee && s.chipOn]} onPress={() => setCommitteeModal(true)}>
+            <Text style={[s.chipTxt, !!selCommittee && s.chipTxtOn]}>{selCommittee?.name ?? 'Хороо'}</Text>
+            <Ionicons name="chevron-down" size={12} color={selCommittee ? Colors.primary : Colors.textMuted} />
+          </TouchableOpacity>
+          {[1,2,3].map(r => (
+            <TouchableOpacity key={r} style={[s.chip, roomFilter===r && s.chipOn]} onPress={() => setRoomFilter(roomFilter===r ? null : r)}>
+              <Text style={[s.chipTxt, roomFilter===r && s.chipTxtOn]}>{r} өрөө</Text>
+            </TouchableOpacity>
+          ))}
+          {(selDistrict || selCommittee || roomFilter) && (
+            <TouchableOpacity style={s.chipReset} onPress={clearAll}>
+              <Ionicons name="refresh" size={14} color="#fff" />
+            </TouchableOpacity>
+          )}
+        </ScrollView>
       </View>
 
-      {/* Filter chips */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={s.chipBar} contentContainerStyle={s.chipScroll}>
-        <TouchableOpacity style={[s.chip, !!selDistrict && s.chipOn]} onPress={() => setDistrictModal(true)}>
-          <Text style={[s.chipTxt, !!selDistrict && s.chipTxtOn]}>🏙 {selDistrict?.name ?? 'Дүүрэг'} ▾</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[s.chip, !!selCommittee && s.chipOn]} onPress={() => setCommitteeModal(true)}>
-          <Text style={[s.chipTxt, !!selCommittee && s.chipTxtOn]}>📍 {selCommittee?.name ?? 'Хороо'} ▾</Text>
-        </TouchableOpacity>
-        {[1,2,3].map(r => (
-          <TouchableOpacity key={r} style={[s.chip, roomFilter===r && s.chipOn]} onPress={() => setRoomFilter(roomFilter===r ? null : r)}>
-            <Text style={[s.chipTxt, roomFilter===r && s.chipTxtOn]}>{r} өрөө</Text>
-          </TouchableOpacity>
-        ))}
-        {(selDistrict || selCommittee || roomFilter) && (
-          <TouchableOpacity style={s.chipRed} onPress={clearAll}>
-            <Text style={s.chipRedTxt}>✕ Цэвэрлэх</Text>
-          </TouchableOpacity>
-        )}
-      </ScrollView>
-
-      {/* Map */}
+      {/* Map Area */}
       <View style={s.mapWrap}>
         {renderMapView()}
-        <View style={s.zoomBadge} pointerEvents="none">
-          <Text style={s.zoomTxt}>🔭 zoom {zoom}</Text>
+        
+        {/* Floating Controls */}
+        <View style={s.leftControls}>
+          <View style={s.glassBadge}>
+            <Text style={s.glassBadgeTxt}>{listings.length} байр олдлоо</Text>
+          </View>
         </View>
-        <View style={s.countBadge} pointerEvents="none">
-          <Text style={s.countTxt}>🏠 {listings.length} байр</Text>
+
+        <View style={s.rightControls}>
+          <TouchableOpacity style={s.floatingBtn} onPress={() => panTo(UB.lat, UB.lng, 12)}>
+            <Ionicons name="locate" size={24} color={Colors.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity style={[s.floatingBtn, { marginTop: 12 }]} onPress={() => evalInMap('map.setZoom(map.getZoom()+1)')}>
+            <Ionicons name="add" size={24} color={Colors.text} />
+          </TouchableOpacity>
+          <TouchableOpacity style={[s.floatingBtn, { marginTop: 4 }]} onPress={() => evalInMap('map.setZoom(map.getZoom()-1)')}>
+            <Ionicons name="remove" size={24} color={Colors.text} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={s.aiBtn}>
-          <Text style={s.aiBtnTxt}>🤖 AI байр хайх</Text>
+
+        <TouchableOpacity style={s.aiFab}>
+          <Ionicons name="sparkles" size={20} color="#fff" />
+          <Text style={s.aiFabTxt}>AI Хайлт</Text>
         </TouchableOpacity>
       </View>
 
       {/* Listing bottom-sheet modal */}
-      <Modal
-        visible={!!selListing}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setSelListing(null)}
-      >
+      <Modal visible={!!selListing} transparent animationType="slide" onRequestClose={() => setSelListing(null)}>
         <TouchableOpacity style={s.overlay} activeOpacity={1} onPress={() => setSelListing(null)}>
           <TouchableOpacity activeOpacity={1} style={s.cardSheet}>
             <View style={s.handle} />
             {selListing && (
-              <>
-                <View style={s.cardRow}>
-                  <View style={s.cardLeft}>
-                    <View style={s.badge}>
-                      <Text style={s.badgeTxt}>{selListing.rooms} өрөө · {selListing.area}м²</Text>
-                    </View>
-                    <Text style={s.cardTitle}>{selListing.title}</Text>
-                    <Text style={s.cardMeta}>{DISTRICTS.find(d=>d.id===selListing.district)?.name}</Text>
-                  </View>
-                  <View style={s.cardRight}>
-                    <Text style={s.cardPrice}>{selListing.price}</Text>
-                    <Text style={s.cardSub}>/сар</Text>
+              <View style={s.cardContent}>
+                <View style={s.cardImagePlaceholder}>
+                  <Ionicons name="image-outline" size={40} color={Colors.border} />
+                  <View style={s.priceBadge}>
+                    <Text style={s.priceBadgeTxt}>{selListing.price}</Text>
                   </View>
                 </View>
-                <TouchableOpacity
-                  style={s.cardBtn}
-                  onPress={() => { setSelListing(null); onOpenDetail?.(selListing.id); }}
-                >
-                  <Text style={s.cardBtnTxt}>Харах →</Text>
-                </TouchableOpacity>
-              </>
+                
+                <View style={s.cardInfo}>
+                  <View style={s.cardMetaRow}>
+                    <View style={s.tag}><Text style={s.tagTxt}>{selListing.rooms} өрөө</Text></View>
+                    <View style={s.tag}><Text style={s.tagTxt}>{selListing.area}м²</Text></View>
+                    <View style={s.rating}><Ionicons name="star" size={14} color="#FFD700" /><Text style={s.ratingTxt}>4.8</Text></View>
+                  </View>
+                  
+                  <Text style={s.cardTitle}>{selListing.title}</Text>
+                  <Text style={s.cardLoc}><Ionicons name="location-outline" size={14} /> {DISTRICTS.find(d=>d.id===selListing.district)?.name}, {COMMITTEES.find(c=>c.id===selListing.committee)?.name}</Text>
+                  
+                  <TouchableOpacity
+                    style={s.mainBtn}
+                    onPress={() => { setSelListing(null); onOpenDetail?.(selListing.id); }}
+                  >
+                    <Text style={s.mainBtnTxt}>Харах</Text>
+                    <Ionicons name="arrow-forward" size={18} color="#fff" />
+                  </TouchableOpacity>
+                </View>
+              </View>
             )}
           </TouchableOpacity>
         </TouchableOpacity>
@@ -376,10 +420,11 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
             <View style={s.handle} />
             <Text style={s.sheetTitle}>🏙 Дүүрэг сонгох</Text>
             <FlatList data={DISTRICTS} keyExtractor={d=>d.id}
+              contentContainerStyle={{ paddingBottom: 40 }}
               renderItem={({item:d}) => (
                 <TouchableOpacity style={[s.row, selDistrict?.id===d.id&&s.rowOn]} onPress={() => pickDistrict(d)}>
                   <Text style={[s.rowTxt, selDistrict?.id===d.id&&s.rowTxtOn]}>{d.name}</Text>
-                  {selDistrict?.id===d.id && <Text style={s.check}>✓</Text>}
+                  {selDistrict?.id===d.id && <Ionicons name="checkmark-circle" size={20} color={Colors.primary} />}
                 </TouchableOpacity>
               )}
               ItemSeparatorComponent={() => <View style={s.sep} />}
@@ -393,14 +438,15 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
         <TouchableOpacity style={s.overlay} activeOpacity={1} onPress={() => setCommitteeModal(false)}>
           <View style={s.sheet}>
             <View style={s.handle} />
-            <Text style={s.sheetTitle}>📍 {selDistrict ? selDistrict.name+' — ' : ''}Хороо сонгох</Text>
+            <Text style={s.sheetTitle}>📍 Сонгох</Text>
             {committees.length === 0
               ? <Text style={s.empty}>Эхлээд дүүрэг сонгоно уу</Text>
               : <FlatList data={committees} keyExtractor={c=>c.id}
+                  contentContainerStyle={{ paddingBottom: 40 }}
                   renderItem={({item:c}) => (
                     <TouchableOpacity style={[s.row, selCommittee?.id===c.id&&s.rowOn]} onPress={() => pickCommittee(c)}>
                       <Text style={[s.rowTxt, selCommittee?.id===c.id&&s.rowTxtOn]}>{c.name}</Text>
-                      {selCommittee?.id===c.id && <Text style={s.check}>✓</Text>}
+                      {selCommittee?.id===c.id && <Ionicons name="checkmark-circle" size={20} color={Colors.primary} />}
                     </TouchableOpacity>
                   )}
                   ItemSeparatorComponent={() => <View style={s.sep} />}
@@ -410,62 +456,97 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
         </TouchableOpacity>
       </Modal>
 
+      {/* Bottom Nav */}
       <BottomNav active="map" onNavigate={onNavigate} />
+
+      {/* Loading Overlay */}
+      {loading && (
+        <View style={StyleSheet.absoluteFillObject}>
+          <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.4)', alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ backgroundColor: '#fff', padding: 20, borderRadius: 20, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10, elevation: 5 }}>
+              <ActivityIndicator size="large" color={Colors.primary} />
+            </View>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
 
 const s = StyleSheet.create({
-  safe:{flex:1,backgroundColor:'#f4f5f7'},
-  topBar:{backgroundColor:'#fff',paddingHorizontal:12,paddingVertical:10,borderBottomWidth:1,borderBottomColor:'#e8e8ec'},
-  searchRow:{flexDirection:'row',alignItems:'center',backgroundColor:'#f4f5f7',borderRadius:22,paddingHorizontal:14,paddingVertical:9,gap:8},
-  searchIcon:{fontSize:16},
-  input:{flex:1,fontSize:14,color:'#111',padding:0},
-  xBtn:{fontSize:13,color:'#aaa',paddingHorizontal:4},
-  searchBtn:{backgroundColor:'#2e55fa',borderRadius:14,paddingVertical:6,paddingHorizontal:12},
-  searchBtnTxt:{color:'#fff',fontSize:12,fontWeight:'800'},
-  chipBar:{backgroundColor:'#fff',borderBottomWidth:1,borderBottomColor:'#e8e8ec',maxHeight:52},
-  chipScroll:{paddingHorizontal:12,paddingVertical:10,gap:8,flexDirection:'row',alignItems:'center'},
-  chip:{borderWidth:1.5,borderColor:'#e8e8ec',borderRadius:20,paddingVertical:5,paddingHorizontal:12,backgroundColor:'#fff'},
-  chipOn:{borderColor:'#2e55fa',backgroundColor:'#eef1ff'},
-  chipTxt:{fontSize:12,fontWeight:'700',color:'#444'},
-  chipTxtOn:{color:'#2e55fa'},
-  chipRed:{borderWidth:1.5,borderColor:'#ff3b5c',borderRadius:20,paddingVertical:5,paddingHorizontal:12,backgroundColor:'#fff5f5'},
-  chipRedTxt:{fontSize:12,fontWeight:'700',color:'#ff3b5c'},
+  safe:{flex:1,backgroundColor:'#fff'},
+  floatingTop:{position:'absolute',top: Platform.OS === 'ios' ? 60 : 20,left:16,right:16,zIndex:10,gap:12},
+  searchRow:{
+    flexDirection:'row',alignItems:'center',backgroundColor:'rgba(255,255,255,0.95)',
+    borderRadius:28,paddingHorizontal:16,paddingVertical:12,gap:12,
+    shadowColor:'#000',shadowOffset:{width:0,height:8},shadowOpacity:0.1,shadowRadius:15,elevation:10
+  },
+  input:{flex:1,fontSize:15,color:'#111',fontWeight:'600'},
+  chipBar:{maxHeight:44},
+  chipScroll:{gap:8,paddingRight:40},
+  chip:{
+    flexDirection:'row',alignItems:'center',gap:6,backgroundColor:'rgba(255,255,255,0.9)',
+    borderRadius:20,paddingHorizontal:14,paddingVertical:8,borderWidth:1,borderColor:'rgba(0,0,0,0.05)',
+    shadowColor:'#000',shadowOffset:{width:0,height:4},shadowOpacity:0.05,shadowRadius:8,elevation:3
+  },
+  chipOn:{backgroundColor:Colors.primary,borderColor:Colors.primary},
+  chipTxt:{fontSize:13,fontWeight:'700',color:Colors.text},
+  chipTxtOn:{color:'#fff'},
+  chipReset:{
+    backgroundColor:'#222',width:36,height:36,borderRadius:18,
+    alignItems:'center',justifyContent:'center',shadowColor:'#000',shadowOpacity:0.2,shadowRadius:5
+  },
   mapWrap:{flex:1,position:'relative'},
-  fallback:{flex:1,backgroundColor:'#eaf2e5',alignItems:'center',justifyContent:'center',gap:10,padding:32},
-  fallbackEmoji:{fontSize:56},
-  fallbackTitle:{fontSize:18,fontWeight:'900',color:'#3a6b3a'},
-  fallbackSub:{fontSize:13,color:'#5a8a5a'},
-  fallbackCode:{backgroundColor:'#111',borderRadius:10,paddingVertical:10,paddingHorizontal:16,marginTop:4},
-  fallbackCodeTxt:{color:'#7fff7f',fontFamily:'monospace',fontSize:12},
-  zoomBadge:{position:'absolute',bottom:12,right:12,backgroundColor:'rgba(0,0,0,0.6)',borderRadius:12,paddingVertical:5,paddingHorizontal:10},
-  zoomTxt:{color:'#fff',fontSize:11,fontWeight:'800'},
-  countBadge:{position:'absolute',top:12,left:12,backgroundColor:'#fff',borderRadius:16,paddingVertical:6,paddingHorizontal:12,shadowColor:'#000',shadowOffset:{width:0,height:2},shadowOpacity:0.12,shadowRadius:6,elevation:4},
-  countTxt:{fontSize:13,fontWeight:'900',color:'#111'},
-  aiBtn:{position:'absolute',top:12,right:12,backgroundColor:'#fff',borderRadius:20,paddingVertical:9,paddingHorizontal:14,shadowColor:'#000',shadowOffset:{width:0,height:3},shadowOpacity:0.15,shadowRadius:8,elevation:5},
-  aiBtnTxt:{fontSize:13,fontWeight:'800',color:'#2e55fa'},
-  cardSheet:{backgroundColor:'#fff',borderTopLeftRadius:24,borderTopRightRadius:24,paddingTop:10,paddingHorizontal:20,paddingBottom:36,gap:14},
-  cardRow:{flexDirection:'row',alignItems:'center',gap:12},
-  cardLeft:{flex:1,gap:4},
-  badge:{backgroundColor:'#eef1ff',borderRadius:8,paddingVertical:3,paddingHorizontal:8,alignSelf:'flex-start'},
-  badgeTxt:{fontSize:11,fontWeight:'800',color:'#2e55fa'},
-  cardTitle:{fontSize:16,fontWeight:'900',color:'#111'},
-  cardMeta:{fontSize:13,color:'#888'},
-  cardRight:{alignItems:'flex-end',gap:2},
-  cardPrice:{fontSize:20,fontWeight:'900',color:'#2e55fa'},
-  cardSub:{fontSize:11,color:'#aaa'},
-  cardBtn:{backgroundColor:'#2e55fa',borderRadius:14,paddingVertical:14,alignItems:'center'},
-  cardBtnTxt:{color:'#fff',fontSize:15,fontWeight:'900'},
-  overlay:{flex:1,backgroundColor:'rgba(0,0,0,0.45)',justifyContent:'flex-end'},
-  sheet:{backgroundColor:'#fff',borderTopLeftRadius:24,borderTopRightRadius:24,paddingTop:10,paddingBottom:36,maxHeight:'65%'},
-  handle:{width:38,height:4,borderRadius:2,backgroundColor:'#e0e0e0',alignSelf:'center',marginBottom:14},
-  sheetTitle:{fontSize:17,fontWeight:'900',color:'#111',paddingHorizontal:20,marginBottom:8},
-  row:{flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingVertical:15,paddingHorizontal:20},
-  rowOn:{backgroundColor:'#eef1ff'},
-  rowTxt:{fontSize:15,fontWeight:'600',color:'#222'},
-  rowTxtOn:{color:'#2e55fa',fontWeight:'800'},
-  check:{fontSize:16,color:'#2e55fa',fontWeight:'900'},
-  sep:{height:1,backgroundColor:'#f0f0f0',marginHorizontal:20},
-  empty:{textAlign:'center',color:'#aaa',fontSize:14,padding:28},
+  leftControls:{position:'absolute',bottom:30,left:16,zIndex:5},
+  rightControls:{position:'absolute',bottom:30,right:16,zIndex:5},
+  glassBadge:{backgroundColor:'rgba(0,0,0,0.7)',paddingVertical:8,paddingHorizontal:14,borderRadius:20},
+  glassBadgeTxt:{color:'#fff',fontSize:12,fontWeight:'800'},
+  floatingBtn:{
+    backgroundColor:'#fff',width:48,height:48,borderRadius:24,
+    alignItems:'center',justifyContent:'center',
+    shadowColor:'#000',shadowOffset:{width:0,height:4},shadowOpacity:0.15,shadowRadius:10,elevation:6
+  },
+  aiFab:{
+    position:'absolute',top:140,right:16,backgroundColor:Colors.primary,
+    flexDirection:'row',alignItems:'center',gap:8,paddingVertical:10,paddingHorizontal:16,
+    borderRadius:25,shadowColor:Colors.primary,shadowOpacity:0.3,shadowRadius:10,elevation:8
+  },
+  aiFabTxt:{color:'#fff',fontSize:13,fontWeight:'900'},
+  overlay:{flex:1,backgroundColor:'rgba(0,0,0,0.4)',justifyContent:'flex-end'},
+  cardSheet:{backgroundColor:'#fff',borderTopLeftRadius:32,borderTopRightRadius:32,paddingBottom:20},
+  handle:{width:40,height:5,borderRadius:3,backgroundColor:'#e0e0e0',alignSelf:'center',marginTop:12,marginBottom:8},
+  cardContent:{padding:20,gap:20},
+  cardImagePlaceholder:{
+    width:'100%',height:180,backgroundColor:'#f8f9fa',borderRadius:24,
+    alignItems:'center',justifyContent:'center',position:'relative',overflow:'hidden'
+  },
+  priceBadge:{position:'absolute',top:16,right:16,backgroundColor:Colors.primary,paddingVertical:6,paddingHorizontal:12,borderRadius:12},
+  priceBadgeTxt:{color:'#fff',fontSize:15,fontWeight:'900'},
+  cardInfo:{gap:12},
+  cardMetaRow:{flexDirection:'row',alignItems:'center',gap:10},
+  tag:{backgroundColor:'#f0f2f5',paddingVertical:4,paddingHorizontal:10,borderRadius:8},
+  tagTxt:{fontSize:12,fontWeight:'800',color:Colors.textMuted},
+  rating:{flexDirection:'row',alignItems:'center',gap:4,marginLeft:'auto'},
+  ratingTxt:{fontSize:13,fontWeight:'800',color:Colors.text},
+  cardTitle:{fontSize:20,fontWeight:'900',color:Colors.text},
+  cardLoc:{fontSize:14,color:Colors.textMuted,flexDirection:'row',alignItems:'center'},
+  mainBtn:{
+    backgroundColor:Colors.primary,height:56,borderRadius:18,
+    flexDirection:'row',alignItems:'center',justifyContent:'center',gap:10,marginTop:8
+  },
+  mainBtnTxt:{color:'#fff',fontSize:16,fontWeight:'800'},
+  sheet:{backgroundColor:'#fff',borderTopLeftRadius:32,borderTopRightRadius:32,maxHeight:'70%'},
+  sheetTitle:{fontSize:18,fontWeight:'900',color:Colors.text,padding:24,paddingBottom:12},
+  row:{flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingVertical:18,paddingHorizontal:24},
+  rowOn:{backgroundColor:Colors.primary + '08'},
+  rowTxt:{fontSize:16,fontWeight:'600',color:Colors.text},
+  rowTxtOn:{color:Colors.primary,fontWeight:'800'},
+  sep:{height:1,backgroundColor:'#f4f5f7',marginHorizontal:24},
+  empty:{textAlign:'center',color:'#aaa',fontSize:14,padding:40},
+  fallback:{flex:1,backgroundColor:'#f8f9fa',alignItems:'center',justifyContent:'center',gap:16,padding:40},
+  fallbackEmoji:{fontSize:64},
+  fallbackTitle:{fontSize:20,fontWeight:'900',color:Colors.text},
+  fallbackSub:{fontSize:14,color:Colors.textMuted,textAlign:'center'},
+  fallbackCode:{backgroundColor:'#111',borderRadius:12,padding:16,marginTop:8},
+  fallbackCodeTxt:{color:Colors.primary,fontFamily:Platform.OS==='ios'?'Courier':'monospace',fontSize:12},
 });

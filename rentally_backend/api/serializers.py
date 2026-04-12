@@ -156,6 +156,8 @@ class ListingSerializer(serializers.ModelSerializer):
     owner_username = serializers.CharField(source='owner.username', read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
     region_name = serializers.CharField(source='region.name', read_only=True)
+    bedrooms = serializers.IntegerField(source='detail.bedrooms', read_only=True, default=0)
+    area_sqm = serializers.DecimalField(source='detail.area_sqm', max_digits=10, decimal_places=2, read_only=True, default=0)
 
     class Meta:
         model = Listing
@@ -163,7 +165,7 @@ class ListingSerializer(serializers.ModelSerializer):
             'id', 'owner', 'owner_username', 'category', 'category_name',
             'region', 'region_name', 'title', 'description', 'address',
             'latitude', 'longitude', 'price', 'price_type', 'status',
-            'is_featured', 'views_count', 'created_at', 'updated_at'
+            'is_featured', 'views_count', 'bedrooms', 'area_sqm', 'created_at', 'updated_at'
         ]
         read_only_fields = ['views_count', 'created_at', 'updated_at']
 

@@ -276,7 +276,7 @@ export const BrokerAPI = {
     phone?: string;
     note?: string;
   }) =>
-    request('/auth/broker-apply/', {
+    request('/brokers/apply/', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
@@ -316,6 +316,8 @@ export interface Listing {
   price: number;
   price_type: string;
   is_active: boolean;
+  bedrooms?: number;
+  area_sqm?: number;
   created_at: string;
   updated_at: string;
 }
