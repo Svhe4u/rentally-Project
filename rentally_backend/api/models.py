@@ -63,7 +63,7 @@ class BrokerProfile(models.Model):
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='broker_profile', primary_key=True)
-    company_name = models.CharField(max_length=255)
+    company_name = models.CharField(max_length=255, blank=True, null=True)
     registration_number = models.CharField(max_length=100, blank=True, null=True, unique=True)
     description = models.TextField(blank=True, null=True)
     website = models.URLField(blank=True, null=True)

@@ -45,7 +45,7 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
 
 # CORS Configuration
-_cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://localhost:8081,http://localhost:8082')
+_cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://localhost:8081,http://localhost:8082,http://localhost:5173')
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in _cors_origins.split(',') if origin.strip()]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
