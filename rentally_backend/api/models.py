@@ -62,7 +62,7 @@ class BrokerProfile(models.Model):
         ('rejected', 'Rejected'),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='broker_profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='broker_profile', primary_key=True)
     company_name = models.CharField(max_length=255)
     registration_number = models.CharField(max_length=100, blank=True, null=True, unique=True)
     description = models.TextField(blank=True, null=True)
