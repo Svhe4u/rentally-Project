@@ -10,6 +10,7 @@ from .views import (
     # Listings
     ListingListAPIView,
     ListingDetailAPIView,
+    ListingImageAPIView,
 
     # Bookings
     BookingListAPIView,
@@ -77,10 +78,12 @@ urlpatterns = [
     path("auth/login/", LoginResponseAPIView.as_view(), name="auth-login"),
     path("auth/change-password/", ChangePasswordAPIView.as_view(), name="auth-change-password"),
     path("auth/role/", UserRoleInfoAPIView.as_view(), name="auth-role"),
+    path("auth/broker-apply/", BrokerApplyAPIView.as_view(), name="auth-broker-apply"),
 
     # ───────────────────── LISTINGS ─────────────────────
     path("listings/", ListingListAPIView.as_view(), name="listing-list"),
     path("listings/<int:pk>/", ListingDetailAPIView.as_view(), name="listing-detail"),
+    path("listing-images/", ListingImageAPIView.as_view(), name="listing-image-list"),
     path("listings/trending/", TrendingListingsAPIView.as_view(), name="trending-listings"),
     path("listings/popular/", PopularListingsAPIView.as_view(), name="popular-listings"),
 

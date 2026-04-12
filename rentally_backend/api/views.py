@@ -35,14 +35,14 @@ from .locale_mn import (
 )
 
 from .models import (
-    Listing, Booking, Review, Favorite, Message,
+    Listing, ListingImage, Booking, Review, Favorite, Message,
     Category, Region, Payment, UserProfile, BrokerProfile
 )
 from .serializers import (
-    ListingSerializer, ListingDetailedSerializer, BookingSerializer,
-    ReviewSerializer, FavoriteSerializer, MessageSerializer,
-    CategorySerializer, RegionSerializer, PaymentSerializer,
-    UserProfileSerializer, BrokerProfileSerializer,
+    ListingSerializer, ListingDetailedSerializer, ListingImageSerializer,
+    BookingSerializer, ReviewSerializer, FavoriteSerializer,
+    MessageSerializer, CategorySerializer, RegionSerializer,
+    PaymentSerializer, UserProfileSerializer, BrokerProfileSerializer,
 )
 from .services import (
     ListingService, BookingService, ReviewService, FavoriteService,
@@ -197,6 +197,39 @@ class ListingDetailAPIView(APIView):
             return APIError.forbidden("You can only delete your own listings")
         ListingService.delete_listing(listing)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ListingImageAPIView(APIView):
+    """
+    GET  /api/listing-images/?listing_id=X
+    POST /api/listing-images/
+    """
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permissions.IsAuthenticated()]
+        return [permissions.AllowAny()]
+
+    def get(self, request):
+        listing_id = request.query_params.get('listing_id')
+        if not listing_id:
+            return APIError.bad_request("listing_id is required")
+        images = ListingImage.objects.filter(listing_id=listing_id).order_by('order')
+        return Response(ListingImageSerializer(images, many=True).data)
+
+    def post(self, request):
+        listing_id = request.data.get('listing_id')
+        if not listing_id:
+            return APIError.bad_request("listing_id is required")
+            
+        listing = get_object_or_404(Listing, id=listing_id)
+        if listing.owner != request.user:
+            return APIError.forbidden("You can only add images to your own listings")
+            
+        serializer = ListingImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(listing=listing)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return APIError.bad_request(str(serializer.errors))
 
 
 # ─────────────────────────────────────────────────────────────────────────

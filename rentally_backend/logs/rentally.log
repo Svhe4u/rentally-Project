@@ -2494,3 +2494,23 @@ INFO 2026-04-12 18:50:37,612 middleware 28484 31712 GET /api/listings/ 500 - 2.3
 ERROR 2026-04-12 18:50:37,613 log 28484 31712 "GET /api/listings/?page_size=20 HTTP/1.1" 500 215310
 INFO 2026-04-12 18:50:38,188 middleware 28484 26848 GET /api/listings/ 500 - 2.457s
 ERROR 2026-04-12 18:50:38,189 log 28484 26848 "GET /api/listings/ HTTP/1.1" 500 214839
+INFO 2026-04-12 18:52:41,386 middleware 28484 26848 GET /api/messages/ 200 - 0.909s
+INFO 2026-04-12 18:52:41,396 log 28484 26848 "GET /api/messages/ HTTP/1.1" 200 37
+INFO 2026-04-12 18:52:44,134 middleware 28484 31712 GET /api/bookings/ 200 - 0.642s
+INFO 2026-04-12 18:52:44,135 log 28484 31712 "GET /api/bookings/ HTTP/1.1" 200 73
+INFO 2026-04-12 18:52:44,138 middleware 28484 26688 GET /api/favorites/ 200 - 0.645s
+INFO 2026-04-12 18:52:44,138 log 28484 26688 "GET /api/favorites/ HTTP/1.1" 200 73
+INFO 2026-04-12 18:52:44,370 middleware 28484 26848 GET /api/messages/ 200 - 0.882s
+INFO 2026-04-12 18:52:44,371 log 28484 26848 "GET /api/messages/ HTTP/1.1" 200 37
+INFO 2026-04-12 18:52:46,962 middleware 28484 23440 GET /api/categories/ 200 - 0.626s
+INFO 2026-04-12 18:52:46,963 log 28484 23440 "GET /api/categories/ HTTP/1.1" 200 89
+INFO 2026-04-12 18:52:46,978 middleware 28484 26688 GET /api/favorites/ 200 - 0.645s
+INFO 2026-04-12 18:52:46,979 log 28484 26688 "GET /api/favorites/ HTTP/1.1" 200 73
+INFO 2026-04-12 18:52:48,248 middleware 28484 31712 GET /api/regions/ 200 - 1.913s
+INFO 2026-04-12 18:52:48,249 log 28484 31712 "GET /api/regions/ HTTP/1.1" 200 702
+INFO 2026-04-12 18:52:48,825 middleware 28484 26848 GET /api/listings/ 500 - 2.493s
+ERROR 2026-04-12 18:52:48,826 log 28484 26848 "GET /api/listings/?page_size=20 HTTP/1.1" 500 215310
+INFO 2026-04-12 18:53:18,207 autoreload 28484 27360 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-12 18:53:19,638 autoreload 4328 28016 Watching for file changes with StatReloader
+INFO 2026-04-12 18:53:26,349 autoreload 4328 28016 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-12 18:53:27,053 autoreload 31360 3856 Watching for file changes with StatReloader
