@@ -17,11 +17,11 @@ interface Props {
 
 export default function ChatScreen({
   onNavigate,
-  senderId = 1,
   receiverId = 2,
   listingId,
   receiverName = 'Зуучлагч',
 }: Props) {
+  const { user: currentUser } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText]         = useState('');
   const [loading, setLoading]   = useState(true);
@@ -30,10 +30,13 @@ export default function ChatScreen({
 
   const load = async () => {
     try {
-      const data = await MessageAPI.thread(senderId, receiverId);
-      setMessages(data.reverse()); // oldest first for display
-    } catch {}
-    finally { setLoading(false); }
+      const data = await MessageAPI.thread(receiverId);
+      setMessages(data); // Backend returns oldest first, which is what we need
+    } catch (e) {
+      console.error('Failed to load chat:', e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { load(); }, []);
@@ -44,20 +47,22 @@ export default function ChatScreen({
     setSending(true);
     try {
       const msg = await MessageAPI.send({
-        sender_id: senderId,
-        receiver_id: receiverId,
+        recipient_id: receiverId,
         listing_id: listingId,
-        message: trimmed,
+        content: trimmed,
       });
       setMessages(prev => [...prev, msg]);
       setText('');
       setTimeout(() => flatRef.current?.scrollToEnd({ animated: true }), 100);
-    } catch {}
-    finally { setSending(false); }
+    } catch (e) {
+      console.error('Failed to send message:', e);
+    } finally {
+      setSending(false);
+    }
   };
 
   const renderItem = ({ item }: { item: Message }) => {
-    const isMine = item.sender_id === senderId;
+    const isMine = item.sender_id === currentUser?.id;
     return (
       <View style={[c.bubble, isMine ? c.bubbleMine : c.bubbleTheirs]}>
         <Text style={[c.bubbleTxt, isMine ? c.bubbleTxtMine : c.bubbleTxtTheirs]}>

@@ -170,7 +170,7 @@ export default function ListingCard({
 }
 
 // ─── Styles ───────────────────────────────────────────────────
-const RADIUS = 16;
+const RADIUS = 24;
 const c = StyleSheet.create({
   // ── Full card ──────────────────────────────────────────────
   card: {
@@ -183,7 +183,7 @@ const c = StyleSheet.create({
       android: { elevation: 3 },
     }),
   },
-  imgWrap: { height: 160, backgroundColor: Colors.bg },
+  imgWrap: { height: 180, backgroundColor: Colors.bg },
   img: { width: '100%', height: '100%' },
   imgPlaceholder: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#e8eaf0' },
   favBtn: {
@@ -201,11 +201,11 @@ const c = StyleSheet.create({
 
   info: { padding: 14 },
   infoTop: { marginBottom: 8 },
-  title: { fontSize: 15, fontWeight: '800', color: Colors.text, lineHeight: 21, marginBottom: 3 },
-  loc: { fontSize: 12, color: Colors.textMuted, marginTop: 2 },
-  specRow: { flexDirection: 'row', gap: 12, marginBottom: 6 },
-  spec: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  specTxt: { fontSize: 13, color: Colors.textMuted, fontWeight: '600' },
+  title: { fontSize: 16, fontWeight: '800', color: Colors.text, lineHeight: 22, marginBottom: 4 },
+  loc: { fontSize: 12, color: Colors.textMuted, marginTop: 1 },
+  specRow: { flexDirection: 'row', gap: 14, marginBottom: 8 },
+  spec: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  specTxt: { fontSize: 13, color: Colors.textMuted, fontWeight: '700' },
   ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   ratingChip: { flexDirection: 'row', alignItems: 'center', gap: 3, backgroundColor: '#fffbeb', paddingVertical: 2, paddingHorizontal: 8, borderRadius: 12, borderWidth: 1, borderColor: '#fde68a' },
   ratingNum: { fontSize: 12, fontWeight: '800', color: '#92400e' },

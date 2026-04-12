@@ -1,212 +1,262 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
+  View, Text, TextInput, TouchableOpacity,
+  StyleSheet, ScrollView, SafeAreaView,
+  ActivityIndicator, Platform,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
-import { TabName } from '../components/BottomNav';
+import { useAuth } from '../context/AuthContext';
 
 interface Props {
-  onNavigate: (tab: TabName) => void;
+  onNavigate: (screen: string) => void;
 }
 
 export default function LoginScreen({ onNavigate }: Props) {
+  const { login, isLoading, error, clearError } = useAuth();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [localError, setLocalError] = useState('');
+
+  const canSubmit = username.trim().length > 0 && password.length >= 6;
+
+  const handleLogin = async () => {
+    if (!canSubmit) return;
+    setLocalError('');
+    clearError();
+    try {
+      await login(username.trim(), password);
+      onNavigate('home');
+    } catch (e: any) {
+      setLocalError(e.message || 'Нэвтрэхэд алдаа гарлаа');
+    }
+  };
+
+  const displayError = localError || error;
+
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={s.safe}>
       <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={s.content}
+        keyboardShouldPersistTaps="handled"
       >
-        {/* Close button */}
-        <TouchableOpacity style={styles.closeBtn} onPress={() => onNavigate('home')}>
-          <Text style={styles.closeTxt}>✕</Text>
-        </TouchableOpacity>
+        {/* Header/Close */}
+        <View style={s.header}>
+          <TouchableOpacity style={s.closeBtn} onPress={() => onNavigate('home')}>
+            <Ionicons name="chevron-back" size={24} color={Colors.text} />
+          </TouchableOpacity>
+        </View>
 
         {/* Logo */}
-        <View style={styles.logoArea}>
-          <View style={styles.logoBubble}>
-            <Text style={styles.logoBubbleIcon}>🏠</Text>
+        <View style={s.logoArea}>
+          <View style={s.logoBubble}>
+            <Ionicons name="home" size={40} color="#fff" />
           </View>
-          <Text style={styles.logoName}>
-            БАЙ<Text style={styles.logoAccent}>Р</Text>
+          <Text style={s.logoName}>
+            РЕНТАЛ<Text style={s.logoAccent}>ЛИ</Text>
           </Text>
+          <Text style={s.subtitle}>Орон сууцны платформ</Text>
         </View>
 
-        {/* Tagline */}
-        <Text style={styles.tagline}>
-          Нэвтэрч орж,{'\n'}
-          <Text style={styles.taglineBold}>
-            Байртай холбогдох аяллаа эхлүүлэ!
-          </Text>
-        </Text>
+        {/* Form card */}
+        <View style={s.card}>
+          <Text style={s.cardTitle}>Нэвтрэх</Text>
 
-        {/* Buttons */}
-        <View style={styles.btnGroup}>
+          {/* Error */}
+          {displayError ? (
+            <View style={s.errorBox}>
+              <Text style={s.errorTxt}>⚠️  {displayError}</Text>
+            </View>
+          ) : null}
+
+          {/* Username */}
+          <View style={s.fieldGroup}>
+            <Text style={s.label}>Хэрэглэгчийн нэр</Text>
+            <View style={s.inputWrap}>
+              <Text style={s.inputIcon}>👤</Text>
+              <TextInput
+                style={s.input}
+                placeholder="username"
+                placeholderTextColor="#bbb"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+          </View>
+
+          {/* Password */}
+          <View style={s.fieldGroup}>
+            <Text style={s.label}>Нууц үг</Text>
+            <View style={s.inputWrap}>
+              <Text style={s.inputIcon}>🔒</Text>
+              <TextInput
+                style={[s.input, { flex: 1 }]}
+                placeholder="••••••••"
+                placeholderTextColor="#bbb"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                autoCapitalize="none"
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={s.eyeBtn}>
+                <Text style={s.eyeTxt}>{showPassword ? '🙈' : '👁️'}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Submit */}
           <TouchableOpacity
-            style={[styles.btn, styles.btnKakao]}
-            onPress={() => onNavigate('home')}
+            style={[s.btnPrimary, (!canSubmit || isLoading) && s.btnDisabled]}
+            onPress={handleLogin}
+            disabled={!canSubmit || isLoading}
             activeOpacity={0.85}
           >
-            <Text style={styles.btnKakaoTxt}>💬  Какао-гоор нэвтрэх</Text>
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={s.btnPrimaryTxt}>Нэвтрэх</Text>
+            )}
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.btn, styles.btnApple]}
-            onPress={() => onNavigate('home')}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.btnAppleTxt}>🍎  Apple-ээр үргэлжлүүлэх</Text>
-          </TouchableOpacity>
+          {/* Divider */}
+          <View style={s.orRow}>
+            <View style={s.orLine} />
+            <Text style={s.orTxt}>эсвэл</Text>
+            <View style={s.orLine} />
+          </View>
 
-          <TouchableOpacity
-            style={[styles.btn, styles.btnEmail]}
-            onPress={() => onNavigate('home')}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.btnEmailTxt}>@  Имэйлээр нэвтрэх</Text>
-          </TouchableOpacity>
+          {/* Register link */}
+          <View style={s.signupRow}>
+            <Text style={s.signupTxt}>Гишүүн биш үү? </Text>
+            <TouchableOpacity onPress={() => onNavigate('register')}>
+              <Text style={s.signupLink}>Бүртгүүлэх →</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        {/* OR divider */}
-        <View style={styles.orRow}>
-          <View style={styles.orLine} />
-          <Text style={styles.orTxt}>эсвэл</Text>
-          <View style={styles.orLine} />
-        </View>
-
-        {/* Facebook */}
-        <View style={styles.socialRow}>
-          <TouchableOpacity style={styles.btnFb} activeOpacity={0.85}>
-            <Text style={styles.btnFbTxt}>f</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Sign up */}
-        <View style={styles.signupRow}>
-          <Text style={styles.signupTxt}>Гишүүн биш үү? </Text>
-          <TouchableOpacity>
-            <Text style={styles.signupLink}>Бүртгүүлэх</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: Colors.white,
-  },
-  scroll: { flex: 1 },
+const s = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: '#f5f7ff' },
   content: { paddingBottom: 32 },
 
-  closeBtn: {
-    padding: 14,
-    paddingLeft: 18,
-  },
-  closeTxt: {
-    fontSize: 22,
-    color: '#333',
-  },
+  closeBtn: { padding: 16 },
+  closeTxt: { fontSize: 22, color: '#555' },
 
   logoArea: {
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 12,
     paddingBottom: 28,
   },
   logoBubble: {
-    width: 64,
-    height: 64,
+    width: 72,
+    height: 72,
     backgroundColor: Colors.primary,
-    borderRadius: 18,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
     shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 8 },
+    shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.35,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowRadius: 20,
+    elevation: 10,
   },
-  logoBubbleIcon: { fontSize: 34 },
   logoName: {
-    fontSize: 36,
+    fontSize: 38,
     fontWeight: '900',
     color: Colors.primary,
     letterSpacing: -1,
   },
-  logoAccent: { color: Colors.yellow },
+  logoAccent: { color: Colors.yellow ?? '#FFD700' },
+  subtitle: { fontSize: 13, color: '#888', marginTop: 2, fontWeight: '500' },
 
-  tagline: {
-    textAlign: 'center',
-    fontSize: 17,
-    color: '#222',
-    lineHeight: 28,
-    fontWeight: '600',
-    paddingHorizontal: 32,
-    marginBottom: 32,
+  card: {
+    marginHorizontal: 20,
+    backgroundColor: '#fff',
+    borderRadius: 24,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 5,
   },
-  taglineBold: { fontWeight: '800' },
+  cardTitle: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#1a1a2e',
+    marginBottom: 20,
+  },
 
-  btnGroup: {
-    paddingHorizontal: 22,
-    gap: 11,
+  errorBox: {
+    backgroundColor: '#fff0f0',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 16,
+    borderLeftWidth: 3,
+    borderLeftColor: '#ff4444',
   },
-  btn: {
+  errorTxt: { color: '#cc0000', fontSize: 13, fontWeight: '600' },
+
+  fieldGroup: { marginBottom: 16 },
+  label: { fontSize: 13, fontWeight: '700', color: '#444', marginBottom: 6 },
+  inputWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#e8e8f0',
+    borderRadius: 14,
+    backgroundColor: '#fafafe',
+    paddingHorizontal: 12,
+  },
+  inputIcon: { fontSize: 16, marginRight: 8 },
+  input: {
+    flex: 1,
+    paddingVertical: 13,
+    fontSize: 15,
+    color: '#1a1a2e',
+  },
+  eyeBtn: { padding: 4 },
+  eyeTxt: { fontSize: 16 },
+
+  btnPrimary: {
+    backgroundColor: Colors.primary,
     borderRadius: 14,
     paddingVertical: 15,
-    paddingHorizontal: 20,
     alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 4,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 6,
   },
-  btnKakao: { backgroundColor: Colors.kakao },
-  btnKakaoTxt: { fontSize: 15, fontWeight: '700', color: '#191919' },
-
-  btnApple: { backgroundColor: Colors.black },
-  btnAppleTxt: { fontSize: 15, fontWeight: '700', color: Colors.white },
-
-  btnEmail: {
-    backgroundColor: Colors.white,
-    borderWidth: 1.5,
-    borderColor: '#ddd',
-  },
-  btnEmailTxt: { fontSize: 15, fontWeight: '600', color: '#333' },
+  btnDisabled: { backgroundColor: '#b0bdf8', shadowOpacity: 0 },
+  btnPrimaryTxt: { fontSize: 16, fontWeight: '800', color: '#fff' },
 
   orRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    paddingHorizontal: 22,
-    marginTop: 20,
+    marginVertical: 20,
   },
-  orLine: { flex: 1, height: 1, backgroundColor: '#e0e0e0' },
+  orLine: { flex: 1, height: 1, backgroundColor: '#eee' },
   orTxt: { fontSize: 12, color: '#bbb', fontWeight: '600' },
-
-  socialRow: {
-    alignItems: 'center',
-    paddingVertical: 18,
-  },
-  btnFb: {
-    width: 50,
-    height: 50,
-    backgroundColor: Colors.facebook,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btnFbTxt: { color: Colors.white, fontSize: 20, fontWeight: '900' },
 
   signupRow: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  signupTxt: { fontSize: 13, color: Colors.textLight },
-  signupLink: { fontSize: 13, color: Colors.primary, fontWeight: '700' },
+  signupTxt: { fontSize: 14, color: '#888' },
+  signupLink: { fontSize: 14, color: Colors.primary, fontWeight: '800' },
 });

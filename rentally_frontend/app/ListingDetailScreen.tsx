@@ -439,7 +439,7 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
               )}
 
               {/* Owner */}
-              <Sec title={listing.owner.role === 'broker' ? '🏢 Зуучлагч' : '👤 Эзэмшигч'}>
+              <Sec title="👤 Холбоо барих">
                 <View style={c.ownerRow}>
                   <View style={c.ownerAvWrap}>
                     {listing.owner.broker_profile?.profile_image ? (
@@ -449,18 +449,9 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
                         <Text style={c.ownerAvLtr}>{listing.owner.username[0]?.toUpperCase()}</Text>
                       </View>
                     )}
-                    {listing.owner.role === 'broker' && (
-                      <View style={c.verifiedBadge}><Text style={c.verifiedTxt}>✓</Text></View>
-                    )}
                   </View>
                   <View style={{ flex: 1 }}>
                     <Text style={c.ownerName}>{listing.owner.username}</Text>
-                    {listing.owner.broker_profile?.agency_name && (
-                      <Text style={c.agency}>{listing.owner.broker_profile.agency_name}</Text>
-                    )}
-                    {listing.owner.broker_profile?.license_no && (
-                      <Text style={c.license}>Лиценз · {listing.owner.broker_profile.license_no}</Text>
-                    )}
                     {listing.owner.phone && <Text style={c.ownerPhone}>📞 {listing.owner.phone}</Text>}
                   </View>
                 </View>

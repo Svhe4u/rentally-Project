@@ -64,10 +64,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for user profile."""
 
-    username = serializers.CharField(source='user.username', read_only=True)
-    email = serializers.CharField(source='user.email', read_only=True)
-    first_name = serializers.CharField(source='user.first_name', read_only=True)
-    last_name = serializers.CharField(source='user.last_name', read_only=True)
+    username = serializers.CharField(source='user.username', required=False)
+    email = serializers.EmailField(source='user.email', required=False)
+    first_name = serializers.CharField(source='user.first_name', required=False)
+    last_name = serializers.CharField(source='user.last_name', required=False)
 
     class Meta:
         model = UserProfile
@@ -78,14 +78,33 @@ class UserProfileSerializer(serializers.ModelSerializer):
         """Validate Mongolian phone number."""
         if value:
             import re
-            # Remove all non-digit characters
             digits = re.sub(r'\D', '', value)
-            # Check if it starts with country code or not
             if len(digits) < 8:
                 raise serializers.ValidationError("Утасны дугаар хэт богино байна.")
             if len(digits) > 12:
                 raise serializers.ValidationError("Утасны дугаар хэт урт байна.")
         return value
+
+    def update(self, instance, validated_data):
+        # Extract user data from validated_data (nested source)
+        user_data = validated_data.pop('user', {})
+        user = instance.user
+
+        # Update User model fields
+        if 'username' in user_data:
+            user.username = user_data['username']
+        if 'email' in user_data:
+            user.email = user_data['email']
+        if 'first_name' in user_data:
+            user.first_name = user_data['first_name']
+        if 'last_name' in user_data:
+            user.last_name = user_data['last_name']
+        
+        if user_data:
+            user.save()
+
+        # Update UserProfile fields
+        return super().update(instance, validated_data)
 
 
 class BrokerProfileSerializer(serializers.ModelSerializer):

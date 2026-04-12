@@ -42,7 +42,6 @@ export default function BookingScreen({
     try {
       const booking = await BookingAPI.create({
         listing_id: listingId,
-        user_id: userId,
         start_date: startDate,
         end_date: endDate,
         total_price: totalPrice,

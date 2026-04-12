@@ -45,7 +45,7 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
 
 # CORS Configuration
-_cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://localhost:8081')
+_cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://localhost:8081,http://localhost:8082')
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in _cors_origins.split(',') if origin.strip()]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
@@ -174,10 +174,10 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/hour',
-        'user': '1000/hour',
-        'login': '5/minute',
-        'register': '3/hour',
+        'anon': '1000/hour',
+        'user': '10000/hour',
+        'login': '100/minute',
+        'register': '100/hour',
     },
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -223,8 +223,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
 ]
 
 # ─────────────────────────────────────────────────────────────────────

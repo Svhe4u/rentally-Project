@@ -10,6 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 
 from .serializers import UserRegisterSerializer
+from .models import UserProfile
 
 
 class RegisterAPIView(APIView):
@@ -35,9 +36,11 @@ class RegisterAPIView(APIView):
         if serializer.is_valid():
             user = serializer.save()
 
-            # Update user profile role
-            profile = user.profile
+            # Update user profile role and phone
+            profile, created = UserProfile.objects.get_or_create(user=user)
             profile.role = role
+            if request.data.get('phone'):
+                profile.phone = request.data.get('phone')
             profile.save()
 
             # If broker, create BrokerProfile

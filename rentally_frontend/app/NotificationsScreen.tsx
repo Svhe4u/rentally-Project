@@ -1,33 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet,
-  FlatList, SafeAreaView, ActivityIndicator,
+  FlatList, SafeAreaView, ActivityIndicator, RefreshControl,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { BookingAPI, Booking } from '../services/api';
+import BottomNav, { TabName } from '../components/BottomNav';
 
 interface Props {
   onNavigate: (screen: string, params?: any) => void;
-  userId?: number;
 }
 
-const STATUS_CONFIG: Record<string, { icon: string; color: string; label: string }> = {
-  pending:   { icon: '⏳', color: '#F59E0B', label: 'Хүлээгдэж байна' },
-  confirmed: { icon: '✅', color: '#10B981', label: 'Баталгаажсан' },
-  cancelled: { icon: '❌', color: Colors.red,   label: 'Цуцлагдсан' },
-  completed: { icon: '🏁', color: Colors.primary, label: 'Дууссан' },
+const STATUS_CONFIG: Record<string, { icon: keyof typeof Ionicons.glyphMap; color: string; label: string }> = {
+  pending:   { icon: 'time', color: '#F59E0B', label: 'Хүлээгдэж байна' },
+  confirmed: { icon: 'checkmark-circle', color: '#10B981', label: 'Баталгаажсан' },
+  cancelled: { icon: 'close-circle', color: Colors.red,   label: 'Цуцлагдсан' },
+  completed: { icon: 'flag', color: Colors.primary, label: 'Дууссан' },
 };
 
-export default function NotificationsScreen({ onNavigate, userId = 1 }: Props) {
+export default function NotificationsScreen({ onNavigate }: Props) {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading]   = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    BookingAPI.list(userId)
-      .then(data => setBookings(data.reverse()))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [userId]);
+  const load = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setLoading(true);
+    try {
+      const data = await BookingAPI.list();
+      setBookings(data.reverse());
+    } catch {
+      // ignore
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
 
   const renderItem = ({ item }: { item: Booking }) => {
     const cfg = STATUS_CONFIG[item.status] ?? STATUS_CONFIG.pending;
@@ -38,7 +47,7 @@ export default function NotificationsScreen({ onNavigate, userId = 1 }: Props) {
         activeOpacity={0.85}
       >
         <View style={[s.iconWrap, { backgroundColor: cfg.color + '1A' }]}>
-          <Text style={s.icon}>{cfg.icon}</Text>
+          <Ionicons name={cfg.icon} size={24} color={cfg.color} />
         </View>
         <View style={s.cardBody}>
           <View style={s.cardTop}>
@@ -63,19 +72,22 @@ export default function NotificationsScreen({ onNavigate, userId = 1 }: Props) {
 
   return (
     <SafeAreaView style={s.safe}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => onNavigate('profile')} style={s.backBtn}>
-          <Text style={s.backIcon}>←</Text>
+      <View style={s.topBar}>
+        <Text style={s.logo}>РЕНТАЛ<Text style={s.logoAccent}>ЛИ</Text></Text>
+        <TouchableOpacity style={s.topBtn} onPress={() => onNavigate('profile')}>
+          <Ionicons name="notifications-outline" size={24} color={Colors.text} />
         </TouchableOpacity>
+      </View>
+
+      <View style={s.pageHeader}>
         <Text style={s.headerTitle}>Мэдэгдэл</Text>
-        <View style={{ width: 40 }} />
       </View>
 
       {/* Status legend */}
       <View style={s.legend}>
         {Object.entries(STATUS_CONFIG).map(([, cfg]) => (
           <View key={cfg.label} style={s.legendItem}>
-            <Text style={s.legendIcon}>{cfg.icon}</Text>
+            <Ionicons name={cfg.icon} size={14} color={cfg.color} />
             <Text style={[s.legendTxt, { color: cfg.color }]}>{cfg.label}</Text>
           </View>
         ))}
@@ -103,11 +115,17 @@ export default function NotificationsScreen({ onNavigate, userId = 1 }: Props) {
 }
 
 const s = StyleSheet.create({
-  safe:    { flex: 1, backgroundColor: Colors.bg },
-  header:  { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: Colors.white, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  backIcon: { fontSize: 22, color: Colors.text },
-  headerTitle: { fontSize: 16, fontWeight: '800', color: Colors.text },
+  safe: { flex: 1, backgroundColor: Colors.bg },
+  topBar: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 20, paddingVertical: 15,
+    backgroundColor: Colors.white,
+  },
+  logo: { fontSize: 20, fontWeight: '900', color: Colors.primary, letterSpacing: 1 },
+  logoAccent: { color: Colors.yellow },
+  topBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: Colors.bg, alignItems: 'center', justifyContent: 'center' },
+  pageHeader: { paddingHorizontal: 20, paddingTop: 15, paddingBottom: 5 },
+  headerTitle: { fontSize: 24, fontWeight: 'bold', color: Colors.text },
   legend:  { flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 10, backgroundColor: Colors.white, borderBottomWidth: 1, borderBottomColor: Colors.border },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   legendIcon: { fontSize: 14 },

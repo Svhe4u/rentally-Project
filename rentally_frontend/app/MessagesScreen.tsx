@@ -1,36 +1,39 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet,
-  FlatList, SafeAreaView, ActivityIndicator, RefreshControl,
+  FlatList, SafeAreaView, ActivityIndicator, RefreshControl, Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { MessageThreadAPI, MessageThread } from '../services/api';
 import BottomNav, { TabName } from '../components/BottomNav';
-
-
+import { useAuth } from '../context/AuthContext';
 
 interface Props {
   onNavigate: (target: TabName | string, params?: any) => void;
-  userId?: number;
 }
 
-const timeAgo = (d: string) => {
-  const s = (Date.now() - new Date(d).getTime()) / 1000;
-  if (s < 60) return 'Одоо';
-  if (s < 3600) return `${Math.floor(s / 60)} мин`;
-  if (s < 86400) return `${Math.floor(s / 3600)} цаг`;
-  if (s < 604800) return `${Math.floor(s / 86400)} өдөр`;
-  return new Date(d).toLocaleDateString('mn-MN');
-};
+const formatSimpleTime = (d: string) => {
+  const date = new Date(d);
+  const now = new Date();
+  const diffDays = Math.floor((now.getTime() - date.getTime()) / 86400000);
 
-const fmtPrice = (p: number) =>
-  p.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  if (diffDays === 0) {
+    return date.toLocaleTimeString('mn-MN', { hour: '2-digit', minute: '2-digit' });
+  }
+  if (diffDays === 1) return 'Өчигдөр';
+  if (diffDays < 7) {
+    const days = ['Ням', 'Дав', 'Мяг', 'Лха', 'Пүр', 'Баа', 'Бям'];
+    return days[date.getDay()];
+  }
+  return date.toLocaleDateString('mn-MN', { month: 'short', day: 'numeric' });
+};
 
 const AVATAR_COLORS = ['#2e55fa', '#ff6b6b', '#f0ad00', '#20c997', '#845ef7', '#ff922b'];
 const getAvatarColor = (id: number) => AVATAR_COLORS[id % AVATAR_COLORS.length];
 
-export default function MessagesScreen({ onNavigate, userId = 1 }: Props) {
+export default function MessagesScreen({ onNavigate }: Props) {
+  const { user: currentUser } = useAuth();
   const [threads, setThreads] = useState<MessageThread[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -39,15 +42,15 @@ export default function MessagesScreen({ onNavigate, userId = 1 }: Props) {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
     try {
-      const data = await MessageThreadAPI.list(userId);
-      setThreads(data ?? []);
-    } catch {
-      // silently handle — threads stay empty on error
+      const resp = await MessageThreadAPI.list();
+      setThreads(resp?.conversations ?? []);
+    } catch (e) {
+      console.error('Failed to load inbox:', e);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [userId]);
+  }, []);
 
   useEffect(() => { load(); }, [load]);
 
@@ -55,78 +58,66 @@ export default function MessagesScreen({ onNavigate, userId = 1 }: Props) {
     <TouchableOpacity
       style={s.thread}
       onPress={() => onNavigate('chat', {
-        senderId: userId,
+        senderId: currentUser?.id,
         receiverId: item.partner_id,
         listingId: item.listing_id,
         receiverName: item.partner_name,
       })}
-      activeOpacity={0.8}
+      activeOpacity={0.7}
     >
-      {/* Avatar */}
-      <View style={[s.avatar, { backgroundColor: getAvatarColor(item.partner_id) }]}>
-        <Text style={s.avatarLtr}>{item.partner_name?.[0]?.toUpperCase() ?? '?'}</Text>
+      {/* Avatar Container */}
+      <View style={s.avatarContainer}>
+        {item.partner_avatar ? (
+          <Image source={{ uri: item.partner_avatar }} style={s.avatar} />
+        ) : (
+          <View style={[s.avatar, { backgroundColor: getAvatarColor(item.partner_id) }]}>
+            <Text style={s.avatarLtr}>{item.partner_name?.[0]?.toUpperCase() ?? '?'}</Text>
+          </View>
+        )}
       </View>
 
-      {/* Content */}
-      <View style={s.content}>
-        <View style={s.topRow}>
-          <Text style={s.name} numberOfLines={1}>{item.partner_name ?? `Хэрэглэгч #${item.partner_id}`}</Text>
-          <Text style={s.time}>{timeAgo(item.last_message_created)}</Text>
+      {/* Text Content */}
+      <View style={s.textContainer}>
+        <View style={s.row}>
+          <Text style={[s.name, item.unread_count > 0 && s.unreadText]} numberOfLines={1}>
+            {item.partner_name}
+          </Text>
+          <Text style={[s.time, item.unread_count > 0 && s.unreadTime]}>
+            {formatSimpleTime(item.last_message_created)}
+          </Text>
         </View>
 
-        {item.listing_title && (
-          <View style={s.listingRow}>
-            <Ionicons name="home-outline" size={10} color={Colors.primary} />
-            <Text style={s.listingTitle} numberOfLines={1}>
-              {item.listing_title}
-              {item.listing_price
-                ? ` · ${fmtPrice(item.listing_price)} ₮`
-                : ''}
-            </Text>
-          </View>
-        )}
-
-        <Text style={s.preview} numberOfLines={1}>
-          {item.last_message_text}
-        </Text>
-      </View>
-
-      {/* Thumbnail + chevron */}
-      <View style={s.rightCol}>
-        {item.listing_thumb && (
-          <View style={s.thumb}>
-            <Ionicons name="image-outline" size={16} color="#ccc" />
-          </View>
-        )}
-        <Ionicons name="chevron-forward" size={16} color="#ccc" />
+        <View style={s.row}>
+          <Text style={[s.preview, item.unread_count > 0 && s.unreadText]} numberOfLines={1}>
+            {item.is_outgoing ? 'Та: ' : ''}{item.last_message_text}
+          </Text>
+          {item.unread_count > 0 && (
+            <View style={s.unreadDot} />
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={s.safe}>
-      {/* Header */}
       <View style={s.header}>
-        {/* <TouchableOpacity style={s.backBtn} onPress={() => onNavigate('home')}>
-          <Ionicons name="chevron-back" size={24} color={Colors.primary} />
-        </TouchableOpacity> */}
-        <Text style={s.headerTitle}>💬 Мессежүүд</Text>
+        <Text style={s.headerTitle}>Чатууд</Text>
         <TouchableOpacity style={s.addBtn}>
-          <Ionicons name="add" size={24} color={Colors.primary} />
+          <Ionicons name="create-outline" size={22} color={Colors.text} />
         </TouchableOpacity>
       </View>
 
-      {loading ? (
+      {loading && !refreshing ? (
         <View style={s.center}>
-          <ActivityIndicator size="large" color={Colors.primary} />
-          <Text style={s.loadingTxt}>Уншиж байна...</Text>
+          <ActivityIndicator size="small" color={Colors.primary} />
         </View>
       ) : (
         <FlatList
           data={threads}
           keyExtractor={item => String(item.partner_id)}
           renderItem={renderItem}
-          contentContainerStyle={s.list}
+          contentContainerStyle={s.listContent}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
@@ -135,12 +126,10 @@ export default function MessagesScreen({ onNavigate, userId = 1 }: Props) {
               tintColor={Colors.primary}
             />
           }
-          ItemSeparatorComponent={() => <View style={s.sep} />}
           ListEmptyComponent={
             <View style={s.emptyBox}>
-              <Ionicons name="chatbubbles-outline" size={64} color="#ddd" />
-              <Text style={s.emptyTxt}>Мессеж байхгүй</Text>
-              <Text style={s.emptySub}>Байрны зар дээр мессеж илгээх</Text>
+              <Ionicons name="chatbubble-ellipses-outline" size={60} color="#eee" />
+              <Text style={s.emptyTxt}>Мессеж байхгүй байна</Text>
             </View>
           }
         />
@@ -150,58 +139,41 @@ export default function MessagesScreen({ onNavigate, userId = 1 }: Props) {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────
 const s = StyleSheet.create({
-  safe:    { flex: 1, backgroundColor: Colors.bg },
+  safe: { flex: 1, backgroundColor: Colors.white },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 16, paddingVertical: 14,
-    backgroundColor: Colors.white,
-    borderBottomWidth: 1, borderBottomColor: Colors.border,
+    paddingHorizontal: 20, paddingVertical: 12,
   },
-  backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  headerTitle: { fontSize: 18, fontWeight: '900', color: Colors.text, flex: 1, textAlign: 'center' },
-  addBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
-  loadingTxt: { fontSize: 14, color: Colors.textMuted, fontWeight: '600' },
-  list: { paddingHorizontal: 12, paddingTop: 8 },
-  sep: { height: 6 },
-
+  headerTitle: { fontSize: 24, fontWeight: 'bold', color: Colors.text },
+  addBtn: {
+    width: 36, height: 36, borderRadius: 18, 
+    backgroundColor: '#f5f5f5', alignItems: 'center', justifyContent: 'center'
+  },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  listContent: { paddingVertical: 8 },
+  
   thread: {
-    flexDirection: 'row', alignItems: 'center', gap: 12,
-    backgroundColor: Colors.white,
-    borderRadius: 14, padding: 14,
+    flexDirection: 'row', alignItems: 'center',
+    paddingHorizontal: 20, paddingVertical: 10,
   },
+  avatarContainer: { position: 'relative' },
   avatar: {
-    width: 52, height: 52, borderRadius: 26,
-    alignItems: 'center', justifyContent: 'center',
-    flexShrink: 0,
-  },
-  avatarLtr: { fontSize: 20, fontWeight: '900', color: '#fff' },
-  content: { flex: 1, gap: 2 },
-  topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  name: { fontSize: 14, fontWeight: '800', color: Colors.text, flex: 1 },
-  time: { fontSize: 11, color: Colors.textMuted, marginLeft: 6 },
-  listingRow: {
-    flexDirection: 'row', alignItems: 'center', gap: 4,
-    marginTop: 2,
-  },
-  listingTitle: {
-    fontSize: 11, color: Colors.primary, fontWeight: '600',
-    flex: 1,
-  },
-  preview: { fontSize: 13, color: Colors.textMuted, marginTop: 2 },
-  rightCol: { alignItems: 'center', gap: 8, flexShrink: 0 },
-  thumb: {
-    width: 44, height: 44, borderRadius: 10,
-    backgroundColor: Colors.bg,
+    width: 60, height: 60, borderRadius: 30,
     alignItems: 'center', justifyContent: 'center',
   },
-
-  emptyBox: {
-    alignItems: 'center', justifyContent: 'center',
-    paddingTop: 100, paddingHorizontal: 32, gap: 12,
-  },
-  emptyTxt: { fontSize: 17, fontWeight: '800', color: Colors.text, textAlign: 'center' },
-  emptySub: { fontSize: 13, color: Colors.textMuted, textAlign: 'center' },
+  avatarLtr: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
+  
+  textContainer: { flex: 1, marginLeft: 14, justifyContent: 'center' },
+  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  name: { fontSize: 16, fontWeight: '600', color: Colors.text, marginBottom: 2 },
+  time: { fontSize: 13, color: Colors.textMuted },
+  preview: { fontSize: 14, color: Colors.textMuted, flex: 1, marginRight: 8 },
+  
+  unreadText: { fontWeight: 'bold', color: Colors.text },
+  unreadTime: { color: Colors.primary, fontWeight: '600' },
+  unreadDot: { width: 12, height: 12, borderRadius: 6, backgroundColor: Colors.primary },
+  
+  emptyBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 100 },
+  emptyTxt: { marginTop: 12, fontSize: 16, color: Colors.textMuted, fontWeight: '500' },
 });

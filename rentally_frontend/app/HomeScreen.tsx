@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import BottomNav, { TabName } from '../components/BottomNav';
 import ListingCard from '../components/ListingCard';
-import { ListingAPI, FavoriteAPI, Category, Region, Listing, RegionAPI } from '../services/api';
+import { ListingAPI, FavoriteAPI, Category, Region, Listing, RegionAPI, CategoryAPI } from '../services/api';
 
 const { width: W } = Dimensions.get('window');
 const CARD_W = W * 0.62;
@@ -55,7 +55,7 @@ function SkeletonCard({ compact }: { compact?: boolean }) {
 }
 
 // ─── Section header ───────────────────────────────────────────
-function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: string; onPress?: () => void }) {
+function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: { label: string; onPress: () => void } }) {
   return (
     <View style={s.secHeader}>
       <View>
@@ -199,15 +199,15 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
       {/* ── Top bar ─────────────────────────────────────── */}
       <View style={s.topBar}>
         <View style={s.logoRow}>
-          <Text style={s.logo}>БАЙ<Text style={s.logoAccent}>Р</Text></Text>
-          <TouchableOpacity style={s.notifBtn} onPress={() => onNavigate('profile')}>
+          <Text style={s.logo}>РЕНТАЛ<Text style={s.logoAccent}>ЛИ</Text></Text>
+          <TouchableOpacity style={s.topBtn} onPress={() => onNavigate('profile')}>
             <Ionicons name="notifications-outline" size={24} color={Colors.text} />
           </TouchableOpacity>
         </View>
 
         {/* Search bar */}
         <TouchableOpacity style={s.searchBar} onPress={() => setSearchOpen(true)} activeOpacity={0.8}>
-          <Ionicons name="search" size={18} color={Colors.textMuted} />
+          <Ionicons name="search" size={18} color={Colors.textLight} />
           <Text style={s.searchTxt}>Ямар байр хайж байна вэ?</Text>
         </TouchableOpacity>
       </View>
@@ -234,7 +234,7 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
               onPress={() => handleCategoryPress(cat.id)}
               activeOpacity={0.8}
             >
-              <View style={s.catCircle}>
+              <View style={[s.catCircle, { backgroundColor: Colors.primary + '15' }]}>
                 <Ionicons name={CATEGORY_ICONS.default} size={22} color={Colors.primary} />
               </View>
               <Text style={s.catLabel} numberOfLines={1}>{cat.name}</Text>
@@ -245,8 +245,8 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
             onPress={() => onNavigate('map')}
             activeOpacity={0.8}
           >
-            <View style={[s.catCircle, { backgroundColor: Colors.iconBg }]}>
-              <Ionicons name="options-outline" size={22} color={Colors.primary} />
+            <View style={[s.catCircle, { backgroundColor: '#845ef715' }]}>
+              <Ionicons name="options-outline" size={22} color="#845ef7" />
             </View>
             <Text style={s.catLabel}>Бүгд</Text>
           </TouchableOpacity>
@@ -349,26 +349,24 @@ const s = StyleSheet.create({
   // top bar
   topBar: {
     backgroundColor: Colors.white,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    gap: 12,
   },
   logoRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  logo: { fontSize: 22, fontWeight: '900', color: Colors.primary, letterSpacing: -0.5 },
+  logo: { fontSize: 20, fontWeight: '900', color: Colors.primary, letterSpacing: 1 },
   logoAccent: { color: Colors.yellow },
-  notifBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  topBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: Colors.bg, alignItems: 'center', justifyContent: 'center' },
   searchBar: {
     backgroundColor: Colors.bg,
-    borderRadius: 22,
-    paddingVertical: 11,
-    paddingHorizontal: 16,
+    borderRadius: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 10,
   },
-  searchTxt: { fontSize: 14, color: Colors.textMuted },
+  searchTxt: { fontSize: 14, color: Colors.textLight, fontWeight: '500' },
 
   scroll: { flex: 1 },
   scrollContent: { paddingTop: 12 },
@@ -380,46 +378,45 @@ const s = StyleSheet.create({
     paddingBottom: 16,
     gap: 8,
   },
-  catItem: { alignItems: 'center', gap: 6, flex: 1 },
+  catItem: { alignItems: 'center', gap: 8, flex: 1 },
   catCircle: {
-    width: 52, height: 52, borderRadius: 26,
-    backgroundColor: Colors.iconBg,
+    width: 60, height: 60, borderRadius: 20,
     alignItems: 'center', justifyContent: 'center',
   },
-  catLabel: { fontSize: 11, fontWeight: '700', color: Colors.text, textAlign: 'center' },
+  catLabel: { fontSize: 12, fontWeight: 'bold', color: Colors.text, textAlign: 'center' },
 
   // section
   section: { marginBottom: 24 },
   secHeader: {
-    flexDirection: 'row', alignItems: 'flex-start',
+    flexDirection: 'row', alignItems: 'flex-end',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    marginBottom: 12,
+    paddingHorizontal: 20,
+    marginBottom: 15,
   },
-  secTitle: { fontSize: 17, fontWeight: '900', color: Colors.text },
-  secSub: { fontSize: 12, color: Colors.textMuted, marginTop: 2 },
-  secAction: { flexDirection: 'row', alignItems: 'center', gap: 2, marginTop: 2 },
-  secActionTxt: { fontSize: 13, fontWeight: '700', color: Colors.primary },
-  rowScroll: { paddingHorizontal: 16, gap: 12 },
+  secTitle: { fontSize: 18, fontWeight: '900', color: Colors.text, letterSpacing: -0.2 },
+  secSub: { fontSize: 13, color: Colors.textMuted, marginTop: 4 },
+  secAction: { flexDirection: 'row', alignItems: 'center', gap: 2, backgroundColor: Colors.primary + '10', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 },
+  secActionTxt: { fontSize: 12, fontWeight: 'bold', color: Colors.primary },
+  rowScroll: { paddingHorizontal: 16, gap: 14 },
 
   // promo banner
   promoBanner: {
     marginHorizontal: 16,
     marginBottom: 24,
     backgroundColor: Colors.darkBg,
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: 24,
+    padding: 24,
     flexDirection: 'row',
     alignItems: 'center',
     overflow: 'hidden',
   },
-  promoTitle: { fontSize: 17, fontWeight: '900', color: Colors.white, lineHeight: 26, marginBottom: 6 },
+  promoTitle: { fontSize: 18, fontWeight: '900', color: Colors.white, lineHeight: 28, marginBottom: 8 },
   promoHighlight: { color: '#60b4ff' },
-  promoSub: { fontSize: 12, color: 'rgba(255,255,255,0.6)' },
+  promoSub: { fontSize: 12, color: 'rgba(255,255,255,0.7)' },
   promoSticker: {
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderRadius: 14,
-    padding: 12,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 16,
+    padding: 14,
     alignItems: 'center',
     marginLeft: 14,
   },
@@ -427,34 +424,34 @@ const s = StyleSheet.create({
   promoStickerMini: { fontSize: 10, color: 'rgba(255,255,255,0.6)', marginTop: 2 },
 
   // district grid
-  districtGrid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 16, gap: 8 },
+  districtGrid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 16, gap: 10 },
   districtChip: {
     backgroundColor: Colors.white,
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
     borderWidth: 1.5,
-    borderColor: Colors.border,
+    borderColor: '#f0f0f5',
   },
-  districtChipTxt: { fontSize: 13, fontWeight: '700', color: Colors.text },
+  districtChipTxt: { fontSize: 13, fontWeight: 'bold', color: Colors.text },
 
   // skeletons
   skelCard: {
     backgroundColor: Colors.white,
-    borderRadius: 16,
+    borderRadius: 24,
     overflow: 'hidden',
     marginRight: 12,
   },
-  skelImg: { height: 120, backgroundColor: '#e8eaf0', borderRadius: 0 },
-  skelInfo: { padding: 10, gap: 6 },
-  skelLine: { height: 12, backgroundColor: '#e8eaf0', borderRadius: 6 },
-  skelLineShort: { height: 10, width: '40%', backgroundColor: '#e8eaf0', borderRadius: 6 },
+  skelImg: { height: 120, backgroundColor: '#f0f2f7' },
+  skelInfo: { padding: 12, gap: 8 },
+  skelLine: { height: 12, backgroundColor: '#f0f2f7', borderRadius: 6 },
+  skelLineShort: { height: 12, width: '40%', backgroundColor: '#f0f2f7', borderRadius: 6 },
   skelCardFull: {
     backgroundColor: Colors.white,
-    borderRadius: 16,
+    borderRadius: 24,
     overflow: 'hidden',
-    marginBottom: 12,
+    marginBottom: 16,
   },
-  skelImgFull: { height: 160, backgroundColor: '#e8eaf0' },
-  skelInfoFull: { padding: 14, gap: 6 },
+  skelImgFull: { height: 180, backgroundColor: '#f0f2f7' },
+  skelInfoFull: { padding: 16, gap: 10 },
 });

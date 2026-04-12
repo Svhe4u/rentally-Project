@@ -322,6 +322,45 @@ class MessageService:
         return set(list(sent_to) + list(received_from))
 
     @staticmethod
+    def get_inbox(user):
+        """Get summarized inbox (latest message per partner) sorted by date DESC."""
+        from django.db.models import Max, OuterRef, Subquery, Case, When, Value, IntegerField, F, Count
+        
+        # 1. Identify all unique partners
+        sent_to = Message.objects.filter(sender=user).values_list('recipient_id', flat=True)
+        received_from = Message.objects.filter(recipient=user).values_list('sender_id', flat=True)
+        partner_ids = set(list(sent_to) + list(received_from))
+        
+        inbox = []
+        for pid in partner_ids:
+            # Get latest message with this specific partner
+            last_msg = Message.objects.filter(
+                Q(sender=user, recipient_id=pid) | Q(sender_id=pid, recipient=user)
+            ).order_by('-created_at').first()
+            
+            if not last_msg:
+                continue
+                
+            partner = User.objects.get(id=pid)
+            partner_profile = getattr(partner, 'profile', None)
+            
+            inbox.append({
+                'partner_id': pid,
+                'partner_name': f"{partner.first_name} {partner.last_name}".strip() or partner.username,
+                'partner_avatar': partner_profile.profile_picture if partner_profile else None,
+                'last_message_text': last_msg.content,
+                'last_message_created': last_msg.created_at,
+                'is_outgoing': last_msg.sender == user,
+                'unread_count': Message.objects.filter(sender_id=pid, recipient=user, is_read=False).count(),
+                'listing_id': last_msg.listing_id,
+                'listing_title': last_msg.listing.title if last_msg.listing else None,
+            })
+            
+        # 2. Sort by latest message DESC
+        inbox.sort(key=lambda x: x['last_message_created'], reverse=True)
+        return inbox
+
+    @staticmethod
     def mark_as_read(message):
         """Mark a message as read."""
         if not message.is_read:

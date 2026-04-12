@@ -1,19 +1,35 @@
-// services/api.ts
-// Matches all endpoints from views.py
+import { storage } from './storage';
 
-const BASE_URL = 'https://your-api.com/api'; // Replace with your actual backend URL
+const BASE_URL = 'http://localhost:8000/api'; // Web testing
 
 async function request<T>(
   path: string,
   options?: RequestInit,
 ): Promise<T> {
+  // Get token from storage
+  const token = await storage.getItem('auth_token');
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+    ...(options?.headers || {}),
+  };
+
   const res = await fetch(`${BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
     ...options,
+    headers,
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || err.detail || `HTTP ${res.status}`);
+    // Django error format: { "field": ["message"] } or { "error": "message" } or { "detail": "message" }
+    let errorMessage = err.error || err.detail;
+    if (!errorMessage && typeof err === 'object') {
+      const firstKey = Object.keys(err)[0];
+      if (firstKey && Array.isArray(err[firstKey])) {
+        errorMessage = `${firstKey}: ${err[firstKey][0]}`;
+      }
+    }
+    throw new Error(errorMessage || `HTTP ${res.status}`);
   }
   return res.json();
 }
@@ -24,6 +40,9 @@ export const AuthAPI = {
     username: string;
     email: string;
     password: string;
+    password2: string;
+    first_name?: string;
+    last_name?: string;
     phone?: string;
   }) =>
     request('/auth/register/', {
@@ -32,13 +51,13 @@ export const AuthAPI = {
     }),
 
   login: (username: string, password: string) =>
-    request<{ access: string; refresh: string }>('/token/', {
+    request<any>('/auth/login/', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     }),
 
   refreshToken: (refresh: string) =>
-    request<{ access: string }>('/token/refresh/', {
+    request<{ access: string }>('/auth/token/refresh/', {
       method: 'POST',
       body: JSON.stringify({ refresh }),
     }),
@@ -114,15 +133,14 @@ export const ListingAPI = {
 
 // ─── BOOKINGS ────────────────────────────────────────────────
 export const BookingAPI = {
-  list: (user_id: number) =>
-    request<Booking[]>(`/bookings/?user_id=${user_id}`),
+  list: () =>
+    request<Booking[]>('/bookings/'),
 
-  detail: (pk: number, user_id: number) =>
-    request<Booking>(`/bookings/${pk}/?user_id=${user_id}`),
+  detail: (pk: number) =>
+    request<Booking>(`/bookings/${pk}/`),
 
   create: (data: {
     listing_id: number;
-    user_id: number;
     start_date: string;
     end_date: string;
     total_price?: number;
@@ -147,7 +165,7 @@ export const BookingAPI = {
 export const ReviewAPI = {
   list: (listing_id: number, page = 1) =>
     request<{ meta: any; results: Review[] }>(
-      `/reviews/?listing=${listing_id}&page=${page}`,
+      `/reviews/?listing_id=${listing_id}&page=${page}`,
     ),
 
   create: (data: {
@@ -173,8 +191,8 @@ export const ReviewAPI = {
 
 // ─── FAVORITES ───────────────────────────────────────────────
 export const FavoriteAPI = {
-  list: (user_id: number) =>
-    request<Favorite[]>(`/favorites/?user_id=${user_id}`),
+  list: () =>
+    request<Favorite[]>('/favorites/'),
 
   add: (user_id: number, listing_id: number) =>
     request<Favorite>('/favorites/', {
@@ -182,44 +200,37 @@ export const FavoriteAPI = {
       body: JSON.stringify({ user_id, listing_id }),
     }),
 
-  remove: (listing_id: number, user_id: number) =>
-    request(`/favorites/${listing_id}/?user_id=${user_id}`, { method: 'DELETE' }),
+  remove: (listing_id: number) =>
+    request(`/favorites/${listing_id}/check/`, { method: 'DELETE' }),
 };
 
 // ─── MESSAGE THREADS ─────────────────────────────────────────
 export interface MessageThread {
   partner_id: number;
   partner_name: string;
-  partner_email?: string;
-  last_message_id: number;
+  partner_avatar: string | null;
   last_message_text: string;
   last_message_created: string;
-  sender_id: number;
-  receiver_id: number;
+  is_outgoing: boolean;
+  unread_count: number;
   listing_id: number | null;
-  listing_title?: string;
-  listing_price?: number;
-  listing_price_type?: string;
-  listing_thumb?: string;
+  listing_title: string | null;
 }
 
 export const MessageThreadAPI = {
-  list: (userId: number) =>
-    request<MessageThread[]>(`/messages/threads/?user_id=${userId}`),
+  list: () =>
+    request<{ conversations: MessageThread[]; unread_total: number }>('/messages/'),
 };
 
 // ─── MESSAGES ────────────────────────────────────────────────
 export const MessageAPI = {
-  thread: (sender_id: number, receiver_id: number) =>
-    request<Message[]>(
-      `/messages/?sender_id=${sender_id}&receiver_id=${receiver_id}`,
-    ),
+  thread: (partner_id: number) =>
+    request<Message[]>(`/messages/${partner_id}/`),
 
   send: (data: {
-    sender_id: number;
-    receiver_id: number;
+    recipient_id: number;
     listing_id?: number;
-    message: string;
+    content: string;
   }) =>
     request<Message>('/messages/', {
       method: 'POST',
@@ -244,8 +255,8 @@ export const UserAPI = {
   detail: (pk: number) =>
     request<User>(`/users/${pk}/`),
 
-  update: (pk: number, data: Partial<User>) =>
-    request<User>(`/users/${pk}/`, {
+  update: (data: Partial<User & { phone?: string; address?: string }>) =>
+    request<User>('/profile/', {
       method: 'PUT',
       body: JSON.stringify(data),
     }),

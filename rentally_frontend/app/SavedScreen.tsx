@@ -5,8 +5,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
-import { FavoriteAPI, Favorite } from '../services/api';
-import { ListingAPI } from '../services/api';
+import { FavoriteAPI, Favorite, ListingAPI } from '../services/api';
 import BottomNav, { TabName } from '../components/BottomNav';
 import ListingCard from '../components/ListingCard';
 
@@ -35,13 +34,13 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
     try {
-      const favData = await FavoriteAPI.list(userId);
+      const favData = await FavoriteAPI.list();
       const favs: Favorite[] = (favData as any).results ?? favData ?? [];
 
       // Enrich each favorite with full listing details
       const enriched = await Promise.allSettled(
         favs.map(f =>
-          ListingAPI.fullDetail(f.listing_id).catch(() => null)
+          ListingAPI.detail(f.listing_id).catch(() => null)
         )
       );
 
@@ -78,7 +77,7 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
   const handleRemove = async (id: number) => {
     setRemoving(id);
     try {
-      await FavoriteAPI.remove(id, userId);
+      await FavoriteAPI.remove(id);
       setItems(prev => prev.filter(f => f.listing_id !== id));
     } catch (e: any) {
       Alert.alert('Алдаа', e.message);
@@ -111,14 +110,15 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
 
   return (
     <SafeAreaView style={s.safe}>
-      {/* Header */}
-      <View style={s.header}>
-        <Text style={s.headerTitle}>❤️ Хадгалсан байрнууд</Text>
-        {items.length > 0 && (
-          <View style={s.countBadge}>
-            <Text style={s.countTxt}>{items.length}</Text>
-          </View>
-        )}
+      <View style={s.topBar}>
+        <Text style={s.logo}>РЕНТАЛ<Text style={s.logoAccent}>ЛИ</Text></Text>
+        <View style={s.countBadge}>
+          <Text style={s.countTxt}>{items.length}</Text>
+        </View>
+      </View>
+
+      <View style={s.pageHeader}>
+        <Text style={s.headerTitle}>Хадгалсан</Text>
       </View>
 
       {loading ? (
@@ -156,20 +156,22 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
 }
 
 const s = StyleSheet.create({
-  safe:    { flex: 1, backgroundColor: Colors.bg },
-  header: {
-    flexDirection: 'row', alignItems: 'center', gap: 10,
-    paddingHorizontal: 16, paddingVertical: 14,
+  safe: { flex: 1, backgroundColor: Colors.bg },
+  topBar: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 20, paddingVertical: 15,
     backgroundColor: Colors.white,
-    borderBottomWidth: 1, borderBottomColor: Colors.border,
   },
-  headerTitle: { fontSize: 18, fontWeight: '900', color: Colors.text },
+  logo: { fontSize: 20, fontWeight: '900', color: Colors.primary, letterSpacing: 1 },
+  logoAccent: { color: Colors.yellow },
+  pageHeader: { paddingHorizontal: 20, paddingTop: 15, paddingBottom: 5 },
+  headerTitle: { fontSize: 24, fontWeight: 'bold', color: Colors.text },
   countBadge: {
-    backgroundColor: Colors.red,
+    backgroundColor: Colors.primary + '15',
+    paddingHorizontal: 12, paddingVertical: 4,
     borderRadius: 12,
-    paddingHorizontal: 8, paddingVertical: 2,
   },
-  countTxt: { fontSize: 12, fontWeight: '800', color: Colors.white },
+  countTxt: { fontSize: 13, fontWeight: 'bold', color: Colors.primary },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
   loadingTxt: { fontSize: 14, color: Colors.textMuted, fontWeight: '600' },
   list: { padding: 12, gap: 0 },

@@ -422,12 +422,11 @@ class MessageListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        conversation_ids = MessageService.get_conversations(request.user)
-        unread_count = MessageService.get_unread_count(request.user)
+        inbox = MessageService.get_inbox(request.user)
+        unread_total = MessageService.get_unread_count(request.user)
         return Response({
-            "conversation_count":    len(conversation_ids),
-            "unread_count":          unread_count,
-            "conversation_user_ids": list(conversation_ids),
+            "conversations": inbox,
+            "unread_total":  unread_total,
         })
 
     def post(self, request):

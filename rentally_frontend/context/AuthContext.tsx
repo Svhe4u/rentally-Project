@@ -4,16 +4,16 @@
  */
 
 import React, { createContext, useReducer, useCallback, useEffect } from 'react';
-import * as SecureStore from 'expo-secure-store';
 import { AuthAPI } from '../services/api';
+import { storage } from '../services/storage';
 
+// ─── Types ────────────────────────────────────────────────────────────────────
 export interface User {
   id: number;
   username: string;
   email: string;
-  first_name?: string;
-  last_name?: string;
   role: 'user' | 'broker' | 'admin';
+  is_verified?: boolean;
 }
 
 export interface AuthContextType {
@@ -21,19 +21,11 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  accessToken: string | null;
   login(username: string, password: string): Promise<void>;
   logout(): void;
-  register(data: RegisterData): Promise<void>;
+  updateUser(userData: Partial<User>): Promise<void>;
   clearError(): void;
-}
-
-export interface RegisterData {
-  username: string;
-  email: string;
-  password: string;
-  password2: string;
-  first_name?: string;
-  last_name?: string;
 }
 
 type AuthState = {
@@ -42,17 +34,17 @@ type AuthState = {
   isLoading: boolean;
   error: string | null;
   accessToken: string | null;
-  refreshToken: string | null;
 };
 
 type AuthAction =
   | { type: 'LOGIN_START' }
-  | { type: 'LOGIN_SUCCESS'; payload: { user: User; accessToken: string; refreshToken: string } }
+  | { type: 'LOGIN_SUCCESS'; payload: { user: User; accessToken: string } }
   | { type: 'LOGIN_FAILURE'; payload: string }
   | { type: 'LOGOUT' }
-  | { type: 'SET_ERROR'; payload: string }
   | { type: 'CLEAR_ERROR' }
-  | { type: 'LOAD_TOKEN'; payload: { accessToken?: string; user?: User } };
+  | { type: 'LOAD_TOKEN'; payload: { accessToken: string; user: User } }
+  | { type: 'UPDATE_USER'; payload: Partial<User> }
+  | { type: 'INIT_DONE' };
 
 const initialState: AuthState = {
   user: null,
@@ -60,7 +52,6 @@ const initialState: AuthState = {
   isLoading: true,
   error: null,
   accessToken: null,
-  refreshToken: null,
 };
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
@@ -74,29 +65,29 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
         isAuthenticated: true,
         isLoading: false,
         accessToken: action.payload.accessToken,
-        refreshToken: action.payload.refreshToken,
+        error: null,
       };
     case 'LOGIN_FAILURE':
-      return {
-        ...state,
-        isLoading: false,
-        error: action.payload,
-        isAuthenticated: false,
-      };
+      return { ...state, isLoading: false, error: action.payload, isAuthenticated: false };
     case 'LOGOUT':
-      return initialState;
-    case 'SET_ERROR':
-      return { ...state, error: action.payload };
+      return { ...initialState, isLoading: false };
     case 'CLEAR_ERROR':
       return { ...state, error: null };
     case 'LOAD_TOKEN':
       return {
         ...state,
-        accessToken: action.payload.accessToken || state.accessToken,
-        user: action.payload.user || state.user,
-        isAuthenticated: !!(action.payload.accessToken || action.payload.user),
+        accessToken: action.payload.accessToken,
+        user: action.payload.user,
+        isAuthenticated: true,
         isLoading: false,
       };
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        user: state.user ? { ...state.user, ...action.payload } : null,
+      };
+    case 'INIT_DONE':
+      return { ...state, isLoading: false };
     default:
       return state;
   }
@@ -104,93 +95,81 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Load token from secure storage on app start
+  // Restore session on app start
   useEffect(() => {
-    const loadToken = async () => {
+    const restore = async () => {
       try {
-        const token = await SecureStore.getItemAsync('auth_token');
-        if (token) {
-          dispatch({ type: 'LOAD_TOKEN', payload: { accessToken: token } });
+        const token = await storage.getItem('auth_token');
+        const userJson = await storage.getItem('auth_user');
+        if (token && userJson) {
+          const user: User = JSON.parse(userJson);
+          dispatch({ type: 'LOAD_TOKEN', payload: { accessToken: token, user } });
         } else {
-          dispatch({ type: 'LOAD_TOKEN', payload: {} });
+          dispatch({ type: 'INIT_DONE' });
         }
-      } catch (error) {
-        console.error('Failed to load token:', error);
-        dispatch({ type: 'LOAD_TOKEN', payload: {} });
+      } catch {
+        dispatch({ type: 'INIT_DONE' });
       }
     };
-    loadToken();
+    restore();
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {
     dispatch({ type: 'LOGIN_START' });
-
     try {
-      const response = await AuthAPI.login(username, password);
+      // Uses /api/auth/login/ which returns { user, tokens }
+      const res: any = await AuthAPI.login(username, password);
 
-      if (response.error) {
-        dispatch({ type: 'LOGIN_FAILURE', payload: response.error });
-        throw new Error(response.error);
+      // Handle both /api/auth/login/ (custom) and /api/auth/token/ (JWT) responses
+      let accessToken: string;
+      let user: User;
+
+      if (res.tokens) {
+        // Custom login endpoint response: { user, tokens: { access, refresh } }
+        accessToken = res.tokens.access;
+        user = res.user;
+        await storage.setItem('refresh_token', res.tokens.refresh);
+      } else if (res.access) {
+        // Simple JWT token endpoint: { access, refresh }
+        accessToken = res.access;
+        await storage.setItem('refresh_token', res.refresh || '');
+        // Build a minimal user object from token
+        user = { id: 0, username, email: '', role: 'user' };
+      } else {
+        throw new Error('Хариу буруу байна');
       }
 
-      const { access, refresh } = response.data;
+      await storage.setItem('auth_token', accessToken);
+      await storage.setItem('auth_user', JSON.stringify(user));
 
-      // Save token to secure storage
-      await SecureStore.setItemAsync('auth_token', access);
-      if (refresh) {
-        await SecureStore.setItemAsync('refresh_token', refresh);
-      }
-
-      // Fetch user data (you'll need to add this endpoint)
-      const mockUser: User = {
-        id: 1,
-        username,
-        email: `${username}@rentally.com`,
-        role: 'user',
-      };
-
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: {
-          user: mockUser,
-          accessToken: access,
-          refreshToken: refresh || '',
-        },
-      });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Login failed';
+      dispatch({ type: 'LOGIN_SUCCESS', payload: { user, accessToken } });
+    } catch (error: any) {
+      const message = error.message || 'Нэвтрэхэд алдаа гарлаа';
       dispatch({ type: 'LOGIN_FAILURE', payload: message });
       throw error;
     }
   }, []);
 
   const logout = useCallback(async () => {
-    await SecureStore.deleteItemAsync('auth_token');
-    await SecureStore.deleteItemAsync('refresh_token');
+    await storage.deleteItem('auth_token');
+    await storage.deleteItem('refresh_token');
+    await storage.deleteItem('auth_user');
     dispatch({ type: 'LOGOUT' });
   }, []);
 
-  const register = useCallback(async (data: RegisterData) => {
-    dispatch({ type: 'LOGIN_START' });
-
-    try {
-      // You'll need to implement a registration endpoint
-      // const response = await AuthAPI.register(data);
-      // For now, just login after registration
-      await login(data.username, data.password);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Registration failed';
-      dispatch({ type: 'LOGIN_FAILURE', payload: message });
-      throw error;
+  const updateUser = useCallback(async (userData: Partial<User>) => {
+    dispatch({ type: 'UPDATE_USER', payload: userData });
+    // Update persistent storage
+    const currentUserJson = await storage.getItem('auth_user');
+    if (currentUserJson) {
+      const currentUser = JSON.parse(currentUserJson);
+      const updatedUser = { ...currentUser, ...userData };
+      await storage.setItem('auth_user', JSON.stringify(updatedUser));
     }
-  }, [login]);
+  }, []);
 
   const clearError = useCallback(() => {
     dispatch({ type: 'CLEAR_ERROR' });
@@ -201,9 +180,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: state.isAuthenticated,
     isLoading: state.isLoading,
     error: state.error,
+    accessToken: state.accessToken,
     login,
     logout,
-    register,
+    updateUser,
     clearError,
   };
 
@@ -212,8 +192,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 export const useAuth = (): AuthContextType => {
   const context = React.useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 };

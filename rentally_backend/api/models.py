@@ -25,7 +25,7 @@ class UserProfile(models.Model):
         ('admin', 'Admin'),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', primary_key=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='user')
     phone = models.CharField(
         max_length=20,
@@ -341,10 +341,10 @@ class Message(models.Model):
     """Direct messages between users."""
 
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages', db_column='receiver_id')
     listing = models.ForeignKey(Listing, on_delete=models.SET_NULL, null=True, blank=True, related_name='messages')
 
-    content = models.TextField()
+    content = models.TextField(db_column='message')
     is_read = models.BooleanField(default=False)
     read_at = models.DateTimeField(blank=True, null=True)
 

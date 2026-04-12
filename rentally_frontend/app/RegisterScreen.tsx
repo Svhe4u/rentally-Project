@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
-  StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert,
+  StyleSheet, ScrollView, SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import { Colors } from '../constants/colors';
+import { Ionicons } from '@expo/vector-icons';
 import { AuthAPI } from '../services/api';
 
-interface Props { onNavigate: (screen: string) => void; }
+interface Props {
+  onNavigate: (screen: string) => void;
+}
 
 export default function RegisterScreen({ onNavigate }: Props) {
   const [username, setUsername] = useState('');
@@ -16,34 +20,38 @@ export default function RegisterScreen({ onNavigate }: Props) {
   const [confirm, setConfirm]   = useState('');
   const [agreed, setAgreed]     = useState(false);
   const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState('');
+  const [showPass, setShowPass] = useState(false);
 
-  const canSubmit = agreed && !!username && !!email && password.length >= 6 && password === confirm;
+  const passwordsMatch = confirm.length === 0 || password === confirm;
+  const canSubmit = agreed && !!username && !!email && password.length >= 8 && password === confirm;
 
   const handleRegister = async () => {
     if (!canSubmit) return;
     setLoading(true);
+    setError('');
     try {
-      await AuthAPI.register({ username, email, password, phone });
-      Alert.alert('Амжилттай', 'Бүртгэл амжилттай үүслээ!', [
-        { text: 'Нэвтрэх', onPress: () => onNavigate('login') },
-      ]);
+      await AuthAPI.register({
+        username,
+        email,
+        password,
+        password2: confirm,
+        first_name: '', // Required by backend serializer
+        last_name: '',  // Required by backend serializer
+        phone
+      });
+      // Navigate to login after successful register
+      onNavigate('login');
     } catch (e: any) {
-      Alert.alert('Алдаа', e.message || 'Бүртгэл амжилтгүй боллоо');
+      setError(e.message || 'Бүртгэл амжилтгүй боллоо. Дахин оролдно уу.');
     } finally {
       setLoading(false);
     }
   };
 
-  const fields = [
-    { label: 'Хэрэглэгчийн нэр', value: username, set: setUsername, placeholder: 'username', kb: 'default' as const, secure: false },
-    { label: 'Имэйл',            value: email,    set: setEmail,    placeholder: 'email@mail.com', kb: 'email-address' as const, secure: false },
-    { label: 'Утас',             value: phone,    set: setPhone,    placeholder: '99xxxxxx', kb: 'phone-pad' as const, secure: false },
-    { label: 'Нууц үг',         value: password, set: setPassword, placeholder: '6+ тэмдэгт', kb: 'default' as const, secure: true },
-    { label: 'Нууц үг давтах',  value: confirm,  set: setConfirm,  placeholder: '••••••••', kb: 'default' as const, secure: true },
-  ];
-
   return (
     <SafeAreaView style={s.safe}>
+      {/* Header */}
       <View style={s.header}>
         <TouchableOpacity onPress={() => onNavigate('login')} style={s.backBtn}>
           <Text style={s.backIcon}>←</Text>
@@ -52,109 +60,239 @@ export default function RegisterScreen({ onNavigate }: Props) {
         <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.content}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={s.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Logo */}
         <View style={s.logoRow}>
-          <View style={s.bubble}><Text style={{ fontSize: 28 }}>🏠</Text></View>
-          <Text style={s.logoName}>БАЙ<Text style={s.logoAccent}>Р</Text></Text>
+          <View style={s.bubble}>
+            <Ionicons name="person-add" size={36} color="#fff" />
+          </View>
+          <Text style={s.logoName}>
+            РЕНТАЛ<Text style={s.logoAccent}>ЛИ</Text>
+          </Text>
+          <Text style={s.logoSub}>Шинэ бүртгэл үүсгэх</Text>
         </View>
 
-        {fields.map(f => (
-          <View key={f.label} style={s.group}>
-            <Text style={s.label}>{f.label}</Text>
-            <TextInput
-              style={[s.input,
-                f.label === 'Нууц үг давтах' && confirm.length > 0 && confirm !== password
-                  ? s.inputErr : null]}
-              placeholder={f.placeholder}
-              placeholderTextColor={Colors.textLight}
-              value={f.value}
-              onChangeText={f.set}
-              keyboardType={f.kb}
-              secureTextEntry={f.secure}
-              autoCapitalize="none"
-            />
-            {f.label === 'Нууц үг давтах' && confirm.length > 0 && confirm !== password && (
-              <Text style={s.errTxt}>Нууц үг таарахгүй байна</Text>
+        <View style={s.card}>
+          {/* Error */}
+          {error ? (
+            <View style={s.errorBox}>
+              <Text style={s.errorTxt}>⚠️  {error}</Text>
+            </View>
+          ) : null}
+
+          {/* Username */}
+          <View style={s.group}>
+            <Text style={s.label}>Хэрэглэгчийн нэр *</Text>
+            <View style={s.inputWrap}>
+              <Text style={s.icon}>👤</Text>
+              <TextInput
+                style={s.input}
+                placeholder="username"
+                placeholderTextColor="#bbb"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+          </View>
+
+          {/* Email */}
+          <View style={s.group}>
+            <Text style={s.label}>Имэйл *</Text>
+            <View style={s.inputWrap}>
+              <Text style={s.icon}>📧</Text>
+              <TextInput
+                style={s.input}
+                placeholder="email@example.com"
+                placeholderTextColor="#bbb"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+          </View>
+
+          {/* Phone */}
+          <View style={s.group}>
+            <Text style={s.label}>Утасны дугаар</Text>
+            <View style={s.inputWrap}>
+              <Text style={s.icon}>📱</Text>
+              <TextInput
+                style={s.input}
+                placeholder="99xxxxxx"
+                placeholderTextColor="#bbb"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+              />
+            </View>
+          </View>
+
+          {/* Password */}
+          <View style={s.group}>
+            <Text style={s.label}>Нууц үг * (8+)</Text>
+            <View style={s.inputWrap}>
+              <Text style={s.icon}>🔒</Text>
+              <TextInput
+                style={[s.input, { flex: 1 }]}
+                placeholder="••••••••"
+                placeholderTextColor="#bbb"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPass}
+                autoCapitalize="none"
+              />
+              <TouchableOpacity onPress={() => setShowPass(!showPass)} style={{ padding: 4 }}>
+                <Text style={{ fontSize: 16 }}>{showPass ? '🙈' : '👁️'}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Confirm password */}
+          <View style={s.group}>
+            <Text style={s.label}>Нууц үг давтах *</Text>
+            <View style={[s.inputWrap, !passwordsMatch && s.inputWrapErr]}>
+              <Text style={s.icon}>🔐</Text>
+              <TextInput
+                style={[s.input, { flex: 1 }]}
+                placeholder="••••••••"
+                placeholderTextColor="#bbb"
+                value={confirm}
+                onChangeText={setConfirm}
+                secureTextEntry={!showPass}
+                autoCapitalize="none"
+              />
+            </View>
+            {!passwordsMatch && (
+              <Text style={s.errHint}>Нууц үг таарахгүй байна</Text>
             )}
           </View>
-        ))}
 
-        <TouchableOpacity style={s.agreeRow} onPress={() => setAgreed(!agreed)} activeOpacity={0.7}>
-          <View style={[s.check, agreed && s.checkOn]}>
-            {agreed && <Text style={s.checkMark}>✓</Text>}
-          </View>
-          <Text style={s.agreeTxt}>
-            <Text style={s.agreeLink}>Үйлчилгээний нөхцөл</Text>{' болон '}
-            <Text style={s.agreeLink}>Нууцлалын бодлого</Text>{'-г зөвшөөрч байна'}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[s.btnPrimary, !canSubmit && s.btnOff]}
-          onPress={handleRegister}
-          disabled={!canSubmit || loading}
-          activeOpacity={0.85}
-        >
-          {loading ? <ActivityIndicator color={Colors.white} />
-            : <Text style={s.btnPrimaryTxt}>Бүртгүүлэх</Text>}
-        </TouchableOpacity>
-
-        <View style={s.divRow}>
-          <View style={s.divLine} /><Text style={s.divTxt}>эсвэл</Text><View style={s.divLine} />
-        </View>
-
-        <TouchableOpacity style={s.btnKakao} activeOpacity={0.85}>
-          <Text style={s.btnKakaoTxt}>💬  Какао-гоор бүртгүүлэх</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={s.btnApple} activeOpacity={0.85}>
-          <Text style={s.btnAppleTxt}>🍎  Apple-ээр бүртгүүлэх</Text>
-        </TouchableOpacity>
-
-        <View style={s.loginRow}>
-          <Text style={s.loginTxt}>Аль хэдийн бүртгэлтэй юу? </Text>
-          <TouchableOpacity onPress={() => onNavigate('login')}>
-            <Text style={s.loginLink}>Нэвтрэх</Text>
+          {/* Terms */}
+          <TouchableOpacity style={s.agreeRow} onPress={() => setAgreed(!agreed)} activeOpacity={0.7}>
+            <View style={[s.check, agreed && s.checkOn]}>
+              {agreed && <Text style={s.checkMark}>✓</Text>}
+            </View>
+            <Text style={s.agreeTxt}>
+              <Text style={s.agreeLink}>Үйлчилгээний нөхцөл</Text>
+              {' болон '}
+              <Text style={s.agreeLink}>Нууцлалын бодлого</Text>
+              {'-г зөвшөөрч байна'}
+            </Text>
           </TouchableOpacity>
+
+          {/* Submit */}
+          <TouchableOpacity
+            style={[s.btnPrimary, (!canSubmit || loading) && s.btnOff]}
+            onPress={handleRegister}
+            disabled={!canSubmit || loading}
+            activeOpacity={0.85}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={s.btnPrimaryTxt}>Бүртгүүлэх →</Text>
+            )}
+          </TouchableOpacity>
+
+          {/* Login link */}
+          <View style={s.loginRow}>
+            <Text style={s.loginTxt}>Аль хэдийн бүртгэлтэй юу? </Text>
+            <TouchableOpacity onPress={() => onNavigate('login')}>
+              <Text style={s.loginLink}>Нэвтрэх</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={{ height: 32 }} />
+
+        <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const s = StyleSheet.create({
-  safe:    { flex: 1, backgroundColor: Colors.white },
-  content: { paddingHorizontal: 22, paddingBottom: 16 },
-  header:  { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: Colors.border },
+  safe: { flex: 1, backgroundColor: '#f5f7ff' },
+  header: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 16, paddingVertical: 12,
+    borderBottomWidth: 1, borderBottomColor: '#eee',
+    backgroundColor: '#fff',
+  },
   backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  backIcon: { fontSize: 22, color: Colors.text },
-  headerTitle: { fontSize: 16, fontWeight: '800', color: Colors.text },
-  logoRow: { alignItems: 'center', paddingVertical: 24, gap: 6 },
-  bubble:  { width: 56, height: 56, backgroundColor: Colors.primary, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
-  logoName: { fontSize: 28, fontWeight: '900', color: Colors.primary },
-  logoAccent: { color: Colors.yellow },
-  group:   { marginBottom: 14 },
-  label:   { fontSize: 13, fontWeight: '700', color: '#555', marginBottom: 6 },
-  input:   { borderWidth: 1.5, borderColor: '#e0e0e0', borderRadius: 12, paddingVertical: 12, paddingHorizontal: 14, fontSize: 14, color: Colors.text, backgroundColor: '#fafafa' },
-  inputErr: { borderColor: Colors.red },
-  errTxt:  { fontSize: 11, color: Colors.red, marginTop: 4 },
+  backIcon: { fontSize: 22, color: '#333' },
+  headerTitle: { fontSize: 17, fontWeight: '800', color: '#1a1a2e' },
+
+  content: { paddingBottom: 32 },
+
+  logoRow: { alignItems: 'center', paddingVertical: 20, gap: 6 },
+  bubble: {
+    width: 60, height: 60, backgroundColor: Colors.primary,
+    borderRadius: 18, alignItems: 'center', justifyContent: 'center',
+    shadowColor: Colors.primary, shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3, shadowRadius: 16, elevation: 8,
+  },
+  logoName: { fontSize: 30, fontWeight: '900', color: Colors.primary },
+  logoAccent: { color: Colors.yellow ?? '#FFD700' },
+  logoSub: { fontSize: 13, color: '#999', fontWeight: '500' },
+
+  card: {
+    marginHorizontal: 18,
+    backgroundColor: '#fff',
+    borderRadius: 24,
+    padding: 22,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.07,
+    shadowRadius: 14,
+    elevation: 5,
+  },
+
+  errorBox: {
+    backgroundColor: '#fff0f0', borderRadius: 10, padding: 12,
+    marginBottom: 16, borderLeftWidth: 3, borderLeftColor: '#ff4444',
+  },
+  errorTxt: { color: '#cc0000', fontSize: 13, fontWeight: '600' },
+
+
+
+  group: { marginBottom: 14 },
+  label: { fontSize: 13, fontWeight: '700', color: '#444', marginBottom: 6 },
+  inputWrap: {
+    flexDirection: 'row', alignItems: 'center',
+    borderWidth: 1.5, borderColor: '#e8e8f0',
+    borderRadius: 13, backgroundColor: '#fafafe', paddingHorizontal: 12,
+  },
+  inputWrapErr: { borderColor: '#ff4444' },
+  icon: { fontSize: 16, marginRight: 8 },
+  input: { flex: 1, paddingVertical: 13, fontSize: 14, color: '#1a1a2e' },
+  errHint: { fontSize: 11, color: '#ff4444', marginTop: 4 },
+
   agreeRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, marginVertical: 16 },
-  check:   { width: 20, height: 20, borderRadius: 5, borderWidth: 2, borderColor: '#ddd', alignItems: 'center', justifyContent: 'center', marginTop: 1 },
+  check: {
+    width: 20, height: 20, borderRadius: 5, borderWidth: 2, borderColor: '#ddd',
+    alignItems: 'center', justifyContent: 'center', marginTop: 1,
+  },
   checkOn: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  checkMark: { fontSize: 12, color: Colors.white, fontWeight: '900' },
-  agreeTxt: { flex: 1, fontSize: 13, color: Colors.textMuted, lineHeight: 20 },
+  checkMark: { fontSize: 12, color: '#fff', fontWeight: '900' },
+  agreeTxt: { flex: 1, fontSize: 13, color: '#777', lineHeight: 20 },
   agreeLink: { color: Colors.primary, fontWeight: '700' },
-  btnPrimary: { backgroundColor: Colors.primary, borderRadius: 14, paddingVertical: 15, alignItems: 'center', marginBottom: 16 },
-  btnOff:  { backgroundColor: '#b0c0f8' },
-  btnPrimaryTxt: { fontSize: 15, fontWeight: '800', color: Colors.white },
-  divRow:  { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 14 },
-  divLine: { flex: 1, height: 1, backgroundColor: '#e0e0e0' },
-  divTxt:  { fontSize: 12, color: '#bbb', fontWeight: '600' },
-  btnKakao: { backgroundColor: Colors.kakao, borderRadius: 14, paddingVertical: 14, alignItems: 'center', marginBottom: 10 },
-  btnKakaoTxt: { fontSize: 14, fontWeight: '700', color: '#191919' },
-  btnApple: { backgroundColor: Colors.black, borderRadius: 14, paddingVertical: 14, alignItems: 'center', marginBottom: 20 },
-  btnAppleTxt: { fontSize: 14, fontWeight: '700', color: Colors.white },
+
+  btnPrimary: {
+    backgroundColor: Colors.primary, borderRadius: 14,
+    paddingVertical: 15, alignItems: 'center', marginBottom: 16,
+    shadowColor: Colors.primary, shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3, shadowRadius: 12, elevation: 6,
+  },
+  btnOff: { backgroundColor: '#b0bdf8', shadowOpacity: 0 },
+  btnPrimaryTxt: { fontSize: 16, fontWeight: '800', color: '#fff' },
+
   loginRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
-  loginTxt: { fontSize: 13, color: Colors.textLight },
-  loginLink: { fontSize: 13, color: Colors.primary, fontWeight: '700' },
+  loginTxt: { fontSize: 13, color: '#888' },
+  loginLink: { fontSize: 13, color: Colors.primary, fontWeight: '800' },
 });
