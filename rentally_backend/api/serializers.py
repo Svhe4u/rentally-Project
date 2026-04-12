@@ -4,13 +4,14 @@ Handles validation, data transformation, and nested relationships.
 """
 
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from django.db.models import Avg
 from decimal import Decimal
 
 from .models import (
-    User, UserProfile, BrokerProfile, Category, Region, Listing, ListingImage,
+    UserProfile, BrokerProfile, Category, Region, Listing, ListingImage,
     ListingDetail, ListingFeature, Booking, Review, Favorite, Message, Payment
 )
 
@@ -28,7 +29,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2']
+        fields = ['username', 'email', 'password', 'password2', 'first_name', 'last_name']
 
     def validate(self, data):
         # Validate passwords match first
@@ -51,7 +52,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('password2', None)
         user = User(
             username=validated_data['username'],
-            email=validated_data['email']
+            email=validated_data['email'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', '')
         )
         user.set_password(validated_data['password'])
         user.save()

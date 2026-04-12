@@ -84,9 +84,6 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
 ]
 
-# Custom User Model
-AUTH_USER_MODEL = 'api.User'
-
 # ─────────────────────────────────────────────────────────────────────
 # MIDDLEWARE
 # ─────────────────────────────────────────────────────────────────────
@@ -226,17 +223,24 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
 ]
 
 # ─────────────────────────────────────────────────────────────────────
-# CACHE CONFIGURATION (Local memory for development)
+# CACHE CONFIGURATION (Redis)
 # ─────────────────────────────────────────────────────────────────────
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'rentally-cache',
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
+            'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
+        }
     }
 }
 

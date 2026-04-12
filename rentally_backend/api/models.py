@@ -1,35 +1,23 @@
 """
-Database models matching the existing PostgreSQL schema.
-Uses unmanaged models for tables that already exist.
+Database models for Rentally backend.
+Implements proper ORM structure using Django models for:
+- Users (with broker profile)
+- Listings (properties with images, details, features)
+- Bookings (reservations)
+- Reviews (ratings and comments)
+- Messages (user-to-user communication)
+- Favorites (saved listings)
 """
 
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 
-class UserManager(BaseUserManager):
-    """Custom user manager for the users table."""
-
-    def create_user(self, username, email, password=None, **extra_fields):
-        if not username:
-            raise ValueError('Username is required')
-        if not email:
-            raise ValueError('Email is required')
-        user = self.model(username=username, email=email, **extra_fields)
-        if password:
-            user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, username, email, password=None, **extra_fields):
-        extra_fields.setdefault('role', 'admin')
-        extra_fields.setdefault('is_verified', True)
-        return self.create_user(username, email, password, **extra_fields)
-
-
-class User(AbstractBaseUser, PermissionsMixin):
-    """Custom user model matching the 'users' table."""
+class UserProfile(models.Model):
+    """Extended user profile for additional information."""
 
     ROLE_CHOICES = [
         ('user', 'User'),
@@ -37,310 +25,392 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('admin', 'Admin'),
     ]
 
-    id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=50, unique=True)
-    email = models.CharField(max_length=100, unique=True)
-    # password is handled by AbstractBaseUser
-    phone = models.CharField(max_length=20, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='user')
+    phone = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        validators=[
+            RegexValidator(
+                regex=r'^[0-9+\-\s()]{8,20}$',
+                message='Утасны дугаар зөв биш байна (жишээ: +976 9911 2233)'
+            )
+        ]
+    )
+    address = models.TextField(blank=True, null=True)
+    profile_picture = models.URLField(blank=True, null=True)
     is_verified = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    # Django auth compatibility fields
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-    last_login = models.DateTimeField(null=True, blank=True)
-
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
-
-    objects = UserManager()
-
-    class Meta:
-        db_table = 'users'
-        managed = False
-
-    def __str__(self):
-        return self.username
-
-    def get_full_name(self):
-        return self.username
-
-    def get_short_name(self):
-        return self.username
-
-
-class Category(models.Model):
-    """Property categories."""
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-
-    class Meta:
-        db_table = 'categories'
-        managed = False
-
-    def __str__(self):
-        return self.name
-
-
-class Region(models.Model):
-    """Regions/districts."""
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    parent_id = models.IntegerField(null=True, blank=True)
-
-    class Meta:
-        db_table = 'regions'
-        managed = False
-
-    def __str__(self):
-        return self.name
-
-
-class Listing(models.Model):
-    """Property listings."""
-
-    PRICE_TYPE_CHOICES = [
-        ('monthly', 'Monthly'),
-        ('daily', 'Daily'),
-        ('yearly', 'Yearly'),
-        ('total', 'Total'),
-    ]
-
-    id = models.AutoField(primary_key=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, db_column='owner_id', related_name='listings')
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, db_column='category_id')
-    region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, blank=True, db_column='region_id')
-
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2)
-    price_type = models.CharField(max_length=20, choices=PRICE_TYPE_CHOICES, default='monthly')
-    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        db_table = 'listings'
-        managed = False
-
     def __str__(self):
-        return self.title
-
-
-class ListingImage(models.Model):
-    """Images for listings."""
-    id = models.AutoField(primary_key=True)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, db_column='listing_id', related_name='images')
-    image_url = models.TextField()
-    sort_order = models.IntegerField(default=0)
+        return f"{self.user.username} ({self.role})"
 
     class Meta:
-        db_table = 'listing_images'
-        managed = False
-
-    def __str__(self):
-        return f"Image for {self.listing.title}"
-
-
-class ListingDetail(models.Model):
-    """Detailed specs for listings."""
-    listing = models.OneToOneField(Listing, on_delete=models.CASCADE, db_column='listing_id', primary_key=True, related_name='detail')
-    floor_type = models.CharField(max_length=50, blank=True, null=True)
-    balcony = models.BooleanField(null=True, blank=True)
-    year_built = models.IntegerField(null=True, blank=True)
-    garage = models.BooleanField(null=True, blank=True)
-    window_type = models.CharField(max_length=50, blank=True, null=True)
-    building_floors = models.IntegerField(null=True, blank=True)
-    door_type = models.CharField(max_length=50, blank=True, null=True)
-    area_sqm = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
-    floor_number = models.IntegerField(null=True, blank=True)
-    window_count = models.IntegerField(null=True, blank=True)
-    payment_terms = models.CharField(max_length=50, blank=True, null=True)
-
-    class Meta:
-        db_table = 'listing_details'
-        managed = False
+        verbose_name = "User Profile"
+        verbose_name_plural = "User Profiles"
+        ordering = ['-created_at']
 
 
 class BrokerProfile(models.Model):
-    """Broker profile matching the database schema."""
-    user = models.OneToOneField(User, on_delete=models.CASCADE, db_column='user_id', primary_key=True, related_name='broker_profile')
-    license_no = models.CharField(max_length=100, blank=True, null=True)
-    agency_name = models.CharField(max_length=150, blank=True, null=True)
-    bio = models.TextField(blank=True, null=True)
-    profile_image = models.TextField(blank=True, null=True)
-    is_verified = models.BooleanField(default=False)
-    verified_at = models.DateTimeField(null=True, blank=True)
-    rating_avg = models.DecimalField(max_digits=3, decimal_places=2, default=0)
-    listing_count = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    """Profile for broker users with company info."""
 
-    class Meta:
-        db_table = 'broker_profiles'
-        managed = False
-
-    def __str__(self):
-        return f"{self.agency_name or self.user.username} (Broker)"
-
-
-class BrokerApplication(models.Model):
-    """Broker applications table."""
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
     ]
 
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id', related_name='broker_applications')
-    license_no = models.CharField(max_length=100, blank=True, null=True)
-    agency_name = models.CharField(max_length=150, blank=True, null=True)
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    note = models.TextField(blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='broker_profile')
+    company_name = models.CharField(max_length=255)
+    registration_number = models.CharField(max_length=100, blank=True, null=True, unique=True)
+    description = models.TextField(blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
+    license_document = models.URLField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    reject_reason = models.TextField(blank=True, null=True)
-    reviewed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, db_column='reviewed_by', related_name='reviewed_applications')
-    reviewed_at = models.DateTimeField(null=True, blank=True)
+    verified_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def clean(self):
+        """Validate broker profile data."""
+        if self.status == 'approved' and not self.verified_at:
+            self.verified_at = timezone.now()
+        super().clean()
+
+    def __str__(self):
+        return f"{self.company_name} ({self.status})"
+
+    class Meta:
+        verbose_name = "Broker Profile"
+        verbose_name_plural = "Broker Profiles"
+        ordering = ['-created_at']
+
+
+class Category(models.Model):
+    """Property categories (apartment, house, office, etc)."""
+
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True)
+    icon = models.URLField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Categories"
+        ordering = ['name']
+
+
+class Region(models.Model):
+    """Mongolian regions/districts."""
+
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True)
+    country = models.CharField(max_length=100, default='Mongolia')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
+class Listing(models.Model):
+    """Property listings."""
+
+    PRICE_TYPE_CHOICES = [
+        ('daily', 'Daily'),
+        ('monthly', 'Monthly'),
+        ('yearly', 'Yearly'),
+    ]
+
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+        ('sold', 'Sold'),
+        ('archived', 'Archived'),
+    ]
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listings')
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, blank=True)
+
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    address = models.CharField(max_length=255)
+    latitude = models.DecimalField(max_digits=10, decimal_places=7, blank=True, null=True)
+    longitude = models.DecimalField(max_digits=10, decimal_places=7, blank=True, null=True)
+
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    price_type = models.CharField(max_length=20, choices=PRICE_TYPE_CHOICES, default='monthly')
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    is_featured = models.BooleanField(default=False)
+
+    views_count = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['status', '-created_at']),
+            models.Index(fields=['owner', 'status']),
+            models.Index(fields=['category', 'region']),
+            models.Index(fields=['is_featured', '-created_at']),
+            models.Index(fields=['price', 'price_type']),
+        ]
+
+
+class ListingImage(models.Model):
+    """Images for listings."""
+
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='images')
+    image_url = models.URLField()
+    alt_text = models.CharField(max_length=255, blank=True, null=True)
+    is_primary = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        """Ensure only one primary image per listing."""
+        if self.is_primary:
+            # Reset other primary images
+            ListingImage.objects.filter(listing=self.listing, is_primary=True).update(is_primary=False)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Image for {self.listing.title}"
+
+    class Meta:
+        ordering = ['order', 'created_at']
+        verbose_name_plural = "Listing Images"
+
+
+class ListingDetail(models.Model):
+    """Detailed specs for listings (bedrooms, bathrooms, utilities)."""
+
+    listing = models.OneToOneField(Listing, on_delete=models.CASCADE, related_name='detail')
+
+    bedrooms = models.PositiveIntegerField(blank=True, null=True)
+    bathrooms = models.PositiveIntegerField(blank=True, null=True)
+    area_sqm = models.PositiveIntegerField(blank=True, null=True)
+
+    utilities_estimated = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)])
+    heating_type = models.CharField(max_length=100, blank=True, null=True)
+    air_type = models.CharField(max_length=100, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Details for {self.listing.title}"
+
+    class Meta:
+        verbose_name = "Listing Detail"
+        verbose_name_plural = "Listing Details"
+
+
+class ListingFeature(models.Model):
+    """Individual features/amenities for listings."""
+
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='features')
+    name = models.CharField(max_length=100)
+    value = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'broker_applications'
-        managed = False
+        ordering = ['name']
+        verbose_name_plural = "Listing Features"
+        constraints = [
+            models.UniqueConstraint(fields=['listing', 'name'], name='unique_listing_feature')
+        ]
 
     def __str__(self):
-        return f"Application from {self.user.username} - {self.status}"
+        return f"{self.name}: {self.value}"
 
 
 class Booking(models.Model):
-    """Bookings table."""
+    """Reservations for listings."""
+
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('confirmed', 'Confirmed'),
+        ('checked_in', 'Checked In'),
+        ('checked_out', 'Checked Out'),
         ('cancelled', 'Cancelled'),
-        ('completed', 'Completed'),
     ]
 
-    id = models.AutoField(primary_key=True)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, db_column='listing_id', related_name='bookings')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id', related_name='bookings')
-    start_date = models.DateField()
-    end_date = models.DateField()
-    total_price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    created_at = models.DateTimeField(auto_now_add=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='bookings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings')
 
-    class Meta:
-        db_table = 'bookings'
-        managed = False
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    total_price = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)])
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    notes = models.TextField(blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def clean(self):
+        """Validate booking dates."""
+        if self.start_date and self.end_date:
+            if self.end_date <= self.start_date:
+                raise ValidationError({'end_date': 'Дуусах огноо эхлэх огнооноос хойш байх ёстой.'})
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        """Auto-calculate total price before saving."""
+        if self.start_date and self.end_date and self.listing:
+            duration_days = (self.end_date - self.start_date).days
+            if duration_days > 0 and not self.total_price:
+                from decimal import Decimal
+                self.total_price = Decimal(duration_days) * self.listing.price
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Booking {self.id} - {self.user.username}"
 
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', 'status']),
+            models.Index(fields=['listing', 'status']),
+            models.Index(fields=['start_date', 'end_date']),
+            models.Index(fields=['status', 'created_at']),
+        ]
+
 
 class Review(models.Model):
-    """Reviews table."""
-    id = models.AutoField(primary_key=True)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, db_column='listing_id', related_name='reviews')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id', related_name='reviews')
-    rating = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-    comment = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    """Reviews and ratings for listings."""
 
-    class Meta:
-        db_table = 'reviews'
-        managed = False
-        unique_together = ['listing', 'user']
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    comment = models.TextField(blank=True, null=True)
+
+    is_verified_booking = models.BooleanField(default=False)
+    helpful_count = models.PositiveIntegerField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.rating}*"
+        return f"{self.user.username} - {self.rating}★ for {self.listing.title}"
+
+    class Meta:
+        ordering = ['-created_at']
+        unique_together = ['listing', 'user']
+        indexes = [
+            models.Index(fields=['listing', 'rating']),
+            models.Index(fields=['user', 'created_at']),
+            models.Index(fields=['is_verified_booking', '-created_at']),
+        ]
 
 
 class Favorite(models.Model):
-    """Favorites table."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id', related_name='favorites')
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, db_column='listing_id', related_name='favorited_by')
-    created_at = models.DateTimeField(auto_now_add=True)
+    """User's saved listings."""
 
-    class Meta:
-        db_table = 'favorites'
-        managed = False
-        unique_together = ['user', 'listing']
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='favorited_by')
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.user.username} saved {self.listing.title}"
 
+    class Meta:
+        ordering = ['-created_at']
+        unique_together = ['user', 'listing']
+        verbose_name_plural = "Favorites"
+
 
 class Message(models.Model):
-    """Messages table."""
-    id = models.AutoField(primary_key=True)
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, db_column='sender_id', related_name='sent_messages')
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, db_column='receiver_id', related_name='received_messages')
-    listing = models.ForeignKey(Listing, on_delete=models.SET_NULL, null=True, blank=True, db_column='listing_id', related_name='messages')
-    content = models.TextField(db_column='message')
+    """Direct messages between users."""
+
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    listing = models.ForeignKey(Listing, on_delete=models.SET_NULL, null=True, blank=True, related_name='messages')
+
+    content = models.TextField()
     is_read = models.BooleanField(default=False)
-    read_at = models.DateTimeField(null=True, blank=True)
+    read_at = models.DateTimeField(blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'messages'
-        managed = False
+    def clean(self):
+        """Prevent sending messages to self."""
+        if self.sender == self.recipient:
+            raise ValidationError({'recipient': 'Өөртөө мессеж илгээх боломжгүй.'})
+        if not self.content or not str(self.content).strip():
+            raise ValidationError({'content': 'Мессеж хоосон байж болохгүй.'})
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Message from {self.sender.username} to {self.receiver.username}"
+        return f"Message from {self.sender.username} to {self.recipient.username}"
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['sender', 'recipient']),
+            models.Index(fields=['recipient', 'is_read']),
+            models.Index(fields=['created_at']),
+        ]
 
 
 class Payment(models.Model):
-    """Payments table."""
+    """Payment records for bookings."""
+
     STATUS_CHOICES = [
         ('pending', 'Pending'),
-        ('paid', 'Paid'),
+        ('completed', 'Completed'),
         ('failed', 'Failed'),
         ('refunded', 'Refunded'),
     ]
 
-    METHOD_CHOICES = [
-        ('card', 'Card'),
-        ('bank_transfer', 'Bank Transfer'),
-        ('cash', 'Cash'),
-        ('qpay', 'QPay'),
-        ('socialpay', 'SocialPay'),
-        ('lendpay', 'LendPay'),
-    ]
+    booking = models.OneToOneField(Booking, on_delete=models.CASCADE, related_name='payment')
 
-    id = models.AutoField(primary_key=True)
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, db_column='booking_id', related_name='payment')
-    amount = models.DecimalField(max_digits=12, decimal_places=2)
-    method = models.CharField(max_length=30, choices=METHOD_CHOICES, blank=True, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, blank=True, null=True)
-    paid_at = models.DateTimeField(null=True, blank=True)
+    amount = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    currency = models.CharField(max_length=3, default='MNT')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
-    class Meta:
-        db_table = 'payments'
-        managed = False
+    payment_method = models.CharField(max_length=100, blank=True, null=True)
+    transaction_id = models.CharField(max_length=255, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(blank=True, null=True)
+
+    def clean(self):
+        """Validate transaction_id is unique when set."""
+        if self.transaction_id:
+            existing = Payment.objects.filter(transaction_id=self.transaction_id).exclude(pk=self.pk).first()
+            if existing:
+                raise ValidationError({'transaction_id': 'Энэ гүйлгээний ID өмнө ашиглагдсан байна.'})
+        super().clean()
 
     def __str__(self):
         return f"Payment {self.id} - {self.status}"
 
-
-# UserProfile for backward compatibility - maps to users table
-class UserProfile(models.Model):
-    """Compatibility wrapper around User."""
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='profile')
-    role = models.CharField(max_length=20, default='user')
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    is_verified = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     class Meta:
-        db_table = 'users'
-        managed = False
-
-    def __str__(self):
-        return f"{self.user.username} Profile"
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['booking', 'status']),
+            models.Index(fields=['created_at']),
+            models.Index(fields=['status', 'created_at']),
+        ]

@@ -7,8 +7,8 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.models import User
 
-from .models import User
 from .serializers import UserRegisterSerializer
 
 
@@ -35,9 +35,10 @@ class RegisterAPIView(APIView):
         if serializer.is_valid():
             user = serializer.save()
 
-            # Update user role directly (users table has role column)
-            user.role = role
-            user.save(update_fields=['role'])
+            # Update user profile role
+            profile = user.profile
+            profile.role = role
+            profile.save()
 
             # If broker, create BrokerProfile
             if role == 'broker':
@@ -62,8 +63,10 @@ class RegisterAPIView(APIView):
                     'id': user.id,
                     'username': user.username,
                     'email': user.email,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
                     'role': role,
-                    'is_verified': user.is_verified,
+                    'is_verified': profile.is_verified,
                 },
                 'tokens': {
                     'access': str(refresh.access_token),
