@@ -23,10 +23,8 @@ export default function SecurityScreen({ onNavigate }: Props) {
   const canSubmit = oldPass.length > 0 && newPass.length >= 8 && newPass === confirm;
 
   const handleUpdatePassword = async () => {
-    if (!user?.id || !canSubmit) return;
-    setLoading(true);
     try {
-      await AuthAPI.changePassword(user.id, oldPass, newPass);
+      await AuthAPI.changePassword(oldPass, newPass, confirm);
       Alert.alert('Амжилттай', 'Нууц үг амжилттай шинэчлэгдлээ.', [
         { text: 'OK', onPress: () => onNavigate('profile') }
       ]);

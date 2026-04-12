@@ -74,10 +74,10 @@ export const AuthAPI = {
       body: JSON.stringify({ uid, token, new_password }),
     }),
 
-  changePassword: (user_id: number, old_password: string, new_password: string) =>
+  changePassword: (old_password: string, new_password: string, new_password2: string) =>
     request('/auth/change-password/', {
       method: 'POST',
-      body: JSON.stringify({ user_id, old_password, new_password }),
+      body: JSON.stringify({ old_password, new_password, new_password2 }),
     }),
 };
 

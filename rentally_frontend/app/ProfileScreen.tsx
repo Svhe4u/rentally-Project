@@ -89,6 +89,13 @@ export default function ProfileScreen({ onNavigate }: Props) {
   }, [user]);
 
   const handleLogout = () => {
+    // Platform-specific logout confirmation for reliability
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm('Та системээс гарахдаа итгэлтэй байна уу?');
+      if (confirmed) logout();
+      return;
+    }
+
     Alert.alert(
       'Системээс гарах',
       'Та системээс гарахдаа итгэлтэй байна уу?',

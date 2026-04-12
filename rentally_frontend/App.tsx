@@ -36,8 +36,15 @@ function AppNavigator() {
   // Auto-redirect after auth state loads
   React.useEffect(() => {
     if (!isLoading) {
-      if (isAuthenticated && (screen === 'login' || screen === 'register')) {
-        setScreen('home');
+      if (isAuthenticated) {
+        if (screen === 'login' || screen === 'register') {
+          setScreen('home');
+        }
+      } else {
+        // Not authenticated
+        if (screen !== 'login' && screen !== 'register') {
+          setScreen('login');
+        }
       }
     }
   }, [isAuthenticated, isLoading, screen]);
@@ -61,6 +68,11 @@ function AppNavigator() {
   };
 
   const renderScreen = () => {
+    // Top-level Auth Guard: Force login if not authenticated and trying to access private screens
+    if (!isAuthenticated && screen !== 'login' && screen !== 'register') {
+      return <LoginScreen onNavigate={navigate} />;
+    }
+
     switch (screen) {
       case 'login':     return <LoginScreen      onNavigate={navigate} />;
       case 'register':  return <RegisterScreen   onNavigate={navigate} />;
