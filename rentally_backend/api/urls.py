@@ -11,10 +11,13 @@ from .views import (
     ListingListAPIView,
     ListingDetailAPIView,
     ListingImageAPIView,
+    MyListingsAPIView,
+    ListingFullDetailAPIView,
 
     # Bookings
     BookingListAPIView,
     BookingDetailAPIView,
+    MyListingsBookingsAPIView,
 
     # Reviews
     ReviewListAPIView,
@@ -82,13 +85,16 @@ urlpatterns = [
 
     # ───────────────────── LISTINGS ─────────────────────
     path("listings/", ListingListAPIView.as_view(), name="listing-list"),
+    path("listings/my/", MyListingsAPIView.as_view(), name="my-listings"),
     path("listings/<int:pk>/", ListingDetailAPIView.as_view(), name="listing-detail"),
     path("listing-images/", ListingImageAPIView.as_view(), name="listing-image-list"),
     path("listings/trending/", TrendingListingsAPIView.as_view(), name="trending-listings"),
     path("listings/popular/", PopularListingsAPIView.as_view(), name="popular-listings"),
+    path("listings/<int:pk>/full/", ListingFullDetailAPIView.as_view(), name="listing-full-detail"),
 
     # ───────────────────── BOOKINGS ─────────────────────
     path("bookings/", BookingListAPIView.as_view(), name="booking-list"),
+    path("bookings/for-my-listings/", MyListingsBookingsAPIView.as_view(), name="my-listings-bookings"),
     path("bookings/<int:pk>/", BookingDetailAPIView.as_view(), name="booking-detail"),
 
     # ───────────────────── REVIEWS ─────────────────────

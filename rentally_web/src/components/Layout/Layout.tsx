@@ -7,9 +7,10 @@ import './Layout.css';
 interface LayoutProps {
   user: UserProfile | null;
   onLogout: () => void;
+  children?: React.ReactNode;
 }
 
-export function Layout({ user, onLogout }: LayoutProps) {
+export function Layout({ user, onLogout,children  }: LayoutProps) {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -79,7 +80,7 @@ export function Layout({ user, onLogout }: LayoutProps) {
       </aside>
 
       <main className="main-content">
-        <Outlet />
+        {children}  {/* ← change this */}
       </main>
 
       {isSidebarOpen && (

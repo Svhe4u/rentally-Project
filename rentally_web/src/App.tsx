@@ -13,27 +13,10 @@ import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { Listings } from './pages/Listings';
 import { Profile } from './pages/Profile';
+import { Bookings } from './pages/Bookings';
+import { Messages } from './pages/Messages';
 
 import './index.css';
-
-// Placeholder pages (to be implemented)
-function Bookings() {
-  return (
-    <div className="page-placeholder">
-      <h1>Bookings</h1>
-      <p>Booking management coming soon...</p>
-    </div>
-  );
-}
-
-function Messages() {
-  return (
-    <div className="page-placeholder">
-      <h1>Messages</h1>
-      <p>Message center coming soon...</p>
-    </div>
-  );
-}
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(api.isAuthenticated());
@@ -106,8 +89,14 @@ function App() {
                     path="/listings"
                     element={<Listings onSuccess={success} onError={error} />}
                   />
-                  <Route path="/bookings" element={<Bookings />} />
-                  <Route path="/messages" element={<Messages />} />
+                  <Route
+                    path="/bookings"
+                    element={<Bookings onSuccess={success} onError={error} />}
+                  />
+                  <Route
+                    path="/messages"
+                    element={<Messages onSuccess={success} onError={error} />}
+                  />
                   <Route
                     path="/profile"
                     element={<Profile onSuccess={success} onError={error} />}

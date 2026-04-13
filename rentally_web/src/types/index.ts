@@ -124,6 +124,7 @@ export interface ListingFormData {
   area_sqm?: number;
   heating_type?: string;
   features?: string[];
+  status?: ListingStatus;
 }
 
 export interface Booking {

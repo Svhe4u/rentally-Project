@@ -5,6 +5,7 @@ import {
   Dimensions, Image, Alert, Animated, StatusBar, Platform,
 } from 'react-native';
 import { TabName } from '../components/BottomNav';
+import { storage } from '../services/storage';
 
 // ─── Config ───────────────────────────────────────────────────
 const API_BASE = 'http://127.0.0.1:8000/api';
@@ -153,10 +154,32 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
     if (!listingId) return;
     setLoading(true); setError(''); setListing(null); setUtility(null); setImgIdx(0);
     try {
-      const r = await fetch(`${API_BASE}/listings/${listingId}/full/`);
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const d: Listing = await r.json();
-      setListing(d);
+              const r = await fetch(`${API_BASE}/listings/${listingId}/`);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const raw = await r.json();
+
+        const d: Listing = {
+          ...raw,
+          price: parseFloat(raw.price),
+          owner: {
+            id: raw.owner,
+            username: raw.owner_username,
+            role: 'broker',
+          },
+          category: raw.category ? { id: raw.category, name: raw.category_name } : undefined,
+          region: raw.region ? { id: raw.region, name: raw.region_name } : undefined,
+          details: raw.detail || {},
+          extra_features: (raw.features || []).map((f: any) => ({
+            id: f.id,
+            key: f.name,
+            value: f.value,
+          })),
+          rating_avg: raw.average_rating ?? null,
+          reviews: [],
+          availability: [],
+        };
+
+        setListing(d);
       if (d.details?.area_sqm) {
         const u = await fetch(`${API_BASE}/mongolia/utility-estimate/?area_sqm=${d.details.area_sqm}`);
         const ud = await u.json();
@@ -193,23 +216,47 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
   };
 
   // ── Message ───────────────────────────────────────────────
-  const sendMsg = async () => {
-    if (!msgText.trim() || !listing) return;
-    setMsgSending(true);
-    try {
-      const r = await fetch(`${API_BASE}/messages/`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sender_id: CURRENT_USER_ID, receiver_id: listing.owner.id,
-          listing_id: listing.id, message: msgText.trim(),
-        }),
+const sendMsg = async () => {
+  if (!msgText.trim() || !listing) return;
+  setMsgSending(true);
+  try {
+    let token = await storage.getItem('auth_token');
+    
+    // Token expire бол refresh хийнэ
+    const refreshToken = await storage.getItem('refresh_token');
+    if (refreshToken) {
+      const refreshRes = await fetch(`${API_BASE}/auth/token/refresh/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh: refreshToken }),
       });
-      if (!r.ok) throw new Error();
-      setMsgText(''); setMsgOpen(false);
-      Alert.alert('✅', 'Мессеж амжилттай илгээгдлээ!');
-    } catch { Alert.alert('Алдаа', 'Мессеж илгээхэд алдаа гарлаа'); }
-    finally { setMsgSending(false); }
-  };
+      if (refreshRes.ok) {
+        const refreshData = await refreshRes.json();
+        token = refreshData.access;
+        await storage.setItem('auth_token', token!);
+      }
+    }
+
+    const r = await fetch(`${API_BASE}/messages/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        recipient_id: listing.owner.id,
+        content: msgText.trim(),
+        listing_id: listing.id,
+      }),
+    });
+    if (!r.ok) throw new Error();
+    setMsgText(''); setMsgOpen(false);
+    Alert.alert('✅', 'Мессеж амжилттай илгээгдлээ!');
+  } catch { 
+    Alert.alert('Алдаа', 'Мессеж илгээхэд алдаа гарлаа'); 
+  }
+  finally { setMsgSending(false); }
+};
 
   // ── Review ────────────────────────────────────────────────
   const postReview = async () => {

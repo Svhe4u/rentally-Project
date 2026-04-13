@@ -2,11 +2,42 @@ import { storage } from './storage';
 
 const BASE_URL = 'http://localhost:8000/api'; // Web testing
 
+// async function request<T>(
+//   path: string,
+//   options?: RequestInit,
+// ): Promise<T> {
+//   // Get token from storage
+//   const token = await storage.getItem('auth_token');
+
+//   const headers: HeadersInit = {
+//     'Content-Type': 'application/json',
+//     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+//     ...(options?.headers || {}),
+//   };
+
+//   const res = await fetch(`${BASE_URL}${path}`, {
+//     ...options,
+//     headers,
+//   });
+//   if (!res.ok) {
+//     const err = await res.json().catch(() => ({}));
+//     // Django error format: { "field": ["message"] } or { "error": "message" } or { "detail": "message" }
+//     let errorMessage = err.error || err.detail;
+//     if (!errorMessage && typeof err === 'object') {
+//       const firstKey = Object.keys(err)[0];
+//       if (firstKey && Array.isArray(err[firstKey])) {
+//         errorMessage = `${firstKey}: ${err[firstKey][0]}`;
+//       }
+//     }
+//     throw new Error(errorMessage || `HTTP ${res.status}`);
+//   }
+//   return res.json();
+// }
+
 async function request<T>(
   path: string,
   options?: RequestInit,
 ): Promise<T> {
-  // Get token from storage
   const token = await storage.getItem('auth_token');
 
   const headers: HeadersInit = {
@@ -19,9 +50,39 @@ async function request<T>(
     ...options,
     headers,
   });
+
+  // Token expire бол refresh хийгээд дахин оролдоно
+  if (res.status === 401) {
+    const refreshToken = await storage.getItem('refresh_token');
+    if (refreshToken) {
+      const refreshRes = await fetch(`${BASE_URL}/auth/token/refresh/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh: refreshToken }),
+      });
+      if (refreshRes.ok) {
+        const { access } = await refreshRes.json();
+        await storage.setItem('auth_token', access);
+
+        // Шинэ token-р дахин request хийнэ
+        const retryRes = await fetch(`${BASE_URL}${path}`, {
+          ...options,
+          headers: {
+            ...headers,
+            'Authorization': `Bearer ${access}`,
+          },
+        });
+        if (!retryRes.ok) {
+          const err = await retryRes.json().catch(() => ({}));
+          throw new Error(err.detail || err.error || `HTTP ${retryRes.status}`);
+        }
+        return retryRes.json();
+      }
+    }
+  }
+
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    // Django error format: { "field": ["message"] } or { "error": "message" } or { "detail": "message" }
     let errorMessage = err.error || err.detail;
     if (!errorMessage && typeof err === 'object') {
       const firstKey = Object.keys(err)[0];
@@ -33,6 +94,8 @@ async function request<T>(
   }
   return res.json();
 }
+
+
 
 // ─── AUTH ────────────────────────────────────────────────────
 export const AuthAPI = {

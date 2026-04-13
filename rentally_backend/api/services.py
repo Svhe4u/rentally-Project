@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.db import transaction
 from datetime import timedelta, date
 from decimal import Decimal, InvalidOperation
+from django.contrib.auth.models import User
 
 from .models import (
     Listing, Booking, Review, Favorite, Message, Payment, UserProfile
@@ -136,6 +137,13 @@ class ListingService:
         listing.status = 'archived'
         listing.save(update_fields=['status'])
 
+    @staticmethod
+    def get_my_listings(owner):
+        """Get all listings owned by a specific user (for broker portal)."""
+        return Listing.objects.filter(owner=owner).select_related(
+            'owner', 'category', 'region'
+        ).prefetch_related('images', 'reviews').order_by('-created_at')
+
 
 class BookingService:
 
@@ -205,6 +213,16 @@ class BookingService:
     def get_user_bookings(user, status=None):
         """Get user's bookings with related data."""
         queryset = Booking.objects.filter(user=user).select_related(
+            'listing', 'user'
+        ).prefetch_related('listing__images')
+        if status:
+            queryset = queryset.filter(status=status)
+        return queryset.order_by('-created_at')
+
+    @staticmethod
+    def get_listing_bookings(listing_owner, status=None):
+        """Get bookings for all listings owned by a specific broker."""
+        queryset = Booking.objects.filter(listing__owner=listing_owner).select_related(
             'listing', 'user'
         ).prefetch_related('listing__images')
         if status:

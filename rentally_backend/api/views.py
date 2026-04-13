@@ -232,6 +232,15 @@ class ListingImageAPIView(APIView):
         return APIError.bad_request(str(serializer.errors))
 
 
+class ListingFullDetailAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, pk):
+        listing = get_object_or_404(Listing, id=pk)
+        serializer = ListingDetailedSerializer(listing)
+        return Response(serializer.data)
+
+
 # ─────────────────────────────────────────────────────────────────────────
 # BOOKINGS
 # ─────────────────────────────────────────────────────────────────────────
@@ -781,6 +790,46 @@ class PopularListingsAPIView(APIView):
 
         listings = SearchService.popular_listings(limit)
         return Response(ListingSerializer(listings, many=True).data)
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# MY LISTINGS (BROKER PORTAL)
+# ─────────────────────────────────────────────────────────────────────────
+
+class MyListingsAPIView(APIView):
+    """
+    GET /api/listings/my/ — broker's own listings (for portal)
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        listings = ListingService.get_my_listings(request.user)
+        serializer = ListingSerializer(listings, many=True)
+        return Response({
+            'total': len(serializer.data),
+            'page': 1,
+            'page_size': len(serializer.data),
+            'total_pages': 1,
+            'results': serializer.data,
+        })
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# MY LISTINGS BOOKINGS (BROKER PORTAL)
+# ─────────────────────────────────────────────────────────────────────────
+
+class MyListingsBookingsAPIView(APIView):
+    """
+    GET /api/bookings/for-my-listings/ — bookings on broker's own listings
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        status_filter = request.query_params.get('status')
+        bookings = BookingService.get_listing_bookings(request.user, status_filter)
+        page, page_size = get_pagination_params(request)
+        results, meta = paginate_queryset(bookings, page, page_size)
+        return Response({'meta': meta, 'results': BookingSerializer(results, many=True).data})
 
 
 class PopularAreasAPIView(APIView):

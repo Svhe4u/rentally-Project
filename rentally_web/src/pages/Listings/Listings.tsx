@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { Listing, Category, Region, ListingFormData } from '../../types';
+import type { Listing, Category, Region, ListingFormData, ListingStatus } from '../../types';
 import { ListingAPI, MetaDataAPI } from '../../api/api';
 import { Modal } from '../../components/Modal';
 import { ListingForm } from '../../components/ListingForm';
@@ -95,7 +95,7 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
     }
   };
 
-  const handleStatusChange = async (listing: Listing, newStatus: string) => {
+  const handleStatusChange = async (listing: Listing, newStatus: ListingStatus) => {
     try {
       await ListingAPI.patch(listing.id, { status: newStatus });
       onSuccess(`Status changed to ${newStatus}`);
@@ -226,7 +226,7 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
                   <td>
                     <select
                       value={listing.status}
-                      onChange={(e) => handleStatusChange(listing, e.target.value)}
+                      onChange={(e) => handleStatusChange(listing, e.target.value as ListingStatus)}
                       className={`status-select status-${listing.status}`}
                     >
                       <option value="active">Active</option>

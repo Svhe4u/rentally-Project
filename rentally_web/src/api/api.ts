@@ -197,7 +197,7 @@ export const ListingAPI = {
       method: 'DELETE',
     }),
 
-  getMyListings: () => api.request<PaginatedResponse<Listing>>('/listings/'),
+  getMyListings: () => api.request<PaginatedResponse<Listing>>('/listings/my/'),
 
   getTrending: (days = 7, limit = 10) =>
     api.request<Listing[]>(`/listings/trending/?days=${days}&limit=${limit}`),
@@ -211,6 +211,11 @@ export const BookingAPI = {
   getAll: (status?: string) => {
     const params = status ? `?status=${status}` : '';
     return api.request<PaginatedResponse<Booking>>(`/bookings/${params}`);
+  },
+
+  getForMyListings: (status?: string) => {
+    const params = status ? `?status=${status}` : '';
+    return api.request<PaginatedResponse<Booking>>(`/bookings/for-my-listings/${params}`);
   },
 
   getById: (id: number) => api.request<Booking>(`/bookings/${id}/`),
