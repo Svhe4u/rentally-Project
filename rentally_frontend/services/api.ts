@@ -288,7 +288,7 @@ export const MessageThreadAPI = {
 // ─── MESSAGES ────────────────────────────────────────────────
 export const MessageAPI = {
   thread: (partner_id: number) =>
-    request<Message[]>(`/messages/${partner_id}/`),
+    request<{ messages: Message[] }>(`/messages/${partner_id}/`).then(r => r?.messages ?? []),
 
   send: (data: {
     recipient_id: number;
@@ -445,20 +445,28 @@ export interface ReviewWithUser extends Review {
 }
 
 export interface Favorite {
-  user_id: number;
-  listing_id: number;
+  id: number;
+  listing: number;
+  listing_title?: string;
+  listing_price?: number;
+  listing_address?: string;
+  listing_image?: string;
+  listing_status?: string;
   created_at: string;
-  title?: string;
-  price?: number;
-  address?: string;
 }
 
 export interface Message {
   id: number;
-  sender_id: number;
-  receiver_id: number;
-  listing_id?: number;
-  message: string;
+  sender: number;
+  sender_username?: string;
+  sender_avatar?: string;
+  recipient: number;
+  recipient_username?: string;
+  listing?: number;
+  listing_title?: string;
+  content: string;
+  is_read: boolean;
+  read_at?: string;
   created_at: string;
 }
 

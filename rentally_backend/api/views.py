@@ -451,6 +451,11 @@ class FavoriteCheckAPIView(APIView):
         listing = get_object_or_404(Listing, id=pk)
         return Response({"is_favorited": FavoriteService.is_favorited(request.user, listing)})
 
+    def delete(self, request, pk):
+        listing = get_object_or_404(Listing, id=pk)
+        FavoriteService.toggle_favorite(request.user, listing)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 # ─────────────────────────────────────────────────────────────────────────
 # MESSAGES

@@ -40,7 +40,7 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
       // Enrich each favorite with full listing details
       const enriched = await Promise.allSettled(
         favs.map(f =>
-          ListingAPI.detail(f.listing_id).catch(() => null)
+          ListingAPI.detail(f.listing).catch(() => null)
         )
       );
 
@@ -49,7 +49,8 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
           if (r.status !== 'fulfilled' || !r.value) return null;
           const listing = r.value as any;
           return {
-            ...favs[i],
+            id: favs[i].id,
+            listing_id: favs[i].listing,
             title: listing.title,
             price: listing.price,
             price_type: listing.price_type,

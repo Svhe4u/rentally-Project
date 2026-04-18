@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import { TabName } from '../components/BottomNav';
 import { storage } from '../services/storage';
+import { FavoriteAPI } from '../services/api';
 
 // ─── Config ───────────────────────────────────────────────────
 const API_BASE = 'http://127.0.0.1:8000/api';
@@ -201,15 +202,9 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
     ]).start();
     try {
       if (isFav) {
-        await fetch(`${API_BASE}/favorites/${listing!.id}/`, {
-          method: 'DELETE', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user_id: CURRENT_USER_ID }),
-        });
+        await FavoriteAPI.remove(listing!.id);
       } else {
-        await fetch(`${API_BASE}/favorites/`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user_id: CURRENT_USER_ID, listing_id: listing!.id }),
-        });
+        await FavoriteAPI.add(CURRENT_USER_ID, listing!.id);
       }
       setIsFav(f => !f);
     } catch { Alert.alert('Алдаа', 'Хадгалахад алдаа гарлаа'); }

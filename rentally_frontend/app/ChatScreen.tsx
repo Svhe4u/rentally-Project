@@ -6,6 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { MessageAPI, Message } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 interface Props {
   onNavigate: (screen: string, params?: any) => void;
@@ -31,7 +32,7 @@ export default function ChatScreen({
   const load = async () => {
     try {
       const data = await MessageAPI.thread(receiverId);
-      setMessages(data); // Backend returns oldest first, which is what we need
+      setMessages(data); // MessageAPI.thread already returns the array
     } catch (e) {
       console.error('Failed to load chat:', e);
     } finally {
@@ -43,14 +44,17 @@ export default function ChatScreen({
 
   const sendMessage = async () => {
     const trimmed = text.trim();
+    console.log('sendMessage called, trimmed:', trimmed, 'sending:', sending);
     if (!trimmed || sending) return;
     setSending(true);
     try {
+      console.log('Sending message to:', receiverId, 'listingId:', listingId);
       const msg = await MessageAPI.send({
         recipient_id: receiverId,
         listing_id: listingId,
         content: trimmed,
       });
+      console.log('Message sent successfully:', msg);
       setMessages(prev => [...prev, msg]);
       setText('');
       setTimeout(() => flatRef.current?.scrollToEnd({ animated: true }), 100);
@@ -62,11 +66,11 @@ export default function ChatScreen({
   };
 
   const renderItem = ({ item }: { item: Message }) => {
-    const isMine = item.sender_id === currentUser?.id;
+    const isMine = item.sender === currentUser?.id;
     return (
       <View style={[c.bubble, isMine ? c.bubbleMine : c.bubbleTheirs]}>
         <Text style={[c.bubbleTxt, isMine ? c.bubbleTxtMine : c.bubbleTxtTheirs]}>
-          {item.message}
+          {item.content}
         </Text>
         <Text style={[c.bubbleTime, isMine ? c.bubbleTimeMine : c.bubbleTimeTheirs]}>
           {new Date(item.created_at).toLocaleTimeString('mn-MN', { hour: '2-digit', minute: '2-digit' })}
