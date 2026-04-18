@@ -230,7 +230,7 @@ const s = StyleSheet.create({
 
   btnPrimary: {
     backgroundColor: Colors.primary,
-    borderRadius: 14,
+    borderRadius: 24,
     paddingVertical: 15,
     alignItems: 'center',
     marginTop: 4,

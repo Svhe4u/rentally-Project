@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
-  SafeAreaView, ScrollView, ActivityIndicator, Alert,
+  SafeAreaView, ScrollView, ActivityIndicator, Alert, Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
@@ -37,9 +37,9 @@ export default function SecurityScreen({ onNavigate }: Props) {
 
   return (
     <SafeAreaView style={s.safe}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => onNavigate('profile')} style={s.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={Colors.text} />
+      <View style={s.topBar}>
+        <TouchableOpacity onPress={() => onNavigate('profile')} style={s.topBtn}>
+          <Ionicons name="arrow-back" size={22} color={Colors.text} />
         </TouchableOpacity>
         <Text style={s.headerTitle}>Аюулгүй байдал</Text>
         <View style={{ width: 40 }} />
@@ -67,6 +67,7 @@ export default function SecurityScreen({ onNavigate }: Props) {
                 onChangeText={setOldPass}
                 secureTextEntry={!showPass}
                 placeholder="••••••••"
+                placeholderTextColor={Colors.textLight}
               />
             </View>
           </View>
@@ -81,6 +82,7 @@ export default function SecurityScreen({ onNavigate }: Props) {
                 onChangeText={setNewPass}
                 secureTextEntry={!showPass}
                 placeholder="••••••••"
+                placeholderTextColor={Colors.textLight}
               />
             </View>
           </View>
@@ -95,6 +97,7 @@ export default function SecurityScreen({ onNavigate }: Props) {
                 onChangeText={setConfirm}
                 secureTextEntry={!showPass}
                 placeholder="••••••••"
+                placeholderTextColor={Colors.textLight}
               />
             </View>
             {newPass !== confirm && confirm.length > 0 && (
@@ -126,42 +129,54 @@ export default function SecurityScreen({ onNavigate }: Props) {
 
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.bg },
-  header: {
+  topBar: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 16, paddingVertical: 12, backgroundColor: Colors.white,
-    borderBottomWidth: 1, borderBottomColor: Colors.border,
+    paddingHorizontal: 20, paddingVertical: 15,
+    backgroundColor: Colors.white,
   },
-  backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  headerTitle: { fontSize: 17, fontWeight: '800', color: Colors.text },
+  topBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.bg, alignItems: 'center', justifyContent: 'center' },
+  headerTitle: { fontSize: 16, fontWeight: '800', color: Colors.text, textTransform: 'uppercase', letterSpacing: 0.5 },
   content: { padding: 20 },
+  
   infoCard: {
     flexDirection: 'row', alignItems: 'center', gap: 16, backgroundColor: Colors.white,
     borderRadius: 24, padding: 20, marginBottom: 20,
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.04, shadowRadius: 10 },
+      android: { elevation: 2 },
+    }),
   },
   infoIcon: {
-    width: 60, height: 60, borderRadius: 20, backgroundColor: Colors.primary + '15',
+    width: 60, height: 60, borderRadius: 20, backgroundColor: Colors.primary + '10',
     alignItems: 'center', justifyContent: 'center',
   },
   infoTitle: { fontSize: 16, fontWeight: '800', color: Colors.text },
-  infoSub: { fontSize: 12, color: Colors.textMuted, marginTop: 4, lineHeight: 18 },
-  card: { backgroundColor: Colors.white, borderRadius: 24, padding: 20, gap: 16 },
+  infoSub: { fontSize: 13, color: Colors.textMuted, marginTop: 4, lineHeight: 18 },
+  
+  card: { 
+    backgroundColor: Colors.white, borderRadius: 24, padding: 20, gap: 20,
+    ...Platform.select({
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.04, shadowRadius: 10 },
+      android: { elevation: 2 },
+    }),
+  },
   group: { gap: 8 },
-  label: { fontSize: 13, fontWeight: '700', color: Colors.textMuted, marginLeft: 4 },
+  label: { fontSize: 12, fontWeight: 'bold', color: Colors.textLight, textTransform: 'uppercase', letterSpacing: 1, marginLeft: 4 },
   inputWrap: {
     flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.bg,
     borderRadius: 14, paddingHorizontal: 14, gap: 10,
   },
   inputErr: { borderColor: Colors.red, borderWidth: 1 },
-  input: { flex: 1, paddingVertical: 14, fontSize: 15, color: Colors.text },
+  input: { flex: 1, paddingVertical: 14, fontSize: 15, color: Colors.text, fontWeight: '600' },
   errTxt: { fontSize: 11, color: Colors.red, marginLeft: 4 },
-  showRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4 },
+  
+  showRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   showTxt: { fontSize: 13, fontWeight: '700', color: Colors.primary },
+  
   btn: {
-    backgroundColor: Colors.primary, height: 56, borderRadius: 16,
+    backgroundColor: Colors.primary, borderRadius: 24, paddingVertical: 16,
     alignItems: 'center', justifyContent: 'center', marginTop: 30,
-    shadowColor: Colors.primary, shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.25, shadowRadius: 15, elevation: 8,
   },
   btnOff: { opacity: 0.6 },
-  btnTxt: { fontSize: 16, fontWeight: '800', color: '#fff' },
+  btnTxt: { fontSize: 16, fontWeight: 'bold', color: '#fff', letterSpacing: 0.5 },
 });

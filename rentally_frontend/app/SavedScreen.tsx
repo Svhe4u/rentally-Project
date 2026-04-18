@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, StyleSheet, FlatList, SafeAreaView,
-  ActivityIndicator, Alert, RefreshControl,
+  ActivityIndicator, Alert, RefreshControl, Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
@@ -143,7 +143,7 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
           }
           ListEmptyComponent={
             <View style={s.emptyBox}>
-              <Ionicons name="heart-dislike-outline" size={64} color="#ddd" />
+              <Ionicons name="heart-dislike-outline" size={64} color={Colors.textLight} />
               <Text style={s.emptyTxt}>Хадгалсан байр байхгүй</Text>
               <Text style={s.emptySub}>Байрны зар дээр ❤️ дарж хадгалаарай</Text>
             </View>
@@ -165,22 +165,27 @@ const s = StyleSheet.create({
   },
   logo: { fontSize: 20, fontWeight: '900', color: Colors.primary, letterSpacing: 1 },
   logoAccent: { color: Colors.yellow },
-  pageHeader: { paddingHorizontal: 20, paddingTop: 15, paddingBottom: 5 },
-  headerTitle: { fontSize: 24, fontWeight: 'bold', color: Colors.text },
+  
+  pageHeader: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: 10 },
+  headerTitle: { fontSize: 22, fontWeight: '900', color: Colors.text, textTransform: 'uppercase', letterSpacing: 0.5 },
+  
   countBadge: {
     backgroundColor: Colors.primary + '15',
-    paddingHorizontal: 12, paddingVertical: 4,
-    borderRadius: 12,
+    paddingHorizontal: 12, paddingVertical: 6,
+    borderRadius: 14,
   },
   countTxt: { fontSize: 13, fontWeight: 'bold', color: Colors.primary },
+  
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
   loadingTxt: { fontSize: 14, color: Colors.textMuted, fontWeight: '600' },
-  list: { padding: 12, gap: 0 },
-  cardWrap: { marginBottom: 4 },
+  
+  list: { paddingHorizontal: 16, paddingBottom: 20 },
+  cardWrap: { marginBottom: 15 },
+  
   emptyBox: {
     flex: 1, alignItems: 'center', justifyContent: 'center',
     paddingTop: 100, paddingHorizontal: 32, gap: 12,
   },
-  emptyTxt:  { fontSize: 17, fontWeight: '800', color: Colors.text, textAlign: 'center' },
-  emptySub:  { fontSize: 13, color: Colors.textMuted, textAlign: 'center' },
+  emptyTxt:  { fontSize: 18, fontWeight: '800', color: Colors.text, textAlign: 'center' },
+  emptySub:  { fontSize: 14, color: Colors.textMuted, fontWeight: '600', textAlign: 'center' },
 });

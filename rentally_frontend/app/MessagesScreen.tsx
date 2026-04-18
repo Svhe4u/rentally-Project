@@ -143,9 +143,9 @@ const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.white },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 12,
+    paddingHorizontal: 20, paddingTop: 15, paddingBottom: 10,
   },
-  headerTitle: { fontSize: 24, fontWeight: 'bold', color: Colors.text },
+  headerTitle: { fontSize: 22, fontWeight: '900', color: Colors.text, textTransform: 'uppercase', letterSpacing: 0.5 },
   addBtn: {
     width: 36, height: 36, borderRadius: 18, 
     backgroundColor: '#f5f5f5', alignItems: 'center', justifyContent: 'center'

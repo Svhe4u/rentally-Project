@@ -167,21 +167,21 @@ const c = StyleSheet.create({
   safe:   { flex: 1, backgroundColor: Colors.bg },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 8, paddingVertical: 10,
+    paddingHorizontal: 20, paddingVertical: 15,
     backgroundColor: Colors.white,
     borderBottomWidth: 1, borderBottomColor: Colors.border,
   },
-  backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  headerCenter: { flexDirection: 'row', alignItems: 'center', gap: 10, flex: 1, marginLeft: 4 },
+  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.bg, alignItems: 'center', justifyContent: 'center' },
+  headerCenter: { flexDirection: 'row', alignItems: 'center', gap: 10, flex: 1, marginLeft: 15 },
   avatar: {
     width: 38, height: 38, borderRadius: 19,
     backgroundColor: Colors.primary,
     alignItems: 'center', justifyContent: 'center',
   },
   avatarLtr: { fontSize: 16, fontWeight: '900', color: '#fff' },
-  headerName: { fontSize: 15, fontWeight: '800', color: Colors.text },
-  headerSub:  { fontSize: 11, color: '#22c55e', fontWeight: '600' },
-  callBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  headerName: { fontSize: 16, fontWeight: '800', color: Colors.text },
+  headerSub:  { fontSize: 11, color: '#22c55e', fontWeight: 'bold' },
+  callBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.primary + '10', alignItems: 'center', justifyContent: 'center' },
 
   listingBanner: {
     flexDirection: 'row', alignItems: 'center', gap: 10,

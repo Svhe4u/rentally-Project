@@ -284,7 +284,7 @@ const s = StyleSheet.create({
   agreeLink: { color: Colors.primary, fontWeight: '700' },
 
   btnPrimary: {
-    backgroundColor: Colors.primary, borderRadius: 14,
+    backgroundColor: Colors.primary, borderRadius: 24,
     paddingVertical: 15, alignItems: 'center', marginBottom: 16,
     shadowColor: Colors.primary, shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3, shadowRadius: 12, elevation: 6,

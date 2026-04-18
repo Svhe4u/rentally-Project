@@ -146,13 +146,7 @@ export default function ProfileScreen({ onNavigate }: Props) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={m.scrollContent}
       >
-        {/* Topbar */}
-        <View style={m.topBar}>
-          <Text style={m.logo}>РЕНТАЛ<Text style={m.logoAccent}>ЛИ</Text></Text>
-          <TouchableOpacity style={m.topBtn} onPress={handleLogout}>
-            <Ionicons name="log-out-outline" size={22} color={Colors.red} />
-          </TouchableOpacity>
-        </View>
+
 
         {/* User info card */}
         <View style={m.userCard}>
