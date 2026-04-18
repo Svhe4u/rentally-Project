@@ -41,7 +41,7 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
       setRegions(regionsData);
     } catch (error) {
       console.error('Failed to fetch data:', error);
-      onError('Failed to load listings');
+      onError('Жагсаалтыг уншиж чадсангүй');
     } finally {
       setLoading(false);
     }
@@ -51,11 +51,11 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
     try {
       setIsSubmitting(true);
       await ListingAPI.create(data);
-      onSuccess('Property created successfully');
+      onSuccess('Байр амжилттай үүслээ');
       setShowAddModal(false);
       fetchData();
     } catch (error: any) {
-      onError(error.message || 'Failed to create property');
+      onError(error.message || 'Байр үүсгэж чадсангүй');
     } finally {
       setIsSubmitting(false);
     }
@@ -67,12 +67,12 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
     try {
       setIsSubmitting(true);
       await ListingAPI.update(selectedListing.id, data);
-      onSuccess('Property updated successfully');
+      onSuccess('Байр амжилттай шинэчлэгдлээ');
       setShowEditModal(false);
       setSelectedListing(null);
       fetchData();
     } catch (error: any) {
-      onError(error.message || 'Failed to update property');
+      onError(error.message || 'Байр шинэчилж чадсангүй');
     } finally {
       setIsSubmitting(false);
     }
@@ -84,12 +84,12 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
     try {
       setIsSubmitting(true);
       await ListingAPI.delete(selectedListing.id);
-      onSuccess('Property deleted successfully');
+      onSuccess('Байр амжилттай устгагдлаа');
       setShowDeleteModal(false);
       setSelectedListing(null);
       fetchData();
     } catch (error: any) {
-      onError(error.message || 'Failed to delete property');
+      onError(error.message || 'Байр устгаж чадсангүй');
     } finally {
       setIsSubmitting(false);
     }
@@ -98,10 +98,10 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
   const handleStatusChange = async (listing: Listing, newStatus: ListingStatus) => {
     try {
       await ListingAPI.patch(listing.id, { status: newStatus });
-      onSuccess(`Status changed to ${newStatus}`);
+      onSuccess(`Төлөв ${newStatus} болж өөрчлөгдлөө`);
       fetchData();
     } catch (error: any) {
-      onError(error.message || 'Failed to update status');
+      onError(error.message || 'Төлөв өөрчилж чадсангүй');
     }
   };
 
@@ -142,7 +142,7 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
           <div className="search-box">
             <input
               type="text"
-              placeholder="Search properties..."
+              placeholder="Байр хайх..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -155,16 +155,16 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="filter-select"
           >
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="sold">Sold</option>
-            <option value="archived">Archived</option>
+            <option value="all">Бүх төлөв</option>
+            <option value="active">Идэвхтэй</option>
+            <option value="inactive">Идэвхгүй</option>
+            <option value="sold">Зарагдсан</option>
+            <option value="archived">Архивлагдсан</option>
           </select>
         </div>
 
         <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
-          + Add Property
+          + Байр нэмэх
         </button>
       </div>
 
@@ -172,12 +172,12 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
         <table className="listings-table">
           <thead>
             <tr>
-              <th>Property</th>
-              <th>Location</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th>Views</th>
-              <th className="actions-header">Actions</th>
+              <th>Байр</th>
+              <th>Байршил</th>
+              <th>Үнэ</th>
+              <th>Төлөв</th>
+              <th>Хандалт</th>
+              <th className="actions-header">Үйлдэл</th>
             </tr>
           </thead>
           <tbody>
@@ -186,9 +186,9 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
                 <td colSpan={6} className="empty-cell">
                   <div className="empty-state">
                     <span className="empty-icon">🏠</span>
-                    <p>No properties found</p>
+                    <p>Байр олдсонгүй</p>
                     <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
-                      Add your first property
+                      Эхний байраа нэмнэ үү
                     </button>
                   </div>
                 </td>
@@ -229,10 +229,10 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
                       onChange={(e) => handleStatusChange(listing, e.target.value as ListingStatus)}
                       className={`status-select status-${listing.status}`}
                     >
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
-                      <option value="sold">Sold</option>
-                      <option value="archived">Archived</option>
+                      <option value="active">Идэвхтэй</option>
+                      <option value="inactive">Идэвхгүй</option>
+                      <option value="sold">Зарагдсан</option>
+                      <option value="archived">Архивлагдсан</option>
                     </select>
                   </td>
                   <td>
@@ -243,14 +243,14 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
                       <button
                         className="action-btn edit"
                         onClick={() => openEditModal(listing)}
-                        title="Edit"
+                        title="Засах"
                       >
                         ✏️
                       </button>
                       <button
                         className="action-btn delete"
                         onClick={() => openDeleteModal(listing)}
-                        title="Delete"
+                        title="Устгах"
                       >
                         🗑️
                       </button>
@@ -267,7 +267,7 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
       <Modal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
-        title="Add New Property"
+        title="Шинэ байр нэмэх"
         size="lg"
       >
         <ListingForm
@@ -286,7 +286,7 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
           setShowEditModal(false);
           setSelectedListing(null);
         }}
-        title="Edit Property"
+        title="Байр засах"
         size="lg"
       >
         {selectedListing && (
@@ -311,11 +311,11 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
           setShowDeleteModal(false);
           setSelectedListing(null);
         }}
-        title="Delete Property"
+        title="Байр устгах"
         size="sm"
       >
         <div className="delete-confirmation">
-          <p>Are you sure you want to delete this property?</p>
+          <p>Та энэ байрыг устгахдаа итгэлтэй байна уу?</p>
           {selectedListing && (
             <div className="delete-property-info">
               <strong>{selectedListing.title}</strong>
@@ -331,14 +331,14 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
               }}
               disabled={isSubmitting}
             >
-              Cancel
+              Болих
             </button>
             <button
               className="btn btn-danger"
               onClick={handleDelete}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Deleting...' : 'Delete'}
+              {isSubmitting ? 'Устгаж байна...' : 'Устгах'}
             </button>
           </div>
         </div>

@@ -10,6 +10,7 @@ import { Layout } from './components/Layout';
 
 // Pages
 import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
 import { Listings } from './pages/Listings';
 import { Profile } from './pages/Profile';
@@ -74,6 +75,17 @@ function App() {
               <Navigate to="/" replace />
             ) : (
               <Login onLogin={handleLogin} />
+            )
+          }
+        />
+        
+        <Route
+          path="/register"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/" replace />
+            ) : (
+              <Register onRegister={handleLogin} />
             )
           }
         />

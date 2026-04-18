@@ -94,7 +94,7 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
     <div className="image-uploader">
       <div className="image-uploader-header">
         <span className="image-count">
-          {images.length} / {maxImages} images
+          {images.length} / {maxImages} зураг
         </span>
         {canAddMore && (
           <button
@@ -102,7 +102,7 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
           >
-            {isUploading ? 'Uploading...' : '+ Add Images'}
+            {isUploading ? 'Хуулж байна...' : '+ Зураг нэмэх'}
           </button>
         )}
       </div>
@@ -132,8 +132,8 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
         {images.length === 0 ? (
           <div className="upload-placeholder" onClick={() => fileInputRef.current?.click()}>
             <div className="upload-icon">📷</div>
-            <p>Click to upload images</p>
-            <span>JPG, PNG up to 10MB each</span>
+            <p>Зураг хуулах бол дарна уу</p>
+            <span>JPG, PNG 10MB хүртэл</span>
           </div>
         ) : (
           images.map((image, index) => (
@@ -144,14 +144,14 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
               <img src={image.image_url} alt={image.alt_text || ''} />
 
               {image.is_primary && (
-                <span className="primary-badge">Primary</span>
+                <span className="primary-badge">Үндсэн</span>
               )}
 
               <div className="image-actions">
                 <button
                   className="image-action-btn"
                   onClick={() => handleSetPrimary(image.id)}
-                  title="Set as primary"
+                  title="Үндсэн болгох"
                   disabled={image.is_primary}
                 >
                   ★
@@ -160,7 +160,7 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
                   className="image-action-btn"
                   onClick={() => handleReorder(image.id, 'up')}
                   disabled={index === 0}
-                  title="Move up"
+                  title="Дээшлүүлэх"
                 >
                   ↑
                 </button>
@@ -168,14 +168,14 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
                   className="image-action-btn"
                   onClick={() => handleReorder(image.id, 'down')}
                   disabled={index === images.length - 1}
-                  title="Move down"
+                  title="Доошлуулах"
                 >
                   ↓
                 </button>
                 <button
                   className="image-action-btn delete"
                   onClick={() => handleRemoveImage(image.id)}
-                  title="Remove"
+                  title="Устгах"
                 >
                   ×
                 </button>

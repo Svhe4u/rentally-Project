@@ -1,21 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
-  --bg: #f8fafc;
-  --sidebar-bg: #0f172a;
-  --sidebar-text: #94a3b8;
+  --primary: #0ea5e9;       /* Sky blue */
+  --primary-hover: #0284c7; /* Darker sky blue */
+  --bg: #f0f9ff;            /* Very light blue bg */
+  --sidebar-bg: #0c4a6e;    /* Deep blue sidebar */
+  --sidebar-text: #e0f2fe;  /* Light text */
   --sidebar-active: #ffffff;
   --card-bg: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
+  --text-main: #0f172a;
+  --text-muted: #475569;
   --border: #e2e8f0;
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
-  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --glass: rgba(255, 255, 255, 0.7);
+  --shadow: 0 4px 6px -1px rgb(14 165 233 / 0.1), 0 2px 4px -2px rgb(14 165 233 / 0.1);
+  --glass: rgba(255, 255, 255, 0.85);
 }
 
 * {
@@ -187,7 +187,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
   padding: 1rem;
 }
 

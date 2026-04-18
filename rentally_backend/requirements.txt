@@ -36,3 +36,6 @@ pytest==7.4.0
 pytest-django==4.7.0
 factory-boy==3.3.0
 
+# Real-time / WebSockets
+daphne==4.1.2
+channels==4.1.0

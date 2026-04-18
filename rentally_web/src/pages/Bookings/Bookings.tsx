@@ -31,7 +31,7 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
       setBookings(data.results || []);
     } catch (error) {
       console.error('Failed to fetch bookings:', error);
-      onError('Failed to load bookings');
+      onError('Захиалга уншиж чадсангүй');
     } finally {
       setLoading(false);
     }
@@ -42,12 +42,12 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
     try {
       setIsSubmitting(true);
       await BookingAPI.update(selectedBooking.id, { status: 'confirmed' });
-      onSuccess('Booking confirmed successfully');
+      onSuccess('Захиалга амжилттай баталгаажлаа');
       setShowConfirmModal(false);
       setSelectedBooking(null);
       fetchBookings();
     } catch (error: any) {
-      onError(error.message || 'Failed to confirm booking');
+      onError(error.message || 'Захиалга баталгаажуулж чадсангүй');
     } finally {
       setIsSubmitting(false);
     }
@@ -58,12 +58,12 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
     try {
       setIsSubmitting(true);
       await BookingAPI.cancel(selectedBooking.id);
-      onSuccess('Booking cancelled successfully');
+      onSuccess('Захиалга амжилттай цуцлагдлаа');
       setShowCancelModal(false);
       setSelectedBooking(null);
       fetchBookings();
     } catch (error: any) {
-      onError(error.message || 'Failed to cancel booking');
+      onError(error.message || 'Захиалга цуцалж чадсангүй');
     } finally {
       setIsSubmitting(false);
     }
@@ -103,11 +103,11 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
 
   const getStatusLabel = (status: string) => {
     const labels: Record<string, string> = {
-      pending: 'Pending',
-      confirmed: 'Confirmed',
-      checked_in: 'Checked In',
-      checked_out: 'Checked Out',
-      cancelled: 'Cancelled',
+      pending: 'Хүлээгдэж буй',
+      confirmed: 'Баталгаажсан',
+      checked_in: 'Орсон',
+      checked_out: 'Гарсан',
+      cancelled: 'Цуцлагдсан',
     };
     return labels[status] || status;
   };
@@ -134,11 +134,11 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
     <div className="bookings-page">
       <div className="bookings-header">
         <div className="bookings-header-left">
-          <h1 className="page-title">Bookings</h1>
+          <h1 className="page-title">Захиалгууд</h1>
           <div className="booking-counts">
-            <span className="count-badge">{statusCounts.all} total</span>
+            <span className="count-badge">Нийт {statusCounts.all}</span>
             {statusCounts.pending > 0 && (
-              <span className="count-badge pending">{statusCounts.pending} pending</span>
+              <span className="count-badge pending">{statusCounts.pending} хүлээгдэж буй</span>
             )}
           </div>
         </div>
@@ -149,12 +149,12 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="filter-select"
           >
-            <option value="all">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="checked_in">Checked In</option>
-            <option value="checked_out">Checked Out</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="all">Бүх төлөв</option>
+            <option value="pending">Хүлээгдэж буй</option>
+            <option value="confirmed">Баталгаажсан</option>
+            <option value="checked_in">Орсон</option>
+            <option value="checked_out">Гарсан</option>
+            <option value="cancelled">Цуцлагдсан</option>
           </select>
         </div>
       </div>
@@ -163,12 +163,12 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
         <table className="bookings-table">
           <thead>
             <tr>
-              <th>Property</th>
-              <th>Guest</th>
-              <th>Dates</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th className="actions-header">Actions</th>
+              <th>Байр</th>
+              <th>Зочин</th>
+              <th>Огноо</th>
+              <th>Үнэ</th>
+              <th>Төлөв</th>
+              <th className="actions-header">Үйлдэл</th>
             </tr>
           </thead>
           <tbody>
@@ -177,7 +177,7 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
                 <td colSpan={6} className="empty-cell">
                   <div className="empty-state">
                     <span className="empty-icon">📅</span>
-                    <p>No bookings found</p>
+                    <p>Захиалга олдсонгүй</p>
                   </div>
                 </td>
               </tr>
@@ -214,7 +214,7 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
                       <button
                         className="action-btn view"
                         onClick={() => openDetail(booking)}
-                        title="View details"
+                        title="Дэлгэрэнгүй харах"
                       >
                         👁
                       </button>
@@ -222,7 +222,7 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
                         <button
                           className="action-btn confirm"
                           onClick={() => openConfirm(booking)}
-                          title="Confirm booking"
+                          title="Захиалга баталгаажуулах"
                         >
                           ✓
                         </button>
@@ -231,7 +231,7 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
                         <button
                           className="action-btn cancel"
                           onClick={() => openCancel(booking)}
-                          title="Cancel booking"
+                          title="Захиалга цуцлах"
                         >
                           ✕
                         </button>
@@ -252,39 +252,39 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
           setShowDetailModal(false);
           setSelectedBooking(null);
         }}
-        title="Booking Details"
+        title="Захиалгын дэлгэрэнгүй"
         size="md"
       >
         {selectedBooking && (
           <div className="booking-detail">
             <div className="detail-section">
-              <h4>Property</h4>
+              <h4>Байр</h4>
               <p>{selectedBooking.listing_title || `Listing #${selectedBooking.listing}`}</p>
             </div>
 
             <div className="detail-section">
-              <h4>Guest</h4>
+              <h4>Зочин</h4>
               <p>{selectedBooking.user_username || `User #${selectedBooking.user}`}</p>
             </div>
 
             <div className="detail-row">
               <div className="detail-section">
-                <h4>Check-in</h4>
+                <h4>Орох</h4>
                 <p>{formatDate(selectedBooking.start_date)}</p>
               </div>
               <div className="detail-section">
-                <h4>Check-out</h4>
+                <h4>Гарах</h4>
                 <p>{formatDate(selectedBooking.end_date)}</p>
               </div>
             </div>
 
             <div className="detail-row">
               <div className="detail-section">
-                <h4>Total Price</h4>
+                <h4>Нийт үнэ</h4>
                 <p className="detail-price">{formatPrice(selectedBooking.total_price)}</p>
               </div>
               <div className="detail-section">
-                <h4>Status</h4>
+                <h4>Төлөв</h4>
                 <p>
                   <span className={`status-badge ${selectedBooking.status}`}>
                     {getStatusLabel(selectedBooking.status)}
@@ -295,13 +295,13 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
 
             {selectedBooking.notes && (
               <div className="detail-section">
-                <h4>Notes</h4>
+                <h4>Тэмдэглэл</h4>
                 <p className="detail-notes">{selectedBooking.notes}</p>
               </div>
             )}
 
             <div className="detail-section">
-              <h4>Booked On</h4>
+              <h4>Захиалсан огноо</h4>
               <p>{formatDate(selectedBooking.created_at)}</p>
             </div>
 
@@ -314,7 +314,7 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
                     openConfirm(selectedBooking);
                   }}
                 >
-                  Confirm Booking
+                  Захиалга баталгаажуулах
                 </button>
               )}
               {(selectedBooking.status === 'pending' || selectedBooking.status === 'confirmed') && (
@@ -325,7 +325,7 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
                     openCancel(selectedBooking);
                   }}
                 >
-                  Cancel Booking
+                  Захиалга цуцлах
                 </button>
               )}
             </div>
@@ -340,18 +340,18 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
           setShowConfirmModal(false);
           setSelectedBooking(null);
         }}
-        title="Confirm Booking"
+        title="Захиалга баталгаажуулах"
         size="sm"
       >
         <div className="confirmation-content">
-          <p>Are you sure you want to confirm this booking?</p>
+          <p>Та энэ захиалгыг баталгаажуулахдаа итгэлтэй байна уу?</p>
           {selectedBooking && (
             <div className="confirmation-info">
               <strong>{selectedBooking.listing_title || `Listing #${selectedBooking.listing}`}</strong>
               <span>
                 {formatDate(selectedBooking.start_date)} → {formatDate(selectedBooking.end_date)}
               </span>
-              <span>Guest: {selectedBooking.user_username || `User #${selectedBooking.user}`}</span>
+              <span>Зочин: {selectedBooking.user_username || `User #${selectedBooking.user}`}</span>
             </div>
           )}
           <div className="confirmation-actions">
@@ -363,10 +363,10 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
               }}
               disabled={isSubmitting}
             >
-              Cancel
+              Болих
             </button>
             <button className="btn btn-primary" onClick={handleConfirm} disabled={isSubmitting}>
-              {isSubmitting ? 'Confirming...' : 'Confirm'}
+              {isSubmitting ? 'Баталгаажуулж байна...' : 'Баталгаажуулах'}
             </button>
           </div>
         </div>
@@ -379,18 +379,18 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
           setShowCancelModal(false);
           setSelectedBooking(null);
         }}
-        title="Cancel Booking"
+        title="Захиалга цуцлах"
         size="sm"
       >
         <div className="confirmation-content">
-          <p>Are you sure you want to cancel this booking?</p>
+          <p>Та энэ захиалгыг цуцлахдаа итгэлтэй байна уу?</p>
           {selectedBooking && (
             <div className="confirmation-info">
               <strong>{selectedBooking.listing_title || `Listing #${selectedBooking.listing}`}</strong>
               <span>
                 {formatDate(selectedBooking.start_date)} → {formatDate(selectedBooking.end_date)}
               </span>
-              <span>Guest: {selectedBooking.user_username || `User #${selectedBooking.user}`}</span>
+              <span>Зочин: {selectedBooking.user_username || `User #${selectedBooking.user}`}</span>
             </div>
           )}
           <div className="confirmation-actions">
@@ -402,10 +402,10 @@ export function Bookings({ onSuccess, onError }: BookingsProps) {
               }}
               disabled={isSubmitting}
             >
-              Go Back
+              Буцах
             </button>
             <button className="btn btn-danger" onClick={handleCancel} disabled={isSubmitting}>
-              {isSubmitting ? 'Cancelling...' : 'Cancel Booking'}
+              {isSubmitting ? 'Цуцалж байна...' : 'Захиалга цуцлах'}
             </button>
           </div>
         </div>

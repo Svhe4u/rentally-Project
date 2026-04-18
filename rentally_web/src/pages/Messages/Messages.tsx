@@ -9,6 +9,7 @@ interface Conversation {
   lastMessage: string;
   lastMessageTime: string;
   isRead: boolean;
+  listingTitle?: string | null;
 }
 
 interface MessagesProps {
@@ -20,16 +21,90 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedUsername, setSelectedUsername] = useState('');
+  const [selectedListingTitle, setSelectedListingTitle] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const selectedUserRef = useRef<number | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    selectedUserRef.current = selectedUserId;
+  }, [selectedUserId]);
 
   useEffect(() => {
     fetchInbox();
+    connectWebSocket();
+
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+    };
   }, []);
+
+  const connectWebSocket = () => {
+    const token = localStorage.getItem('access');
+    if (!token) return;
+
+    // Use ws:// for local dev, wss:// for production
+    const wsUrl = `ws://localhost:8000/ws/chat/?token=${token}`;
+    const ws = new WebSocket(wsUrl);
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === 'chat.message') {
+          const msg = data.message;
+          const senderId = msg.sender;
+
+          // If the message is from the user we are currently chatting with
+          if (selectedUserRef.current === senderId) {
+            setMessages((prev) => [...prev, msg]);
+            // Can optionally mark as read here automatically
+          }
+
+          // Update conversation list
+          setConversations((prev) => {
+            const existingIndex = prev.findIndex((c) => c.userId === senderId);
+            if (existingIndex >= 0) {
+              const newList = [...prev];
+              newList[existingIndex] = {
+                ...newList[existingIndex],
+                lastMessage: msg.content,
+                lastMessageTime: msg.created_at,
+                isRead: selectedUserRef.current === senderId,
+              };
+              const conv = newList.splice(existingIndex, 1)[0];
+              newList.unshift(conv); // move to top
+              return newList;
+            } else {
+              return [{
+                userId: senderId,
+                username: `Шинэ мессеж #${senderId}`, // Will need real fetch for name IRL
+                lastMessage: msg.content,
+                lastMessageTime: msg.created_at,
+                isRead: selectedUserRef.current === senderId,
+                listingTitle: msg.listing?.title || null,
+              }, ...prev];
+            }
+          });
+        }
+      } catch (err) {
+        console.error("Error parsing websocket message", err);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket disconnected');
+      // basic reconnect could be added here
+    };
+
+    wsRef.current = ws;
+  };
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -46,41 +121,28 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
       setLoading(true);
       const data = await MessageAPI.getInbox();
 
-      // The inbox endpoint returns metadata; we need to fetch each conversation
-      // to build the conversation list with last message info.
-      // If the API returns conversation_user_ids, fetch each one.
-      const convIds = data.conversation_user_ids || [];
-      const convList: Conversation[] = [];
-
-      for (const userId of convIds) {
-        try {
-          const convData = await MessageAPI.getConversation(userId);
-          const msgs = convData.messages || [];
-          const lastMsg = msgs[msgs.length - 1];
-          convList.push({
-            userId,
-            username: convData.with_username || `User #${userId}`,
-            lastMessage: lastMsg?.content || '',
-            lastMessageTime: lastMsg?.created_at || '',
-            isRead: lastMsg ? !lastMsg.is_read || lastMsg.sender === userId : true,
-          });
-        } catch {
-          // Skip failed conversations
-        }
-      }
+      const convList: Conversation[] = (data.conversations || []).map((conv) => ({
+        userId: conv.partner_id,
+        username: conv.partner_name,
+        lastMessage: conv.last_message_text,
+        lastMessageTime: conv.last_message_created,
+        isRead: conv.unread_count === 0,
+        listingTitle: conv.listing_title,
+      }));
 
       setConversations(convList);
     } catch (error) {
       console.error('Failed to fetch inbox:', error);
-      onError('Failed to load messages');
+      onError('Мессеж уншиж чадсангүй');
     } finally {
       setLoading(false);
     }
   };
 
-  const selectConversation = async (userId: number, username: string) => {
+  const selectConversation = async (userId: number, username: string, listingTitle?: string | null) => {
     setSelectedUserId(userId);
     setSelectedUsername(username);
+    setSelectedListingTitle(listingTitle || null);
     setLoadingMessages(true);
 
     try {
@@ -93,7 +155,7 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
       );
     } catch (error) {
       console.error('Failed to fetch conversation:', error);
-      onError('Failed to load conversation');
+      onError('Харилцан яриа уншиж чадсангүй');
     } finally {
       setLoadingMessages(false);
     }
@@ -121,9 +183,9 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
         )
       );
 
-      onSuccess('Message sent');
+      onSuccess('Мессеж илгээгдлээ');
     } catch (error: any) {
-      onError(error.message || 'Failed to send message');
+      onError(error.message || 'Мессеж илгээж чадсангүй');
     } finally {
       setSending(false);
     }
@@ -145,7 +207,7 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
     if (diffDays === 0) {
       return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     } else if (diffDays === 1) {
-      return 'Yesterday';
+      return 'Өчигдөр';
     } else if (diffDays < 7) {
       return date.toLocaleDateString('en-US', { weekday: 'short' });
     }
@@ -170,21 +232,21 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
         {/* Sidebar - Conversation List */}
         <div className="conversations-panel">
           <div className="conversations-header">
-            <h2>Messages</h2>
+            <h2>Мессеж</h2>
           </div>
 
           <div className="conversations-list">
             {conversations.length === 0 ? (
               <div className="conversations-empty">
                 <span className="empty-icon">💬</span>
-                <p>No conversations yet</p>
+                <p>Одоогоор харилцан яриа байхгүй байна</p>
               </div>
             ) : (
               conversations.map((conv) => (
                 <button
                   key={conv.userId}
                   className={`conversation-item ${selectedUserId === conv.userId ? 'active' : ''} ${!conv.isRead ? 'unread' : ''}`}
-                  onClick={() => selectConversation(conv.userId, conv.username)}
+                  onClick={() => selectConversation(conv.userId, conv.username, conv.listingTitle)}
                 >
                   <div className="conversation-avatar">
                     {getInitials(conv.username)}
@@ -196,6 +258,11 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
                         {conv.lastMessageTime ? formatTime(conv.lastMessageTime) : ''}
                       </span>
                     </div>
+                    {conv.listingTitle && (
+                      <span className="conversation-listing" style={{ fontSize: '0.75rem', color: '#888', display: 'block', marginBottom: '2px' }}>
+                        🏨 {conv.listingTitle}
+                      </span>
+                    )}
                     <span className="conversation-preview">
                       {conv.lastMessage.length > 50
                         ? conv.lastMessage.substring(0, 50) + '...'
@@ -219,6 +286,11 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
                 </div>
                 <div className="chat-header-info">
                   <h3>{selectedUsername}</h3>
+                  {selectedListingTitle && (
+                    <span className="chat-header-listing" style={{ fontSize: '0.8rem', color: '#666' }}>
+                      Сонирхож буй байр: <strong>{selectedListingTitle}</strong>
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -229,7 +301,7 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
                   </div>
                 ) : messages.length === 0 ? (
                   <div className="chat-empty">
-                    <p>No messages yet. Start the conversation!</p>
+                    <p>Одоогоор мессеж байхгүй байна. Яриагаа эхлүүлээрэй!</p>
                   </div>
                 ) : (
                   messages.map((msg) => {
@@ -254,7 +326,7 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Type a message..."
+                  placeholder="Мессеж бичих..."
                   rows={1}
                   disabled={sending}
                 />
@@ -270,8 +342,8 @@ export function Messages({ onSuccess, onError }: MessagesProps) {
           ) : (
             <div className="chat-placeholder">
               <span className="placeholder-icon">💬</span>
-              <h3>Select a conversation</h3>
-              <p>Choose a conversation from the sidebar to start messaging</p>
+              <h3>Харилцан яриа сонгоно уу</h3>
+              <p>Мессеж бичихийн тулд хажуугийн самбараас харилцан яриа сонгоно уу</p>
             </div>
           )}
         </div>

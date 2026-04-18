@@ -24,7 +24,7 @@ export function Dashboard() {
       setLoading(true);
       const [listingsData, bookingsData] = await Promise.all([
         ListingAPI.getMyListings(),
-        BookingAPI.getAll(),
+        BookingAPI.getForMyListings(),
       ]);
 
       const listings = listingsData.results || [];
@@ -62,7 +62,7 @@ export function Dashboard() {
           <div className="stat-icon">🏠</div>
           <div className="stat-content">
             <span className="stat-value">{stats.totalListings}</span>
-            <span className="stat-label">Total Properties</span>
+            <span className="stat-label">Нийт байр</span>
           </div>
         </div>
 
@@ -70,7 +70,7 @@ export function Dashboard() {
           <div className="stat-icon">✓</div>
           <div className="stat-content">
             <span className="stat-value">{stats.activeListings}</span>
-            <span className="stat-label">Active Listings</span>
+            <span className="stat-label">Идэвхтэй зарууд</span>
           </div>
         </div>
 
@@ -78,7 +78,7 @@ export function Dashboard() {
           <div className="stat-icon">📅</div>
           <div className="stat-content">
             <span className="stat-value">{stats.totalBookings}</span>
-            <span className="stat-label">Total Bookings</span>
+            <span className="stat-label">Нийт захиалга</span>
           </div>
         </div>
 
@@ -86,7 +86,7 @@ export function Dashboard() {
           <div className="stat-icon">⏳</div>
           <div className="stat-content">
             <span className="stat-value">{stats.pendingBookings}</span>
-            <span className="stat-label">Pending Bookings</span>
+            <span className="stat-label">Хүлээгдэж буй захиалга</span>
           </div>
         </div>
 
@@ -94,7 +94,7 @@ export function Dashboard() {
           <div className="stat-icon">👁</div>
           <div className="stat-content">
             <span className="stat-value">{stats.recentViews.toLocaleString()}</span>
-            <span className="stat-label">Total Views</span>
+            <span className="stat-label">Нийт хандалт</span>
           </div>
         </div>
       </div>
@@ -102,11 +102,11 @@ export function Dashboard() {
       <div className="dashboard-sections">
         <div className="dashboard-section">
           <div className="section-header">
-            <h3>Recent Properties</h3>
+            <h3>Сүүлд нэмсэн байрнууд</h3>
           </div>
           <div className="section-content">
             {recentListings.length === 0 ? (
-              <p className="empty-state">No properties yet. Create your first listing!</p>
+              <p className="empty-state">Одоогоор байр байхгүй байна. Эхний зараа нэмнэ үү!</p>
             ) : (
               <div className="recent-list">
                 {recentListings.map((listing) => (
@@ -117,7 +117,10 @@ export function Dashboard() {
                         ₮{Number(listing.price).toLocaleString()} / {listing.price_type}
                       </span>
                     </div>
-                    <span className={`status-badge ${listing.status}`}>{listing.status}</span>
+                    <span className={`status-badge ${listing.status}`}>
+                      {listing.status === 'active' ? 'Идэвхтэй' : 
+                       listing.status === 'rented' ? 'Түрээслэгдсэн' : 'Идэвхгүй'}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -127,11 +130,11 @@ export function Dashboard() {
 
         <div className="dashboard-section">
           <div className="section-header">
-            <h3>Recent Bookings</h3>
+            <h3>Сүүлийн захиалгууд</h3>
           </div>
           <div className="section-content">
             {recentBookings.length === 0 ? (
-              <p className="empty-state">No bookings yet.</p>
+              <p className="empty-state">Одоогоор захиалга байхгүй байна.</p>
             ) : (
               <div className="recent-list">
                 {recentBookings.map((booking) => (
@@ -142,7 +145,11 @@ export function Dashboard() {
                         {new Date(booking.start_date).toLocaleDateString()} - {new Date(booking.end_date).toLocaleDateString()}
                       </span>
                     </div>
-                    <span className={`status-badge ${booking.status}`}>{booking.status}</span>
+                    <span className={`status-badge ${booking.status}`}>
+                      {booking.status === 'pending' ? 'Хүлээгдэж буй' :
+                       booking.status === 'confirmed' ? 'Баталгаажсан' :
+                       booking.status === 'cancelled' ? 'Цуцлагдсан' : booking.status}
+                    </span>
                   </div>
                 ))}
               </div>

@@ -101,11 +101,11 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
         });
       }
 
-      onSuccess('Profile updated successfully');
+      onSuccess('Профайл амжилттай шинэчлэгдлээ');
       setIsEditing(false);
       fetchProfile();
     } catch (error: any) {
-      onError(error.message || 'Failed to update profile');
+      onError(error.message || 'Профайл шинэчилж чадсангүй');
     } finally {
       setIsSubmitting(false);
     }
@@ -124,7 +124,7 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
   }
 
   if (!user) {
-    return <div>Failed to load profile</div>;
+    return <div>Профайл уншиж чадсангүй</div>;
   }
 
   const getStatusBadge = () => {
@@ -132,11 +132,11 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
       const status = brokerProfile?.status || 'pending';
       return (
         <span className={`status-badge status-${status}`}>
-          {status === 'approved' ? '✓ Verified Broker' : status === 'pending' ? '⏳ Pending Approval' : '✗ Rejected'}
+          {status === 'approved' ? '✓ Баталгаажсан зуучлагч' : status === 'pending' ? '⏳ Зөвшөөрөл хүлээж байна' : '✗ Татгалзсан'}
         </span>
       );
     }
-    return <span className="status-badge status-user">Standard User</span>;
+    return <span className="status-badge status-user">Энгийн хэрэглэгч</span>;
   };
 
   return (
@@ -155,7 +155,7 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
             <p>@{user.username}</p>
             <div className="profile-badges">
               {getStatusBadge()}
-              {user.is_verified && <span className="verified-badge">✓ Verified</span>}
+              {user.is_verified && <span className="verified-badge">✓ Баталгаажсан</span>}
             </div>
           </div>
         </div>
@@ -165,7 +165,7 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
           onClick={() => setIsEditing(!isEditing)}
           disabled={isSubmitting}
         >
-          {isEditing ? 'Cancel' : 'Edit Profile'}
+          {isEditing ? 'Болих' : 'Профайл засах'}
         </button>
       </div>
 
@@ -174,14 +174,14 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
           className={`tab ${activeTab === 'personal' ? 'active' : ''}`}
           onClick={() => setActiveTab('personal')}
         >
-          Personal Information
+          Хувийн мэдээлэл
         </button>
         {user.role === 'broker' && (
           <button
             className={`tab ${activeTab === 'broker' ? 'active' : ''}`}
             onClick={() => setActiveTab('broker')}
           >
-            Broker Details
+            Зуучлагчийн мэдээлэл
           </button>
         )}
       </div>
@@ -189,17 +189,17 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
       <form onSubmit={handleSubmit} className="profile-form">
         {activeTab === 'personal' ? (
           <div className="form-section">
-            <h3>Personal Information</h3>
+            <h3>Хувийн мэдээлэл</h3>
 
             <div className="form-row">
               <div className="form-group">
-                <label>First Name</label>
+                <label>Нэр</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={formData.first_name}
                     onChange={(e) => handleChange('first_name', e.target.value)}
-                    placeholder="First name"
+                    placeholder="Нэр"
                   />
                 ) : (
                   <div className="form-value">{formData.first_name || '-'}</div>
@@ -207,13 +207,13 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
               </div>
 
               <div className="form-group">
-                <label>Last Name</label>
+                <label>Овог</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={formData.last_name}
                     onChange={(e) => handleChange('last_name', e.target.value)}
-                    placeholder="Last name"
+                    placeholder="Овог"
                   />
                 ) : (
                   <div className="form-value">{formData.last_name || '-'}</div>
@@ -223,12 +223,12 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
 
             <div className="form-row">
               <div className="form-group">
-                <label>Email</label>
+                <label>Цахим шуудан</label>
                 <div className="form-value">{user.email}</div>
               </div>
 
               <div className="form-group">
-                <label>Phone</label>
+                <label>Утас</label>
                 {isEditing ? (
                   <input
                     type="tel"
@@ -243,12 +243,12 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
             </div>
 
             <div className="form-group">
-              <label>Address</label>
+              <label>Хаяг</label>
               {isEditing ? (
                 <textarea
                   value={formData.address}
                   onChange={(e) => handleChange('address', e.target.value)}
-                  placeholder="Your address"
+                  placeholder="Таны хаяг"
                   rows={3}
                 />
               ) : (
@@ -258,17 +258,17 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
           </div>
         ) : (
           <div className="form-section">
-            <h3>Broker Information</h3>
+            <h3>Зуучлагчийн мэдээлэл</h3>
 
             <div className="form-row">
               <div className="form-group">
-                <label>Company Name</label>
+                <label>Компанийн нэр</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={formData.company_name}
                     onChange={(e) => handleChange('company_name', e.target.value)}
-                    placeholder="Company name"
+                    placeholder="Компанийн нэр"
                   />
                 ) : (
                   <div className="form-value">{formData.company_name || '-'}</div>
@@ -276,13 +276,13 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
               </div>
 
               <div className="form-group">
-                <label>Registration Number</label>
+                <label>Регистрийн дугаар</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={formData.registration_number}
                     onChange={(e) => handleChange('registration_number', e.target.value)}
-                    placeholder="Registration number"
+                    placeholder="Регистрийн дугаар"
                   />
                 ) : (
                   <div className="form-value">{formData.registration_number || '-'}</div>
@@ -291,7 +291,7 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
             </div>
 
             <div className="form-group">
-              <label>Website</label>
+              <label>Вебсайт</label>
               {isEditing ? (
                 <input
                   type="url"
@@ -313,12 +313,12 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
             </div>
 
             <div className="form-group">
-              <label>Description</label>
+              <label>Тайлбар</label>
               {isEditing ? (
                 <textarea
                   value={formData.description}
                   onChange={(e) => handleChange('description', e.target.value)}
-                  placeholder="Describe your company..."
+                  placeholder="Компаниа тайлбарлана уу..."
                   rows={4}
                 />
               ) : (
@@ -328,7 +328,7 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
 
             {brokerProfile?.verified_at && (
               <div className="verified-date">
-                Verified since: {new Date(brokerProfile.verified_at).toLocaleDateString()}
+                Баталгаажсан огноо: {new Date(brokerProfile.verified_at).toLocaleDateString()}
               </div>
             )}
           </div>
@@ -337,10 +337,10 @@ export function Profile({ onSuccess, onError }: ProfileProps) {
         {isEditing && (
           <div className="form-actions">
             <button type="button" className="btn btn-secondary" onClick={() => setIsEditing(false)}>
-              Cancel
+              Болих
             </button>
             <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : 'Save Changes'}
+              {isSubmitting ? 'Хадгалж байна...' : 'Өөрчлөлт хадгалах'}
             </button>
           </div>
         )}

@@ -64,6 +64,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for user profile."""
 
+    id = serializers.IntegerField(source='user.id', read_only=True)
     username = serializers.CharField(source='user.username', required=False)
     email = serializers.EmailField(source='user.email', required=False)
     first_name = serializers.CharField(source='user.first_name', required=False)
@@ -71,7 +72,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['username', 'email', 'first_name', 'last_name', 'role', 'phone', 'address', 'profile_picture', 'is_verified', 'created_at']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'phone', 'address', 'profile_picture', 'is_verified', 'created_at']
         read_only_fields = ['role', 'is_verified', 'created_at']
 
     def validate_phone(self, value):
@@ -205,6 +206,10 @@ class BookingSerializer(serializers.ModelSerializer):
     user_username = serializers.CharField(source='user.username', read_only=True)
     days_remaining = serializers.SerializerMethodField()
     duration_days = serializers.SerializerMethodField()
+    
+    # Force Date representation to avoid aware/naive DateTimeField crashes
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
 
     class Meta:
         model = Booking

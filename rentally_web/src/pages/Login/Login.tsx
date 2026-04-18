@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import type { LoginCredentials } from '../../types';
 import { api, AuthAPI } from '../../api/api';
 import './Login.css';
@@ -30,10 +30,10 @@ export function Login({ onLogin }: LoginProps) {
         onLogin();
         navigate('/');
       } else {
-        setError('Invalid response from server');
+        setError('Серверээс буруу хариу ирлээ');
       }
     } catch (err: any) {
-      setError(err.message || 'Invalid username or password');
+      setError(err.message || 'Хэрэглэгчийн нэр эсвэл нууц үг буруу байна');
     } finally {
       setLoading(false);
     }
@@ -44,13 +44,13 @@ export function Login({ onLogin }: LoginProps) {
       <div className="login-container">
         <div className="login-branding">
           <div className="logo-icon">🏠</div>
-          <h1>Rentally Broker</h1>
-          <p>Professional Property Management Portal</p>
+          <h1>Rentally Зуучлагч</h1>
+          <p>Мэргэжлийн үл хөдлөх хөрөнгийн удирдлагын портал</p>
         </div>
 
         <div className="login-card">
-          <h2>Welcome Back</h2>
-          <p className="login-subtitle">Sign in to manage your properties</p>
+          <h2>Тавтай морилно уу</h2>
+          <p className="login-subtitle">Байрнуудаа удирдахын тулд нэвтэрнэ үү</p>
 
           {error && (
             <div className="login-error">
@@ -60,26 +60,26 @@ export function Login({ onLogin }: LoginProps) {
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="username">Username</label>
+              <label htmlFor="username">Хэрэглэгчийн нэр</label>
               <input
                 id="username"
                 type="text"
                 value={credentials.username}
                 onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                placeholder="Enter your username"
+                placeholder="Хэрэглэгчийн нэрээ оруулна уу"
                 required
                 disabled={loading}
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">Нууц үг</label>
               <input
                 id="password"
                 type="password"
                 value={credentials.password}
                 onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                placeholder="Enter your password"
+                placeholder="Нууц үгээ оруулна уу"
                 required
                 disabled={loading}
               />
@@ -89,16 +89,17 @@ export function Login({ onLogin }: LoginProps) {
               {loading ? (
                 <>
                   <span className="spinner-small"></span>
-                  Signing in...
+                  Нэвтэрч байна...
                 </>
               ) : (
-                'Sign In'
+                'Нэвтрэх'
               )}
             </button>
           </form>
 
           <div className="login-help">
-            <p>Demo credentials:</p>
+            <Link to="/register" className="login-register-link">Та бүртгэлгүй бол энд дарж бүртгүүлнэ үү</Link>
+            <p style={{marginTop: '24px'}}>Жишээ нэвтрэх эрх:</p>
             <code>username: broker / password: broker123</code>
           </div>
         </div>

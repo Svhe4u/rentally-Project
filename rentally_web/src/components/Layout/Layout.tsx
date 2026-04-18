@@ -21,11 +21,11 @@ export function Layout({ user, onLogout,children  }: LayoutProps) {
   };
 
   const navItems = [
-    { path: '/', label: 'Dashboard', icon: '📊' },
-    { path: '/listings', label: 'Properties', icon: '🏠' },
-    { path: '/bookings', label: 'Bookings', icon: '📅' },
-    { path: '/messages', label: 'Messages', icon: '💬' },
-    { path: '/profile', label: 'Profile', icon: '👤' },
+    { path: '/', label: 'Хянах самбар', icon: '📊' },
+    { path: '/listings', label: 'Байрнууд', icon: '🏠' },
+    { path: '/bookings', label: 'Захиалгууд', icon: '📅' },
+    { path: '/messages', label: 'Мессеж', icon: '💬' },
+    { path: '/profile', label: 'Профайл', icon: '👤' },
   ];
 
   const getInitials = () => {
@@ -48,7 +48,7 @@ export function Layout({ user, onLogout,children  }: LayoutProps) {
             <span className="brand-icon">🏠</span>
             <span className="brand-name">Rentally</span>
           </div>
-          <span className="brand-tagline">Broker Portal</span>
+          <span className="brand-tagline">Зуучлагчийн портал</span>
         </div>
 
         <nav className="sidebar-nav">
@@ -74,7 +74,7 @@ export function Layout({ user, onLogout,children  }: LayoutProps) {
             </div>
           </div>
           <button className="logout-btn" onClick={handleLogout}>
-            <span>🚪</span> Logout
+            <span>🚪</span> Гарах
           </button>
         </div>
       </aside>

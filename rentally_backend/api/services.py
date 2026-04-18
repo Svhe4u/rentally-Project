@@ -317,12 +317,31 @@ class MessageService:
             raise ValueError("Message content cannot be empty")
         if len(content) > 2000:
             raise ValueError("Message cannot exceed 2000 characters")
-        return Message.objects.create(
+        
+        msg = Message.objects.create(
             sender=sender,
             recipient=recipient,
             content=content,
             listing=listing,
         )
+
+        from channels.layers import get_channel_layer
+        from asgiref.sync import async_to_sync
+        from .serializers import MessageSerializer
+
+        channel_layer = get_channel_layer()
+        if channel_layer:
+            msg_data = MessageSerializer(msg).data
+            # Send to recipient
+            async_to_sync(channel_layer.group_send)(
+                f"user_{recipient.id}",
+                {
+                    "type": "chat_message",
+                    "message": msg_data
+                }
+            )
+        
+        return msg
 
     @staticmethod
     def get_conversation(user, other_user):

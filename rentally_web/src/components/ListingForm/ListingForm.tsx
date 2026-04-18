@@ -1,6 +1,53 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import type { Category, Region, Listing, ListingFormData, PriceType } from '../../types';
 import './ListingForm.css';
+
+// Fix Leaflet marker icons in React
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+function LocationMarker({ position, onChange }: { 
+  position: L.LatLng | null; 
+  onChange: (pos: L.LatLng) => void;
+}) {
+  const map = useMapEvents({
+    click(e) {
+      onChange(e.latlng);
+    },
+  });
+
+  const markerRef = useRef<any>(null);
+
+  // Focus map on the marker when explicitly loaded (e.g. edit mode)
+  useEffect(() => {
+    if (position) {
+      map.setView(position, map.getZoom(), { animate: false });
+    }
+  }, []);
+
+  return position === null ? null : (
+    <Marker 
+      position={position}
+      draggable={true}
+      ref={markerRef}
+      eventHandlers={{
+        dragend: () => {
+          const marker = markerRef.current;
+          if (marker != null) {
+            onChange(marker.getLatLng());
+          }
+        },
+      }}
+    />
+  );
+}
 
 interface ListingFormProps {
   listing?: Listing | null;
@@ -64,12 +111,12 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.title.trim()) newErrors.title = 'Title is required';
-    if (!formData.description.trim()) newErrors.description = 'Description is required';
-    if (!formData.address.trim()) newErrors.address = 'Address is required';
-    if (!formData.category_id) newErrors.category_id = 'Category is required';
-    if (!formData.region_id) newErrors.region_id = 'Region is required';
-    if (!formData.price || formData.price <= 0) newErrors.price = 'Price must be greater than 0';
+    if (!formData.title.trim()) newErrors.title = 'Гарчиг оруулах шаардлагатай';
+    if (!formData.description.trim()) newErrors.description = 'Тайлбар оруулах шаардлагатай';
+    if (!formData.address.trim()) newErrors.address = 'Хаяг оруулах шаардлагатай';
+    if (!formData.category_id) newErrors.category_id = 'Ангилал сонгох шаардлагатай';
+    if (!formData.region_id) newErrors.region_id = 'Бүс сонгох шаардлагатай';
+    if (!formData.price || formData.price <= 0) newErrors.price = 'Үнэ 0-ээс их байх ёстой';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -106,32 +153,46 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
     }));
   };
 
+  const mapPosition = useMemo(() => {
+    if (formData.latitude && formData.longitude) {
+      return new L.LatLng(formData.latitude, formData.longitude);
+    }
+    return null;
+  }, [formData.latitude, formData.longitude]);
+
+  const handleLocationChange = (pos: L.LatLng) => {
+    handleChange('latitude', parseFloat(pos.lat.toFixed(6)));
+    handleChange('longitude', parseFloat(pos.lng.toFixed(6)));
+  };
+
+  const mapCenter = mapPosition || new L.LatLng(47.9177, 106.9176); // Default Ulaanbaatar
+
   return (
     <form onSubmit={handleSubmit} className="listing-form">
       <div className="form-section">
-        <h4 className="form-section-title">Basic Information</h4>
+        <h4 className="form-section-title">Үндсэн мэдээлэл</h4>
 
         <div className="form-group">
-          <label className="form-label">Property Title *</label>
+          <label className="form-label">Байрны гарчиг *</label>
           <input
             type="text"
             className={`form-input ${errors.title ? 'error' : ''}`}
             value={formData.title}
             onChange={e => handleChange('title', e.target.value)}
-            placeholder="e.g., Modern 2BR Apartment in Khan-Uul"
+            placeholder="Жнь: Хан-Уулд орчин үеийн 2 өрөө байр"
           />
           {errors.title && <span className="error-message">{errors.title}</span>}
         </div>
 
         <div className="form-row">
           <div className="form-group">
-            <label className="form-label">Category *</label>
+            <label className="form-label">Ангилал *</label>
             <select
               className={`form-select ${errors.category_id ? 'error' : ''}`}
               value={formData.category_id}
               onChange={e => handleChange('category_id', parseInt(e.target.value))}
             >
-              <option value={0}>Select Category</option>
+              <option value={0}>Ангилал сонгох</option>
               {categories.map(cat => (
                 <option key={cat.id} value={cat.id}>{cat.name}</option>
               ))}
@@ -140,13 +201,13 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
           </div>
 
           <div className="form-group">
-            <label className="form-label">Region *</label>
+            <label className="form-label">Бүс *</label>
             <select
               className={`form-select ${errors.region_id ? 'error' : ''}`}
               value={formData.region_id}
               onChange={e => handleChange('region_id', parseInt(e.target.value))}
             >
-              <option value={0}>Select Region</option>
+              <option value={0}>Бүс сонгох</option>
               {regions.map(region => (
                 <option key={region.id} value={region.id}>{region.name}</option>
               ))}
@@ -156,24 +217,24 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
         </div>
 
         <div className="form-group">
-          <label className="form-label">Address *</label>
+          <label className="form-label">Хаяг *</label>
           <input
             type="text"
             className={`form-input ${errors.address ? 'error' : ''}`}
             value={formData.address}
             onChange={e => handleChange('address', e.target.value)}
-            placeholder="Full address"
+            placeholder="Бүтэн хаяг"
           />
           {errors.address && <span className="error-message">{errors.address}</span>}
         </div>
 
         <div className="form-group">
-          <label className="form-label">Description *</label>
+          <label className="form-label">Тайлбар *</label>
           <textarea
             className={`form-textarea ${errors.description ? 'error' : ''}`}
             value={formData.description}
             onChange={e => handleChange('description', e.target.value)}
-            placeholder="Describe the property..."
+            placeholder="Байрыг тайлбарлана уу..."
             rows={4}
           />
           {errors.description && <span className="error-message">{errors.description}</span>}
@@ -181,11 +242,11 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
       </div>
 
       <div className="form-section">
-        <h4 className="form-section-title">Pricing</h4>
+        <h4 className="form-section-title">Үнэ</h4>
 
         <div className="form-row">
           <div className="form-group">
-            <label className="form-label">Price (MNT) *</label>
+            <label className="form-label">Үнэ (ТӨГ) *</label>
             <input
               type="number"
               className={`form-input ${errors.price ? 'error' : ''}`}
@@ -197,7 +258,7 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
           </div>
 
           <div className="form-group">
-            <label className="form-label">Price Type *</label>
+            <label className="form-label">Үнийн төрөл *</label>
             <select
               className="form-select"
               value={formData.price_type}
@@ -212,11 +273,11 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
       </div>
 
       <div className="form-section">
-        <h4 className="form-section-title">Property Details</h4>
+        <h4 className="form-section-title">Байрны дэлгэрэнгүй</h4>
 
         <div className="form-row">
           <div className="form-group">
-            <label className="form-label">Bedrooms</label>
+            <label className="form-label">Унтлагын өрөө</label>
             <input
               type="number"
               className="form-input"
@@ -227,7 +288,7 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
           </div>
 
           <div className="form-group">
-            <label className="form-label">Bathrooms</label>
+            <label className="form-label">Ариун цэврийн өрөө</label>
             <input
               type="number"
               className="form-input"
@@ -238,7 +299,7 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
           </div>
 
           <div className="form-group">
-            <label className="form-label">Area (m²)</label>
+            <label className="form-label">Талбай (м²)</label>
             <input
               type="number"
               className="form-input"
@@ -249,13 +310,13 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
           </div>
 
           <div className="form-group">
-            <label className="form-label">Heating Type</label>
+            <label className="form-label">Халаалт</label>
             <select
               className="form-select"
               value={formData.heating_type}
               onChange={e => handleChange('heating_type', e.target.value)}
             >
-              <option value="">Select</option>
+              <option value="">Сонгох</option>
               {heatingTypes.map(type => (
                 <option key={type} value={type}>{type}</option>
               ))}
@@ -265,7 +326,7 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
       </div>
 
       <div className="form-section">
-        <h4 className="form-section-title">Features & Amenities</h4>
+        <h4 className="form-section-title">Давуу талууд</h4>
 
         <div className="form-row">
           <input
@@ -273,11 +334,11 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
             className="form-input"
             value={featureInput}
             onChange={e => setFeatureInput(e.target.value)}
-            placeholder="Add feature (e.g., Parking, WiFi, Balcony)"
+            placeholder="Давуу тал нэмэх (Жнь: Зогсоол, WiFi, Тагт)"
             onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addFeature())}
           />
           <button type="button" className="btn btn-secondary" onClick={addFeature}>
-            Add
+            Нэмэх
           </button>
         </div>
 
@@ -292,11 +353,30 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
       </div>
 
       <div className="form-section">
-        <h4 className="form-section-title">Location Coordinates (Optional)</h4>
+        <h4 className="form-section-title">Байршлын координат (Нэмэлт)</h4>
+        
+        <p className="map-instructions" style={{ fontSize: '0.85rem', color: '#666', marginBottom: '10px' }}>
+          Та газрын зураг дээр хулганаар дарж эсвэл зүүг (Pin) чирч байршлаа зааж өгөх боломжтой.
+        </p>
 
-        <div className="form-row">
+        <div className="map-picker-container">
+          <MapContainer 
+            center={mapCenter} 
+            zoom={13} 
+            scrollWheelZoom={true} 
+            style={{ height: '300px', width: '100%', borderRadius: '8px', zIndex: 0 }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <LocationMarker position={mapPosition} onChange={handleLocationChange} />
+          </MapContainer>
+        </div>
+
+        <div className="form-row" style={{ marginTop: '15px' }}>
           <div className="form-group">
-            <label className="form-label">Latitude</label>
+            <label className="form-label">Өргөрөг (Latitude)</label>
             <input
               type="number"
               step="any"
@@ -308,7 +388,7 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
           </div>
 
           <div className="form-group">
-            <label className="form-label">Longitude</label>
+            <label className="form-label">Уртраг (Longitude)</label>
             <input
               type="number"
               step="any"
@@ -323,10 +403,10 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
 
       <div className="form-actions">
         <button type="button" className="btn btn-secondary" onClick={onCancel} disabled={isSubmitting}>
-          Cancel
+          Болих
         </button>
         <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-          {isSubmitting ? 'Saving...' : listing ? 'Update Property' : 'Create Property'}
+          {isSubmitting ? 'Хадгалж байна...' : listing ? 'Байр шинэчлэх' : 'Байр үүсгэх'}
         </button>
       </div>
     </form>

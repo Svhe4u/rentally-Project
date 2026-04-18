@@ -61,6 +61,7 @@ CORS_ALLOW_HEADERS = [
 # ─────────────────────────────────────────────────────────────────────
 
 INSTALLED_APPS = [
+    'daphne',
     # Django
     'django.contrib.admin',
     'django.contrib.auth',
@@ -71,6 +72,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     # Third party
+    'channels',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
@@ -134,6 +136,17 @@ except ImportError:
 
 ROOT_URLCONF = 'rentally_backend.urls'
 WSGI_APPLICATION = 'rentally_backend.wsgi.application'
+ASGI_APPLICATION = 'rentally_backend.asgi.application'
+
+# ─────────────────────────────────────────────────────────────────────
+# CHANNELS CONFIGURATION
+# ─────────────────────────────────────────────────────────────────────
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 TEMPLATES = [
     {

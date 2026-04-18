@@ -279,9 +279,18 @@ export const FavoriteAPI = {
 export const MessageAPI = {
   getInbox: () =>
     api.request<{
-      conversation_count: number;
-      unread_count: number;
-      conversation_user_ids: number[];
+      conversations: {
+        partner_id: number;
+        partner_name: string;
+        partner_avatar: string | null;
+        last_message_text: string;
+        last_message_created: string;
+        is_outgoing: boolean;
+        unread_count: number;
+        listing_id: number | null;
+        listing_title: string | null;
+      }[];
+      unread_total: number;
     }>('/messages/'),
 
   getConversation: (userId: number) =>
