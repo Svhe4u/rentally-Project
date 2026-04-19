@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, SafeAreaView,
-  TextInput, ScrollView, Modal, FlatList, Platform, ActivityIndicator,
+  TextInput, ScrollView, Modal, FlatList, Platform, ActivityIndicator, Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
@@ -11,7 +11,20 @@ import BottomNav, { TabName } from '../components/BottomNav';
 const GOOGLE_MAPS_API_KEY = 'AIzaSyAhcTN2Y9g3NpsaRus5Yc7rSvTsnhdE5FY';
 
 interface Props { onNavigate: (tab: TabName) => void; onOpenDetail?: (id: number) => void; }
-interface MapListing { id:number; title:string; price:string; lat:number; lng:number; district:string; committee:string; rooms:number; area:number; }
+interface MapListing {
+  id: number;
+  title: string;
+  price: string;
+  lat: number;
+  lng: number;
+  district: string;
+  committee: string;
+  rooms: number;
+  area: number;
+  address?: string;
+  imageUrl?: string;
+  regionLabel?: string;
+}
 interface District { id: number | string; name: string; lat: number; lng: number; zoom: number; }
 interface Committee { id: number | string; name: string; districtId: string | number; lat: number; lng: number; }
 
@@ -199,13 +212,16 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
       const mapped = serverItems.map((l: BackendListing) => ({
         id: l.id,
         title: l.title,
-        price: (l.price || 0).toLocaleString() + ' ₮', 
-        lat: l.latitude || UB.lat, 
-        lng: l.longitude || UB.lng,
-        district: l.region_id?.toString() || '',
-        committee: '', 
-        rooms: l.bedrooms || 1,
-        area: l.area_sqm ? Math.round(Number(l.area_sqm)) : 0
+        price: (l.price || 0).toLocaleString() + ' ₮',
+        lat: Number(l.latitude) || UB.lat,
+        lng: Number(l.longitude) || UB.lng,
+        district: l.region_id != null ? String(l.region_id) : '',
+        committee: '',
+        rooms: l.bedrooms != null ? Number(l.bedrooms) : 0,
+        area: l.area_sqm != null ? Math.round(Number(l.area_sqm)) : 0,
+        address: l.address,
+        imageUrl: l.cover_image ?? l.images?.[0]?.image_url,
+        regionLabel: l.region_name,
       }));
       
       setListings(mapped);
@@ -217,7 +233,9 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
     }
   };
 
-  useEffect(() => { fetchData(); }, [selDistrict, selCommittee, roomFilter]);
+  useEffect(() => {
+    fetchData();
+  }, [selDistrict, selCommittee, roomFilter]);
 
   // ── Listen for postMessage from iframe (web only) ────────────
   useEffect(() => {
@@ -260,11 +278,23 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
   };
   const doSearch = () => {
     const q = query.trim().toLowerCase();
-    if (!q) return;
+    if (!q) {
+      void fetchData();
+      return;
+    }
     const d = DISTRICTS.find(x => x.name.toLowerCase().includes(q));
-    if (d) { pickDistrict(d); return; }
+    if (d) {
+      pickDistrict(d);
+      return;
+    }
     const c = COMMITTEES.find(x => x.name.toLowerCase().includes(q));
-    if (c) { const p = DISTRICTS.find(x => x.id === c.districtId); if (p) setSelDistrict(p); pickCommittee(c); }
+    if (c) {
+      const p = DISTRICTS.find(x => x.id === c.districtId);
+      if (p) setSelDistrict(p);
+      pickCommittee(c);
+      return;
+    }
+    void fetchData();
   };
 
   const committees = selDistrict ? COMMITTEES.filter(c => c.districtId === selDistrict.id) : COMMITTEES;
@@ -382,8 +412,14 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
             <View style={s.handle} />
             {selListing && (
               <View style={s.cardContent}>
-                <View style={s.cardImagePlaceholder}>
-                  <Ionicons name="image-outline" size={40} color={Colors.border} />
+                <View style={s.cardImageWrap}>
+                  {selListing.imageUrl ? (
+                    <Image source={{ uri: selListing.imageUrl }} style={s.cardImage} resizeMode="cover" />
+                  ) : (
+                    <View style={s.cardImagePlaceholder}>
+                      <Ionicons name="image-outline" size={40} color={Colors.border} />
+                    </View>
+                  )}
                   <View style={s.priceBadge}>
                     <Text style={s.priceBadgeTxt}>{selListing.price}</Text>
                   </View>
@@ -397,7 +433,12 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
                   </View>
                   
                   <Text style={s.cardTitle}>{selListing.title}</Text>
-                  <Text style={s.cardLoc}><Ionicons name="location-outline" size={14} /> {DISTRICTS.find(d=>d.id===selListing.district)?.name}, {COMMITTEES.find(c=>c.id===selListing.committee)?.name}</Text>
+                  <Text style={s.cardLoc}>
+                    <Ionicons name="location-outline" size={14} />{' '}
+                    {selListing.regionLabel || selListing.address
+                      || [DISTRICTS.find(d => d.id === selListing.district)?.name, COMMITTEES.find(c => c.id === selListing.committee)?.name].filter(Boolean).join(', ')
+                      || 'Улаанбаатар'}
+                  </Text>
                   
                   <TouchableOpacity
                     style={s.mainBtn}
@@ -419,7 +460,7 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
           <View style={s.sheet}>
             <View style={s.handle} />
             <Text style={s.sheetTitle}>🏙 Дүүрэг сонгох</Text>
-            <FlatList data={DISTRICTS} keyExtractor={d=>d.id}
+            <FlatList data={DISTRICTS} keyExtractor={d => String(d.id)}
               contentContainerStyle={{ paddingBottom: 40 }}
               renderItem={({item:d}) => (
                 <TouchableOpacity style={[s.row, selDistrict?.id===d.id&&s.rowOn]} onPress={() => pickDistrict(d)}>
@@ -441,7 +482,7 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
             <Text style={s.sheetTitle}>📍 Сонгох</Text>
             {committees.length === 0
               ? <Text style={s.empty}>Эхлээд дүүрэг сонгоно уу</Text>
-              : <FlatList data={committees} keyExtractor={c=>c.id}
+              : <FlatList data={committees} keyExtractor={c => String(c.id)}
                   contentContainerStyle={{ paddingBottom: 40 }}
                   renderItem={({item:c}) => (
                     <TouchableOpacity style={[s.row, selCommittee?.id===c.id&&s.rowOn]} onPress={() => pickCommittee(c)}>
@@ -516,9 +557,13 @@ const s = StyleSheet.create({
   cardSheet:{backgroundColor:'#fff',borderTopLeftRadius:32,borderTopRightRadius:32,paddingBottom:20},
   handle:{width:40,height:5,borderRadius:3,backgroundColor:'#e0e0e0',alignSelf:'center',marginTop:12,marginBottom:8},
   cardContent:{padding:20,gap:20},
+  cardImageWrap:{
+    width:'100%',height:180,borderRadius:24,overflow:'hidden',position:'relative',backgroundColor:'#f8f9fa',
+  },
+  cardImage:{width:'100%',height:'100%'},
   cardImagePlaceholder:{
-    width:'100%',height:180,backgroundColor:'#f8f9fa',borderRadius:24,
-    alignItems:'center',justifyContent:'center',position:'relative',overflow:'hidden'
+    width:'100%',height:'100%',
+    alignItems:'center',justifyContent:'center',
   },
   priceBadge:{position:'absolute',top:16,right:16,backgroundColor:Colors.primary,paddingVertical:6,paddingHorizontal:12,borderRadius:12},
   priceBadgeTxt:{color:'#fff',fontSize:15,fontWeight:'900'},

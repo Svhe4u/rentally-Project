@@ -8,6 +8,7 @@ import type {
   Category,
   Region,
   Listing,
+  ListingImage,
   ListingFormData,
   Booking,
   Review,
@@ -204,6 +205,31 @@ export const ListingAPI = {
 
   getPopular: (limit = 10) =>
     api.request<Listing[]>(`/listings/popular/?limit=${limit}`),
+};
+
+export const ListingImageAPI = {
+  create: (body: {
+    listing_id: number;
+    image_url: string;
+    alt_text?: string;
+    is_primary?: boolean;
+    order?: number;
+  }) =>
+    api.request<ListingImage>('/listing-images/', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+
+  update: (id: number, body: Partial<Pick<ListingImage, 'order' | 'is_primary' | 'alt_text'>>) =>
+    api.request<ListingImage>(`/listing-images/${id}/`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
+
+  delete: (id: number) =>
+    api.request<void>(`/listing-images/${id}/`, {
+      method: 'DELETE',
+    }),
 };
 
 // Booking APIs

@@ -159,6 +159,7 @@ class ListingSerializer(serializers.ModelSerializer):
     region_name = serializers.CharField(source='region.name', read_only=True)
     bedrooms = serializers.IntegerField(source='detail.bedrooms', read_only=True, default=0)
     area_sqm = serializers.DecimalField(source='detail.area_sqm', max_digits=10, decimal_places=2, read_only=True, default=0)
+    cover_image = serializers.SerializerMethodField()
 
     class Meta:
         model = Listing
@@ -166,9 +167,29 @@ class ListingSerializer(serializers.ModelSerializer):
             'id', 'owner', 'owner_username', 'category', 'category_name',
             'region', 'region_name', 'title', 'description', 'address',
             'latitude', 'longitude', 'price', 'price_type', 'status',
-            'is_featured', 'views_count', 'bedrooms', 'area_sqm', 'created_at', 'updated_at'
+            'is_featured', 'views_count', 'bedrooms', 'area_sqm', 'cover_image',
+            'created_at', 'updated_at',
         ]
         read_only_fields = ['views_count', 'created_at', 'updated_at']
+
+    def get_cover_image(self, obj):
+        """Primary image URL for list cards (prefetch images on queryset)."""
+        primary = obj.images.filter(is_primary=True).first()
+        if primary:
+            return primary.image_url
+        first = obj.images.first()
+        return first.image_url if first else None
+
+
+class MyListingSerializer(ListingSerializer):
+    """Broker portal listing row including thumbnails, detail, and features for editing."""
+
+    images = ListingImageSerializer(many=True, read_only=True)
+    features = ListingFeatureSerializer(many=True, read_only=True)
+    detail = ListingDetailSerializer(read_only=True)
+
+    class Meta(ListingSerializer.Meta):
+        fields = ListingSerializer.Meta.fields + ['images', 'features', 'detail']
 
 
 class ListingDetailedSerializer(ListingSerializer):

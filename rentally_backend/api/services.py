@@ -17,7 +17,8 @@ from decimal import Decimal, InvalidOperation
 from django.contrib.auth.models import User
 
 from .models import (
-    Listing, Booking, Review, Favorite, Message, Payment, UserProfile
+    Listing, ListingDetail, ListingFeature,
+    Booking, Review, Favorite, Message, Payment, UserProfile,
 )
 
 # Fields a user is allowed to update on a listing (prevents owner override etc.)
@@ -93,6 +94,51 @@ class ListingService:
             return None
 
     @staticmethod
+    def _apply_listing_detail(listing, data):
+        """Create/update ListingDetail when detail keys are present."""
+        detail_keys = ('bedrooms', 'bathrooms', 'area_sqm', 'heating_type')
+        if not any(k in data for k in detail_keys):
+            return
+        detail, _ = ListingDetail.objects.get_or_create(listing=listing)
+        for k in detail_keys:
+            if k not in data:
+                continue
+            val = data[k]
+            if k in ('bedrooms', 'bathrooms', 'area_sqm'):
+                if val is None or val == '':
+                    setattr(detail, k, None)
+                else:
+                    try:
+                        setattr(detail, k, int(val))
+                    except (TypeError, ValueError):
+                        raise ValueError(f"Invalid {k} value")
+            else:
+                s = str(val).strip()[:100] if val is not None else ''
+                detail.heating_type = s or None
+        detail.save()
+
+    @staticmethod
+    def _apply_listing_features(listing, data):
+        """Replace listing features when `features` key is present (list of names)."""
+        if 'features' not in data:
+            return
+        raw = data['features']
+        if not isinstance(raw, list):
+            return
+        names = []
+        seen = set()
+        for item in raw:
+            n = str(item).strip()[:100] if item is not None else ''
+            if not n or n in seen:
+                continue
+            seen.add(n)
+            names.append(n)
+        listing.features.all().delete()
+        for n in names:
+            ListingFeature.objects.create(listing=listing, name=n, value='')
+
+    @staticmethod
+    @transaction.atomic
     def create_listing(owner, data):
         """Create a new listing with validated data."""
         price = data.get('price')
@@ -103,7 +149,7 @@ class ListingService:
         except (InvalidOperation, TypeError):
             raise ValueError("Invalid price value")
 
-        return Listing.objects.create(
+        listing = Listing.objects.create(
             owner=owner,
             category_id=data.get('category_id'),
             region_id=data.get('region_id'),
@@ -116,8 +162,12 @@ class ListingService:
             price_type=data.get('price_type', 'monthly'),
             status='active',
         )
+        ListingService._apply_listing_detail(listing, data)
+        ListingService._apply_listing_features(listing, data)
+        return listing
 
     @staticmethod
+    @transaction.atomic
     def update_listing(listing, data):
         """Update only allowed fields on a listing."""
         for field, value in data.items():
@@ -129,6 +179,8 @@ class ListingService:
                         raise ValueError(f"Invalid {field} value")
                 setattr(listing, field, value)
         listing.save()
+        ListingService._apply_listing_detail(listing, data)
+        ListingService._apply_listing_features(listing, data)
         return listing
 
     @staticmethod
@@ -141,8 +193,8 @@ class ListingService:
     def get_my_listings(owner):
         """Get all listings owned by a specific user (for broker portal)."""
         return Listing.objects.filter(owner=owner).select_related(
-            'owner', 'category', 'region'
-        ).prefetch_related('images', 'reviews').order_by('-created_at')
+            'owner', 'category', 'region', 'detail'
+        ).prefetch_related('images', 'features', 'reviews').order_by('-created_at')
 
 
 class BookingService:
@@ -474,14 +526,20 @@ class SearchService:
     def trending_listings(days=7, limit=10):
         """Get trending listings based on recent views."""
         cutoff = timezone.now() - timedelta(days=days)
-        return Listing.objects.filter(
-            status='active', updated_at__gte=cutoff
-        ).order_by('-views_count')[:limit]
+        return (
+            Listing.objects.filter(status='active', updated_at__gte=cutoff)
+            .select_related('detail')
+            .prefetch_related('images')
+            .order_by('-views_count')[:limit]
+        )
 
     @staticmethod
     def popular_listings(limit=10):
         """Get popular listings based on review count and rating."""
-        return Listing.objects.filter(status='active').annotate(
-            review_count=Count('reviews'),
-            avg_rating=Avg('reviews__rating'),
-        ).order_by('-review_count', '-avg_rating')[:limit]
+        return (
+            Listing.objects.filter(status='active')
+            .annotate(review_count=Count('reviews'), avg_rating=Avg('reviews__rating'))
+            .select_related('detail')
+            .prefetch_related('images')
+            .order_by('-review_count', '-avg_rating')[:limit]
+        )

@@ -1,1 +1,1 @@
-export { ImageUploader } from './ImageUploader';
+export { ImageUploader, type UploadImageMeta } from './ImageUploader';

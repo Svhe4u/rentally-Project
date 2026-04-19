@@ -99,18 +99,18 @@ function ListingRow({
       contentContainerStyle={s.rowScroll}
       renderItem={({ item }) => (
         <ListingCard
-          {...item}
           id={item.id}
           title={item.title}
-          price={item.price}
+          price={Number(item.price)}
           priceType={item.price_type}
-          regionName={(item as any).region?.name}
-          districtName={(item as any).region?.parent_name}
-          imageUrl={(item as any).images?.[0]?.image_url}
-          area={(item as any).details?.area_sqm}
-          rooms={(item as any).details?.floor_number}
-          rating={(item as any).rating_avg ?? null}
-          reviewCount={(item as any).review_count}
+          address={item.address}
+          regionName={item.region_name}
+          districtName={undefined}
+          imageUrl={item.cover_image ?? item.images?.[0]?.image_url}
+          area={item.area_sqm != null ? Number(item.area_sqm) : undefined}
+          rooms={item.bedrooms != null ? Number(item.bedrooms) : undefined}
+          rating={null}
+          reviewCount={undefined}
           isFavorite={favorites.has(item.id)}
           onPress={onCardPress}
           onFavorite={onFavorite}
@@ -141,19 +141,22 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
     try {
       const [listRes, favRes, catRes, regRes] = await Promise.all([
         ListingAPI.list({ page_size: 20 }),
-        FavoriteAPI.list(1),   // TODO: replace 1 with real user id
+        FavoriteAPI.list().catch(() => ({ results: [] as any[] })),
         CategoryAPI.list(),
         RegionAPI.list(),
       ]);
 
-      const all: Listing[] = listRes.results ?? listRes;
+      const all: Listing[] = listRes.results ?? (listRes as any);
       setNearby(all.slice(0, 6));
       setPopular(all.slice(6, 12));
       setNewListings(all.slice(12, 18));
       setCategories(catRes);
       setRegions(regRes);
 
-      const favIds = new Set((favRes as any).results?.map((f: any) => f.listing_id) ?? []);
+      const favRows = (favRes as any).results ?? favRes ?? [];
+      const favIds = new Set(
+        (Array.isArray(favRows) ? favRows : []).map((f: any) => f.listing as number),
+      );
       setFavorites(favIds);
     } catch (e) {
       console.error('Home fetch error:', e);
@@ -174,10 +177,14 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
   const handleFavorite = async (id: number) => {
     try {
       if (favorites.has(id)) {
-        await FavoriteAPI.remove(id, 1);
-        setFavorites(prev => { const s = new Set(prev); s.delete(id); return s; });
+        await FavoriteAPI.remove(id);
+        setFavorites(prev => {
+          const s = new Set(prev);
+          s.delete(id);
+          return s;
+        });
       } else {
-        await FavoriteAPI.add(1, id);
+        await FavoriteAPI.toggle(id);
         setFavorites(prev => new Set(prev).add(id));
       }
     } catch (e) {

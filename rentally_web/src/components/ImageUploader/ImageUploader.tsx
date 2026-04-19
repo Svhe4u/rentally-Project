@@ -2,13 +2,30 @@ import { useState, useRef } from 'react';
 import type { ListingImage } from '../../types';
 import './ImageUploader.css';
 
+export interface UploadImageMeta {
+  order: number;
+  isPrimary: boolean;
+}
+
 interface ImageUploaderProps {
   images: ListingImage[];
   onImagesChange: (images: ListingImage[]) => void;
+  uploadImage: (file: File, meta: UploadImageMeta) => Promise<ListingImage>;
+  onRemoveImage?: (image: ListingImage) => Promise<void>;
+  onPersistImages?: (images: ListingImage[]) => Promise<void>;
+  onUploadError?: (message: string) => void;
   maxImages?: number;
 }
 
-export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageUploaderProps) {
+export function ImageUploader({
+  images,
+  onImagesChange,
+  uploadImage,
+  onRemoveImage,
+  onPersistImages,
+  onUploadError,
+  maxImages = 10,
+}: ImageUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,52 +40,65 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
     setIsUploading(true);
     setUploadProgress(0);
 
-    // Simulate upload progress
     const totalFiles = filesToUpload.length;
     const uploadedImages: ListingImage[] = [];
 
-    for (let i = 0; i < filesToUpload.length; i++) {
-      const file = filesToUpload[i];
+    try {
+      for (let i = 0; i < filesToUpload.length; i++) {
+        const file = filesToUpload[i];
+        const order = images.length + i;
+        const isPrimary = images.length === 0 && i === 0;
+        const listingImg = await uploadImage(file, { order, isPrimary });
+        uploadedImages.push(listingImg);
+        setUploadProgress(((i + 1) / totalFiles) * 100);
+      }
 
-      // In a real app, you would upload to Cloudinary or your backend here
-      // For now, we'll create a preview URL
-      const imageUrl = URL.createObjectURL(file);
-
-      uploadedImages.push({
-        id: Date.now() + i,
-        image_url: imageUrl,
-        alt_text: file.name,
-        is_primary: images.length === 0 && i === 0,
-        order: images.length + i,
-      });
-
-      setUploadProgress(((i + 1) / totalFiles) * 100);
-    }
-
-    onImagesChange([...images, ...uploadedImages]);
-    setIsUploading(false);
-
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      onImagesChange([...images, ...uploadedImages]);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Зураг хуулахад алдаа гарлаа';
+      onUploadError?.(message);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
-  const handleRemoveImage = (id: number) => {
-    const newImages = images.filter(img => img.id !== id);
-    onImagesChange(newImages);
+  const handleRemoveImage = async (id: number) => {
+    const img = images.find((i) => i.id === id);
+    if (!img) return;
+    try {
+      if (onRemoveImage) {
+        await onRemoveImage(img);
+      }
+      const normalized = images
+        .filter((i) => i.id !== id)
+        .map((row, idx) => ({ ...row, order: idx }));
+      onImagesChange(normalized);
+      await onPersistImages?.(normalized);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Зураг устгахад алдаа гарлаа';
+      onUploadError?.(message);
+    }
   };
 
-  const handleSetPrimary = (id: number) => {
-    const newImages = images.map(img => ({
+  const handleSetPrimary = async (id: number) => {
+    const newImages = images.map((img) => ({
       ...img,
       is_primary: img.id === id,
     }));
     onImagesChange(newImages);
+    try {
+      await onPersistImages?.(newImages);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Өөрчлөхөд алдаа гарлаа';
+      onUploadError?.(message);
+    }
   };
 
-  const handleReorder = (id: number, direction: 'up' | 'down') => {
-    const index = images.findIndex(img => img.id === id);
+  const handleReorder = async (id: number, direction: 'up' | 'down') => {
+    const index = images.findIndex((img) => img.id === id);
     if (
       (direction === 'up' && index === 0) ||
       (direction === 'down' && index === images.length - 1)
@@ -76,16 +106,18 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
       return;
     }
 
-    const newImages = [...images];
+    const reordered = [...images];
     const swapIndex = direction === 'up' ? index - 1 : index + 1;
-    [newImages[index], newImages[swapIndex]] = [newImages[swapIndex], newImages[index]];
+    [reordered[index], reordered[swapIndex]] = [reordered[swapIndex], reordered[index]];
+    const withOrder = reordered.map((img, i) => ({ ...img, order: i }));
 
-    // Update order
-    newImages.forEach((img, i) => {
-      img.order = i;
-    });
-
-    onImagesChange(newImages);
+    onImagesChange(withOrder);
+    try {
+      await onPersistImages?.(withOrder);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Дараалал өөрчлөхөд алдаа гарлаа';
+      onUploadError?.(message);
+    }
   };
 
   const canAddMore = images.length < maxImages;
@@ -98,6 +130,7 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
         </span>
         {canAddMore && (
           <button
+            type="button"
             className="btn btn-secondary btn-sm"
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
@@ -130,7 +163,7 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
 
       <div className="images-grid">
         {images.length === 0 ? (
-          <div className="upload-placeholder" onClick={() => fileInputRef.current?.click()}>
+          <div className="upload-placeholder" onClick={() => !isUploading && fileInputRef.current?.click()}>
             <div className="upload-icon">📷</div>
             <p>Зураг хуулах бол дарна уу</p>
             <span>JPG, PNG 10MB хүртэл</span>
@@ -149,6 +182,7 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
 
               <div className="image-actions">
                 <button
+                  type="button"
                   className="image-action-btn"
                   onClick={() => handleSetPrimary(image.id)}
                   title="Үндсэн болгох"
@@ -157,6 +191,7 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
                   ★
                 </button>
                 <button
+                  type="button"
                   className="image-action-btn"
                   onClick={() => handleReorder(image.id, 'up')}
                   disabled={index === 0}
@@ -165,6 +200,7 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
                   ↑
                 </button>
                 <button
+                  type="button"
                   className="image-action-btn"
                   onClick={() => handleReorder(image.id, 'down')}
                   disabled={index === images.length - 1}
@@ -173,6 +209,7 @@ export function ImageUploader({ images, onImagesChange, maxImages = 10 }: ImageU
                   ↓
                 </button>
                 <button
+                  type="button"
                   className="image-action-btn delete"
                   onClick={() => handleRemoveImage(image.id)}
                   title="Устгах"

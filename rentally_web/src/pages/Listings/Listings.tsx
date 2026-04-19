@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import type { Listing, Category, Region, ListingFormData, ListingStatus } from '../../types';
-import { ListingAPI, MetaDataAPI } from '../../api/api';
+import type { Listing, Category, Region, ListingFormData, ListingImage, ListingStatus } from '../../types';
+import { ListingAPI, ListingImageAPI, MetaDataAPI } from '../../api/api';
 import { Modal } from '../../components/Modal';
 import { ListingForm } from '../../components/ListingForm';
 import './Listings.css';
@@ -47,10 +47,20 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
     }
   };
 
-  const handleCreate = async (data: ListingFormData) => {
+  const handleCreate = async (data: ListingFormData, images: ListingImage[]) => {
     try {
       setIsSubmitting(true);
-      await ListingAPI.create(data);
+      const listing = await ListingAPI.create(data);
+      for (let i = 0; i < images.length; i++) {
+        const img = images[i];
+        await ListingImageAPI.create({
+          listing_id: listing.id,
+          image_url: img.image_url,
+          alt_text: img.alt_text,
+          is_primary: img.is_primary,
+          order: img.order ?? i,
+        });
+      }
       onSuccess('Байр амжилттай үүслээ');
       setShowAddModal(false);
       fetchData();
@@ -61,7 +71,7 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
     }
   };
 
-  const handleUpdate = async (data: ListingFormData) => {
+  const handleUpdate = async (data: ListingFormData, _images: ListingImage[]) => {
     if (!selectedListing) return;
 
     try {
@@ -271,11 +281,13 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
         size="lg"
       >
         <ListingForm
+          key="listing-new"
           categories={categories}
           regions={regions}
           onSubmit={handleCreate}
           onCancel={() => setShowAddModal(false)}
           isSubmitting={isSubmitting}
+          onUploadError={onError}
         />
       </Modal>
 
@@ -291,6 +303,7 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
       >
         {selectedListing && (
           <ListingForm
+            key={selectedListing.id}
             listing={selectedListing}
             categories={categories}
             regions={regions}
@@ -300,6 +313,7 @@ export function Listings({ onSuccess, onError }: ListingsProps) {
               setSelectedListing(null);
             }}
             isSubmitting={isSubmitting}
+            onUploadError={onError}
           />
         )}
       </Modal>

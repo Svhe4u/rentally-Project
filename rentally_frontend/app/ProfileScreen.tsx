@@ -76,8 +76,9 @@ export default function ProfileScreen({ onNavigate }: Props) {
           MessageThreadAPI.list(),
           BookingAPI.list(),
         ]);
+        const favRows = (favs as any)?.results ?? favs;
         setStats({
-          favorites: Array.isArray(favs) ? favs.length : 0,
+          favorites: Array.isArray(favRows) ? favRows.length : 0,
           messages: msgs?.conversations?.length || 0,
           bookings: Array.isArray(bks) ? bks.length : 0,
         });

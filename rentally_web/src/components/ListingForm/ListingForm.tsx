@@ -2,7 +2,10 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import type { Category, Region, Listing, ListingFormData, PriceType } from '../../types';
+import type { Category, Region, Listing, ListingFormData, ListingImage, PriceType } from '../../types';
+import { api, ListingImageAPI } from '../../api/api';
+import { ImageUploader } from '../ImageUploader/ImageUploader';
+import type { UploadImageMeta } from '../ImageUploader/ImageUploader';
 import './ListingForm.css';
 
 // Fix Leaflet marker icons in React
@@ -53,9 +56,10 @@ interface ListingFormProps {
   listing?: Listing | null;
   categories: Category[];
   regions: Region[];
-  onSubmit: (data: ListingFormData) => void;
+  onSubmit: (data: ListingFormData, images: ListingImage[]) => void;
   onCancel: () => void;
   isSubmitting?: boolean;
+  onUploadError?: (message: string) => void;
 }
 
 const priceTypes: { value: PriceType; label: string }[] = [
@@ -66,7 +70,15 @@ const priceTypes: { value: PriceType; label: string }[] = [
 
 const heatingTypes = ['Central', 'Electric', 'Gas', 'Coal', 'Other'];
 
-export function ListingForm({ listing, categories, regions, onSubmit, onCancel, isSubmitting }: ListingFormProps) {
+export function ListingForm({
+  listing,
+  categories,
+  regions,
+  onSubmit,
+  onCancel,
+  isSubmitting,
+  onUploadError,
+}: ListingFormProps) {
   const [formData, setFormData] = useState<ListingFormData>({
     title: '',
     description: '',
@@ -86,6 +98,7 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
 
   const [featureInput, setFeatureInput] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [images, setImages] = useState<ListingImage[]>([]);
 
   useEffect(() => {
     if (listing) {
@@ -105,6 +118,9 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
         heating_type: listing.detail?.heating_type || '',
         features: listing.features?.map(f => f.name) || [],
       });
+      setImages([...(listing.images || [])].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)));
+    } else {
+      setImages([]);
     }
   }, [listing]);
 
@@ -125,7 +141,43 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      onSubmit(formData);
+      onSubmit(formData, images);
+    }
+  };
+
+  const uploadListingImage = async (file: File, meta: UploadImageMeta): Promise<ListingImage> => {
+    const { url } = await api.uploadFile('/upload/listing-image/', file);
+    if (listing?.id) {
+      return ListingImageAPI.create({
+        listing_id: listing.id,
+        image_url: url,
+        order: meta.order,
+        is_primary: meta.isPrimary,
+      });
+    }
+    return {
+      id: -(Date.now() + Math.floor(Math.random() * 10000)),
+      image_url: url,
+      order: meta.order,
+      is_primary: meta.isPrimary,
+    };
+  };
+
+  const handleRemoveListingImage = async (img: ListingImage) => {
+    if (listing?.id && img.id > 0) {
+      await ListingImageAPI.delete(img.id);
+    }
+  };
+
+  const persistListingImages = async (next: ListingImage[]) => {
+    if (!listing?.id) return;
+    for (const img of next) {
+      if (img.id > 0) {
+        await ListingImageAPI.update(img.id, {
+          order: img.order,
+          is_primary: img.is_primary,
+        });
+      }
     }
   };
 
@@ -350,6 +402,18 @@ export function ListingForm({ listing, categories, regions, onSubmit, onCancel, 
             </span>
           ))}
         </div>
+      </div>
+
+      <div className="form-section">
+        <h4 className="form-section-title">Зураг</h4>
+        <ImageUploader
+          images={images}
+          onImagesChange={setImages}
+          uploadImage={uploadListingImage}
+          onRemoveImage={handleRemoveListingImage}
+          onPersistImages={persistListingImages}
+          onUploadError={onUploadError}
+        />
       </div>
 
       <div className="form-section">

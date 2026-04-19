@@ -6,6 +6,7 @@ Production-ready configuration with security best practices.
 import os
 from pathlib import Path
 from datetime import timedelta
+from urllib.parse import urlparse, unquote
 
 # Load environment variables
 try:
@@ -261,10 +262,28 @@ SESSION_CACHE_ALIAS = 'default'
 # ─────────────────────────────────────────────────────────────────────
 # CLOUDINARY CONFIGURATION
 # ─────────────────────────────────────────────────────────────────────
+# Use either CLOUDINARY_URL (e.g. cloudinary://api_key:api_secret@cloud_name)
+# or the three variables below. Listing image uploads use cloudinary.uploader.
 
-CLOUDINARY_CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME')
-CLOUDINARY_API_KEY = os.getenv('CLOUDINARY_API_KEY')
-CLOUDINARY_API_SECRET = os.getenv('CLOUDINARY_API_SECRET')
+CLOUDINARY_CLOUD_NAME = (os.getenv('CLOUDINARY_CLOUD_NAME') or '').strip() or None
+CLOUDINARY_API_KEY = (os.getenv('CLOUDINARY_API_KEY') or '').strip() or None
+CLOUDINARY_API_SECRET = (os.getenv('CLOUDINARY_API_SECRET') or '').strip() or None
+
+_cl_url = (os.getenv('CLOUDINARY_URL') or '').strip()
+if _cl_url:
+    try:
+        parsed = urlparse(_cl_url)
+        if parsed.scheme == 'cloudinary' and parsed.hostname:
+            if not CLOUDINARY_CLOUD_NAME:
+                CLOUDINARY_CLOUD_NAME = parsed.hostname
+            if not CLOUDINARY_API_KEY and parsed.username:
+                CLOUDINARY_API_KEY = unquote(parsed.username)
+            if not CLOUDINARY_API_SECRET and parsed.password is not None:
+                CLOUDINARY_API_SECRET = unquote(parsed.password)
+    except Exception:
+        pass
+
+CLOUDINARY_LISTINGS_FOLDER = (os.getenv('CLOUDINARY_LISTINGS_FOLDER') or 'rentally/listings').strip().strip('/')
 
 if CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET:
     import cloudinary
@@ -275,6 +294,16 @@ if CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET:
     )
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
     MEDIA_URL = '/media/'
+else:
+    MEDIA_ROOT = BASE_DIR / 'media'
+    MEDIA_URL = '/media/'
+
+# Serve /media/ through Django when files live under MEDIA_ROOT (not used with Cloudinary-only flow).
+# Defaults: on when DEBUG; if DEBUG is False, set SERVE_MEDIA=true in .env for local disk uploads.
+SERVE_MEDIA = os.getenv(
+    'SERVE_MEDIA',
+    'true' if DEBUG else 'false',
+).lower() in ('1', 'true', 'yes')
 
 # ─────────────────────────────────────────────────────────────────────
 # STATIC FILES

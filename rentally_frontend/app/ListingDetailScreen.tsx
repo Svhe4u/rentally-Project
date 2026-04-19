@@ -5,12 +5,13 @@ import {
   Dimensions, Image, Alert, Animated, StatusBar, Platform,
 } from 'react-native';
 import { TabName } from '../components/BottomNav';
-import { storage } from '../services/storage';
-import { FavoriteAPI } from '../services/api';
-
-// ─── Config ───────────────────────────────────────────────────
-const API_BASE = 'http://127.0.0.1:8000/api';
-const CURRENT_USER_ID = 1;
+import {
+  FavoriteAPI,
+  ListingAPI,
+  MessageAPI,
+  MongoliaAPI,
+  ReviewAPI,
+} from '../services/api';
 
 const { width: W, height: H } = Dimensions.get('window');
 const HERO_H = Math.round(H * 0.40);
@@ -29,6 +30,9 @@ interface Details {
   window_type?: string; building_floors?: number; door_type?: string;
   area_sqm?: number; floor_number?: number; window_count?: number;
   payment_terms?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  heating_type?: string;
 }
 interface ListingImage { id: number; image_url: string; sort_order: number; }
 interface ExtraFeature { id: number; key: string; value: string; }
@@ -48,7 +52,7 @@ interface Listing {
   extra_features: ExtraFeature[];
   availability: any[];
   reviews: Review[];
-  review_count: number;
+  review_count?: number;
   rating_avg: number | null;
 }
 
@@ -153,42 +157,64 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
   // ── Fetch ─────────────────────────────────────────────────
   const load = useCallback(async () => {
     if (!listingId) return;
-    setLoading(true); setError(''); setListing(null); setUtility(null); setImgIdx(0);
+    setLoading(true);
+    setError('');
+    setListing(null);
+    setUtility(null);
+    setImgIdx(0);
     try {
-              const r = await fetch(`${API_BASE}/listings/${listingId}/`);
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const raw = await r.json();
+      const raw = (await ListingAPI.detail(listingId)) as any;
+      const imgs = (raw.images || []).map((img: any) => ({
+        id: img.id,
+        image_url: img.image_url,
+        sort_order: img.order ?? img.sort_order ?? 0,
+      }));
 
-        const d: Listing = {
-          ...raw,
-          price: parseFloat(raw.price),
-          owner: {
-            id: raw.owner,
-            username: raw.owner_username,
-            role: 'broker',
-          },
-          category: raw.category ? { id: raw.category, name: raw.category_name } : undefined,
-          region: raw.region ? { id: raw.region, name: raw.region_name } : undefined,
-          details: raw.detail || {},
-          extra_features: (raw.features || []).map((f: any) => ({
-            id: f.id,
-            key: f.name,
-            value: f.value,
-          })),
-          rating_avg: raw.average_rating ?? null,
-          reviews: [],
-          availability: [],
-        };
+      const d: Listing = {
+        ...raw,
+        price: parseFloat(String(raw.price)),
+        owner: {
+          id: raw.owner,
+          username: raw.owner_username ?? 'Хэрэглэгч',
+          role: 'broker',
+        },
+        category: raw.category ? { id: raw.category, name: raw.category_name } : undefined,
+        region:
+          raw.region_name != null
+            ? { id: raw.region, name: raw.region_name }
+            : undefined,
+        details: raw.detail || {},
+        images: imgs,
+        extra_features: (raw.features || []).map((f: any) => ({
+          id: f.id,
+          key: f.name,
+          value: f.value,
+        })),
+        rating_avg: raw.average_rating ?? null,
+        review_count: raw.review_count ?? 0,
+        reviews: [],
+        availability: [],
+      };
 
-        setListing(d);
-      if (d.details?.area_sqm) {
-        const u = await fetch(`${API_BASE}/mongolia/utility-estimate/?area_sqm=${d.details.area_sqm}`);
-        const ud = await u.json();
-        setUtility(ud.formatted);
+      setListing(d);
+
+      try {
+        const ck = await FavoriteAPI.check(listingId);
+        setIsFav(!!ck.is_favorited);
+      } catch {
+        setIsFav(false);
+      }
+
+      const area = d.details?.area_sqm;
+      if (area != null) {
+        const ud = await MongoliaAPI.utilityEstimate(Number(area));
+        if (ud?.formatted) setUtility(ud.formatted);
       }
     } catch (e: any) {
       setError(e.message || 'Алдаа гарлаа');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   }, [listingId]);
 
   useEffect(() => { if (visible && listingId) load(); }, [visible, listingId]);
@@ -203,75 +229,60 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
     try {
       if (isFav) {
         await FavoriteAPI.remove(listing!.id);
+        setIsFav(false);
       } else {
-        await FavoriteAPI.add(CURRENT_USER_ID, listing!.id);
+        await FavoriteAPI.toggle(listing!.id);
+        setIsFav(true);
       }
-      setIsFav(f => !f);
-    } catch { Alert.alert('Алдаа', 'Хадгалахад алдаа гарлаа'); }
+    } catch {
+      Alert.alert('Алдаа', 'Хадгалахад алдаа гарлаа');
+    }
   };
 
   // ── Message ───────────────────────────────────────────────
-const sendMsg = async () => {
-  if (!msgText.trim() || !listing) return;
-  setMsgSending(true);
-  try {
-    let token = await storage.getItem('auth_token');
-    
-    // Token expire бол refresh хийнэ
-    const refreshToken = await storage.getItem('refresh_token');
-    if (refreshToken) {
-      const refreshRes = await fetch(`${API_BASE}/auth/token/refresh/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh: refreshToken }),
-      });
-      if (refreshRes.ok) {
-        const refreshData = await refreshRes.json();
-        token = refreshData.access;
-        await storage.setItem('auth_token', token!);
-      }
-    }
-
-    const r = await fetch(`${API_BASE}/messages/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({
+  const sendMsg = async () => {
+    if (!msgText.trim() || !listing) return;
+    setMsgSending(true);
+    try {
+      await MessageAPI.send({
         recipient_id: listing.owner.id,
         content: msgText.trim(),
         listing_id: listing.id,
-      }),
-    });
-    if (!r.ok) throw new Error();
-    setMsgText(''); setMsgOpen(false);
-    Alert.alert('✅', 'Мессеж амжилттай илгээгдлээ!');
-  } catch { 
-    Alert.alert('Алдаа', 'Мессеж илгээхэд алдаа гарлаа'); 
-  }
-  finally { setMsgSending(false); }
-};
+      });
+      setMsgText('');
+      setMsgOpen(false);
+      Alert.alert('✅', 'Мессеж амжилттай илгээгдлээ!');
+    } catch {
+      Alert.alert('Алдаа', 'Мессеж илгээхэд алдаа гарлаа');
+    } finally {
+      setMsgSending(false);
+    }
+  };
 
   // ── Review ────────────────────────────────────────────────
   const postReview = async () => {
     if (!rvText.trim() || !listing) return;
     setRvSending(true);
     try {
-      const r = await fetch(`${API_BASE}/reviews/`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: CURRENT_USER_ID, listing_id: listing.id,
-          rating: rvRating, comment: rvText.trim(),
-        }),
+      await ReviewAPI.create({
+        listing_id: listing.id,
+        rating: rvRating,
+        comment: rvText.trim(),
       });
-      if (r.status === 409) { Alert.alert('', 'Та аль хэдийн үнэлсэн байна.'); return; }
-      if (!r.ok) throw new Error();
-      setRvText(''); setRvOpen(false);
+      setRvText('');
+      setRvOpen(false);
       Alert.alert('⭐ Баярлалаа!', 'Таны үнэлгээ нийтлэгдлээ.');
       load();
-    } catch { Alert.alert('Алдаа', 'Үнэлгээ нэмэхэд алдаа гарлаа'); }
-    finally { setRvSending(false); }
+    } catch (e: any) {
+      const m = String(e?.message || '').toLowerCase();
+      if (m.includes('аль хэдийн') || m.includes('already') || m.includes('409')) {
+        Alert.alert('', 'Та аль хэдийн үнэлсэн байна.');
+        return;
+      }
+      Alert.alert('Алдаа', 'Үнэлгээ нэмэхэд алдаа гарлаа');
+    } finally {
+      setRvSending(false);
+    }
   };
 
   // ── Scroll header ─────────────────────────────────────────
@@ -286,7 +297,7 @@ const sendMsg = async () => {
     outputRange: [0, 1], extrapolate: 'clamp',
   });
 
-  if (!visible && slideX._value >= W) return null;
+  if (!visible) return null;
 
   const priceLabel = listing
     ? fmtPrice(listing.price) + ' ₮' + (PRICE_SUFFIX[listing.price_type] ?? '')
@@ -394,7 +405,7 @@ const sendMsg = async () => {
                   <View style={c.ratingChip}>
                     <Text style={c.ratingStar}>★</Text>
                     <Text style={c.ratingNum}>{listing.rating_avg.toFixed(1)}</Text>
-                    <Text style={c.ratingCnt}>({listing.review_count})</Text>
+                    <Text style={c.ratingCnt}>({listing.review_count ?? 0})</Text>
                   </View>
                 )}
               </View>
@@ -412,7 +423,16 @@ const sendMsg = async () => {
               {/* Key bar */}
               {listing.details && (
                 <View style={c.keyBar}>
+                  {listing.details.bedrooms != null && listing.details.bedrooms > 0 && (
+                    <KeyStat icon="🛏" val={String(listing.details.bedrooms)} unit="унтлагын өрөө" />
+                  )}
+                  {listing.details.bathrooms != null && listing.details.bathrooms > 0 && (
+                    <KeyStat icon="🚿" val={String(listing.details.bathrooms)} unit="угаалгын өрөө" />
+                  )}
                   {listing.details.area_sqm && <KeyStat icon="📐" val={`${listing.details.area_sqm}`} unit="м²" />}
+                  {listing.details.heating_type ? (
+                    <KeyStat icon="🔥" val={listing.details.heating_type} unit="халаалт" />
+                  ) : null}
                   {listing.details.floor_number != null && (
                     <KeyStat icon="🏗" val={String(listing.details.floor_number)}
                       unit={listing.details.building_floors ? `/ ${listing.details.building_floors}Д` : 'давхар'} />
@@ -506,7 +526,7 @@ const sendMsg = async () => {
               </Sec>
 
               {/* Reviews */}
-              <Sec title={`⭐ Үнэлгээ${listing.review_count > 0 ? ` · ${listing.review_count}` : ''}`}
+              <Sec title={`⭐ Үнэлгээ${(listing.review_count ?? 0) > 0 ? ` · ${listing.review_count}` : ''}`}
                    action={listing.rating_avg !== null ? `${listing.rating_avg.toFixed(1)} / 5` : undefined}>
                 {listing.reviews.length === 0 ? (
                   <View style={c.noRv}>

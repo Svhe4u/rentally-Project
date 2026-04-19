@@ -11,6 +11,8 @@ from .views import (
     ListingListAPIView,
     ListingDetailAPIView,
     ListingImageAPIView,
+    ListingImageDetailAPIView,
+    ListingImageUploadAPIView,
     MyListingsAPIView,
     ListingFullDetailAPIView,
 
@@ -88,6 +90,8 @@ urlpatterns = [
     path("listings/my/", MyListingsAPIView.as_view(), name="my-listings"),
     path("listings/<int:pk>/", ListingDetailAPIView.as_view(), name="listing-detail"),
     path("listing-images/", ListingImageAPIView.as_view(), name="listing-image-list"),
+    path("listing-images/<int:pk>/", ListingImageDetailAPIView.as_view(), name="listing-image-detail"),
+    path("upload/listing-image/", ListingImageUploadAPIView.as_view(), name="listing-image-upload"),
     path("listings/trending/", TrendingListingsAPIView.as_view(), name="trending-listings"),
     path("listings/popular/", PopularListingsAPIView.as_view(), name="popular-listings"),
     path("listings/<int:pk>/full/", ListingFullDetailAPIView.as_view(), name="listing-full-detail"),

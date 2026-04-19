@@ -187,10 +187,10 @@ export const ListingAPI = {
   images: (listing_id: number) =>
     request<ListingImage[]>(`/listing-images/?listing_id=${listing_id}`),
 
-  addImage: (listing_id: number, image_url: string, sort_order?: number) =>
+  addImage: (listing_id: number, image_url: string, order?: number) =>
     request<ListingImage>('/listing-images/', {
       method: 'POST',
-      body: JSON.stringify({ listing_id, image_url, sort_order }),
+      body: JSON.stringify({ listing_id, image_url, order }),
     }),
 };
 
@@ -231,12 +231,7 @@ export const ReviewAPI = {
       `/reviews/?listing_id=${listing_id}&page=${page}`,
     ),
 
-  create: (data: {
-    listing_id: number;
-    user_id: number;
-    rating: number;
-    comment?: string;
-  }) =>
+  create: (data: { listing_id: number; rating: number; comment?: string }) =>
     request<Review>('/reviews/', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -254,17 +249,23 @@ export const ReviewAPI = {
 
 // ─── FAVORITES ───────────────────────────────────────────────
 export const FavoriteAPI = {
-  list: () =>
-    request<Favorite[]>('/favorites/'),
+  list: (page = 1, page_size = 100) =>
+    request<{ meta: any; results: Favorite[] }>(
+      `/favorites/?page=${page}&page_size=${page_size}`,
+    ),
 
-  add: (user_id: number, listing_id: number) =>
-    request<Favorite>('/favorites/', {
+  /** Toggle favorite for current user (POST). */
+  toggle: (listing_id: number) =>
+    request<{ is_favorited: boolean; detail: string }>('/favorites/', {
       method: 'POST',
-      body: JSON.stringify({ user_id, listing_id }),
+      body: JSON.stringify({ listing_id }),
     }),
 
   remove: (listing_id: number) =>
-    request(`/favorites/${listing_id}/check/`, { method: 'DELETE' }),
+    request<void>(`/favorites/${listing_id}/check/`, { method: 'DELETE' }),
+
+  check: (listing_id: number) =>
+    request<{ is_favorited: boolean }>(`/favorites/${listing_id}/check/`),
 };
 
 // ─── MESSAGE THREADS ─────────────────────────────────────────
@@ -359,8 +360,10 @@ export const MongoliaAPI = {
     request('/mongolia/neighborhoods/'),
   popularAreas: () =>
     request('/mongolia/popular-areas/'),
-  utilityEstimate: () =>
-    request('/mongolia/utility-estimate/'),
+  utilityEstimate: (area_sqm?: number) =>
+    request<{ formatted?: { min: string; max: string } }>(
+      `/mongolia/utility-estimate/${area_sqm != null ? `?area_sqm=${area_sqm}` : ''}`,
+    ),
   seasonalTrends: () =>
     request('/mongolia/seasonal-trends/'),
 };
@@ -368,9 +371,15 @@ export const MongoliaAPI = {
 // ─── TYPES ───────────────────────────────────────────────────
 export interface Listing {
   id: number;
-  owner_id: number;
-  category_id: number;
-  region_id: number;
+  owner?: number;
+  owner_id?: number;
+  owner_username?: string;
+  category?: number;
+  category_id?: number;
+  category_name?: string;
+  region?: number;
+  region_id?: number;
+  region_name?: string;
   title: string;
   description?: string;
   address?: string;
@@ -378,14 +387,21 @@ export interface Listing {
   longitude?: number;
   price: number;
   price_type: string;
-  is_active: boolean;
+  status?: string;
+  is_active?: boolean;
+  is_featured?: boolean;
+  views_count?: number;
   bedrooms?: number;
   area_sqm?: number;
+  /** From list/search API — first listing image */
+  cover_image?: string | null;
+  images?: ListingImage[];
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
 }
 
-export interface ListingFull extends Listing {
+export interface ListingFull
+  extends Omit<Listing, 'owner' | 'category' | 'region' | 'images'> {
   owner: User & { broker_profile?: BrokerProfile };
   category: Category;
   region: Region & { parent_name?: string };
@@ -415,9 +431,12 @@ export interface ListingDetails {
 
 export interface ListingImage {
   id: number;
-  listing_id: number;
+  listing_id?: number;
   image_url: string;
-  sort_order: number;
+  sort_order?: number;
+  order?: number;
+  is_primary?: boolean;
+  alt_text?: string | null;
 }
 
 export interface Booking {

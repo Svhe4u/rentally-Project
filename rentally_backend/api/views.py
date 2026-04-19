@@ -16,7 +16,15 @@ Fixes over previous version:
   - No bare except Exception leaking stack traces
 """
 
+import io
+import logging
+import os
+import uuid
 from datetime import datetime
+
+from django.conf import settings as django_settings
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -39,7 +47,7 @@ from .models import (
     Category, Region, Payment, UserProfile, BrokerProfile
 )
 from .serializers import (
-    ListingSerializer, ListingDetailedSerializer, ListingImageSerializer,
+    ListingSerializer, ListingDetailedSerializer, ListingImageSerializer, MyListingSerializer,
     BookingSerializer, ReviewSerializer, FavoriteSerializer,
     MessageSerializer, CategorySerializer, RegionSerializer,
     PaymentSerializer, UserProfileSerializer, BrokerProfileSerializer,
@@ -48,6 +56,8 @@ from .services import (
     ListingService, BookingService, ReviewService, FavoriteService,
     MessageService, PaymentService, SearchService
 )
+
+logger = logging.getLogger(__name__)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -230,6 +240,107 @@ class ListingImageAPIView(APIView):
             serializer.save(listing=listing)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return APIError.bad_request(str(serializer.errors))
+
+
+class ListingImageDetailAPIView(APIView):
+    """
+    PATCH /api/listing-images/<pk>/  — owner: order, is_primary, alt_text
+    DELETE /api/listing-images/<pk>/ — owner only
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def _get_owned_image(self, pk):
+        img = get_object_or_404(ListingImage, pk=pk)
+        if img.listing.owner != self.request.user:
+            return None, APIError.forbidden("You can only modify images on your own listings")
+        return img, None
+
+    def patch(self, request, pk):
+        img, err = self._get_owned_image(pk)
+        if err:
+            return err
+        serializer = ListingImageSerializer(img, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return APIError.bad_request(str(serializer.errors))
+
+    def delete(self, request, pk):
+        img, err = self._get_owned_image(pk)
+        if err:
+            return err
+        img.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ListingImageUploadAPIView(APIView):
+    """
+    POST /api/upload/listing-image/ — authenticated; multipart field \"file\".
+    Returns { \"url\": \"...\" } suitable for POST /api/listing-images/.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        upload = request.FILES.get('file')
+        if not upload:
+            return APIError.bad_request("file is required")
+
+        max_bytes = 10 * 1024 * 1024
+        if upload.size > max_bytes:
+            return APIError.bad_request("File too large")
+
+        content_type = (upload.content_type or '').lower()
+        if not content_type.startswith('image/'):
+            return APIError.bad_request("Only image uploads are allowed")
+
+        ext = os.path.splitext(upload.name)[1].lower()
+        if ext not in ('.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'):
+            ext = {
+                'image/jpeg': '.jpg',
+                'image/png': '.png',
+                'image/gif': '.gif',
+                'image/webp': '.webp',
+            }.get(content_type, '.jpg')
+
+        key = f"listings/{uuid.uuid4().hex}{ext}"
+        raw = upload.read()
+
+        # Cloudinary: full CDN URL (match settings.py — all three env vars required)
+        _cn = getattr(django_settings, 'CLOUDINARY_CLOUD_NAME', None)
+        _ck = getattr(django_settings, 'CLOUDINARY_API_KEY', None)
+        _cs = getattr(django_settings, 'CLOUDINARY_API_SECRET', None)
+        if _cn and _ck and _cs:
+            import cloudinary.exceptions
+            import cloudinary.uploader
+
+            folder = getattr(django_settings, 'CLOUDINARY_LISTINGS_FOLDER', 'rentally/listings') or 'rentally/listings'
+            try:
+                result = cloudinary.uploader.upload(
+                    io.BytesIO(raw),
+                    folder=folder,
+                    resource_type='image',
+                    public_id=uuid.uuid4().hex,
+                    unique_filename=True,
+                    overwrite=False,
+                )
+            except cloudinary.exceptions.Error as exc:
+                logger.warning("Cloudinary listing upload failed: %s", exc)
+                hint = (
+                    " Cloudinary console (https://console.cloudinary.com) — Product Environment Credentials-аас "
+                    "Cloud name, API Key, API Secret-ийг .env (CLOUDINARY_* эсвэл CLOUDINARY_URL) дээр зөв хуулна уу."
+                )
+                return APIError.bad_request(f"{exc!s}.{hint}")
+
+            url = result.get('secure_url') or result.get('url')
+            if not url:
+                return APIError.server_error()
+            return Response({'url': url})
+
+        path = default_storage.save(key, ContentFile(raw))
+        url = default_storage.url(path)
+        if not url.startswith('http'):
+            url = request.build_absolute_uri(url)
+        return Response({'url': url})
 
 
 class ListingFullDetailAPIView(APIView):
@@ -809,7 +920,7 @@ class MyListingsAPIView(APIView):
 
     def get(self, request):
         listings = ListingService.get_my_listings(request.user)
-        serializer = ListingSerializer(listings, many=True)
+        serializer = MyListingSerializer(listings, many=True)
         return Response({
             'total': len(serializer.data),
             'page': 1,

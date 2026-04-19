@@ -15,13 +15,21 @@ interface Props {
   userId?: number;
 }
 
-interface FavoriteWithDetails extends Favorite {
+interface FavoriteWithDetails {
+  id: number;
+  listing: number;
+  listing_id: number;
+  created_at?: string;
+  title?: string;
+  price?: number;
+  price_type?: string;
+  address?: string;
   images?: { image_url: string }[];
-  details?: { area_sqm?: number; floor_number?: number };
+  details?: { area_sqm?: number; floor_number?: number; bedrooms?: number };
   rating_avg?: number | null;
   review_count?: number;
   region?: { name: string; parent_name?: string };
-  price_type?: string;
+  region_name?: string;
 }
 
 export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Props) {
@@ -50,17 +58,20 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
           const listing = r.value as any;
           return {
             id: favs[i].id,
+            listing: favs[i].listing,
             listing_id: favs[i].listing,
+            created_at: favs[i].created_at,
             title: listing.title,
             price: listing.price,
             price_type: listing.price_type,
             address: listing.address,
             images: listing.images ?? [],
-            details: listing.details ?? {},
-            rating_avg: listing.rating_avg,
+            details: listing.detail ?? listing.details ?? {},
+            rating_avg: listing.average_rating ?? listing.rating_avg,
             review_count: listing.review_count,
-            region: listing.region,
-          } as FavoriteWithDetails;
+            region_name: listing.region_name,
+            region: listing.region_name ? { name: listing.region_name } : listing.region,
+          };
         })
         .filter(Boolean) as FavoriteWithDetails[];
 
@@ -92,14 +103,14 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
       <ListingCard
         id={item.listing_id}
         title={item.title ?? `Байр #${item.listing_id}`}
-        price={item.price ?? 0}
+        price={Number(item.price ?? 0)}
         priceType={item.price_type ?? 'monthly'}
         address={item.address}
-        regionName={item.region?.name}
+        regionName={item.region_name ?? item.region?.name}
         districtName={item.region?.parent_name}
         imageUrl={item.images?.[0]?.image_url}
-        area={item.details?.area_sqm}
-        rooms={item.details?.floor_number}
+        area={item.details?.area_sqm != null ? Number(item.details.area_sqm) : undefined}
+        rooms={item.details?.bedrooms != null ? Number(item.details.bedrooms) : undefined}
         rating={item.rating_avg ?? null}
         reviewCount={item.review_count}
         isFavorite={true}

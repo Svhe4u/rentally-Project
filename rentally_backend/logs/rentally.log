@@ -8557,3 +8557,839 @@ INFO 2026-04-18 18:48:57,278 middleware 45360 42872 GET /api/listings/my/ 200 - 
 INFO 2026-04-18 18:48:57,281 runserver 45360 35556 [mHTTP GET /api/listings/my/ 200 [1.99, 127.0.0.1:55718][0m
 INFO 2026-04-18 18:48:57,659 middleware 45360 25084 GET /api/bookings/for-my-listings/ 200 - 2.145s
 INFO 2026-04-18 18:48:57,661 runserver 45360 35556 [mHTTP GET /api/bookings/for-my-listings/ 200 [2.15, 127.0.0.1:62642][0m
+INFO 2026-04-18 18:52:47,529 middleware 45360 23192 GET /api/favorites/ 200 - 2.834s
+INFO 2026-04-18 18:52:47,531 runserver 45360 35556 [mHTTP GET /api/favorites/ 200 [2.84, 127.0.0.1:60716][0m
+INFO 2026-04-18 18:52:49,567 middleware 45360 43824 GET /api/listings/ 200 - 3.050s
+INFO 2026-04-18 18:52:49,569 runserver 45360 35556 [mHTTP GET /api/listings/ 200 [3.05, 127.0.0.1:53278][0m
+INFO 2026-04-18 18:52:50,912 middleware 45360 39256 GET /api/listings/8/ 200 - 3.362s
+INFO 2026-04-18 18:52:50,915 runserver 45360 35556 [mHTTP GET /api/listings/8/ 200 [3.37, 127.0.0.1:60716][0m
+INFO 2026-04-18 18:53:20,026 middleware 45360 36128 GET /api/messages/ 200 - 4.855s
+INFO 2026-04-18 18:53:20,028 runserver 45360 35556 [mHTTP GET /api/messages/ 200 [4.86, 127.0.0.1:60716][0m
+INFO 2026-04-18 18:53:40,613 middleware 45360 11232 GET /api/messages/18/ 200 - 9.067s
+INFO 2026-04-18 18:53:40,615 runserver 45360 35556 [mHTTP GET /api/messages/18/ 200 [9.07, 127.0.0.1:60716][0m
+INFO 2026-04-19 12:47:11,848 autoreload 7276 18224 Watching for file changes with StatReloader
+INFO 2026-04-19 12:47:49,108 runserver 7276 13864 [mHTTP OPTIONS /api/listings/?page_size=20 200 [0.01, 127.0.0.1:62198][0m
+INFO 2026-04-19 12:47:49,109 runserver 7276 13864 [mHTTP OPTIONS /api/favorites/ 200 [0.01, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:47:49,110 runserver 7276 13864 [mHTTP OPTIONS /api/categories/ 200 [0.01, 127.0.0.1:57163][0m
+INFO 2026-04-19 12:47:49,111 runserver 7276 13864 [mHTTP OPTIONS /api/regions/ 200 [0.01, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:47:49,166 middleware 7276 9048 GET /api/favorites/ 401 - 0.037s
+INFO 2026-04-19 12:47:49,167 middleware 7276 1920 GET /api/listings/ 401 - 0.038s
+INFO 2026-04-19 12:47:49,166 middleware 7276 18488 GET /api/regions/ 401 - 0.037s
+INFO 2026-04-19 12:47:49,166 middleware 7276 15840 GET /api/categories/ 401 - 0.037s
+WARNING 2026-04-19 12:47:49,174 runserver 7276 13864 [31;1mHTTP GET /api/favorites/ 401 [0.06, 127.0.0.1:58575][0m
+WARNING 2026-04-19 12:47:49,175 runserver 7276 13864 [31;1mHTTP GET /api/listings/?page_size=20 401 [0.06, 127.0.0.1:54117][0m
+WARNING 2026-04-19 12:47:49,176 runserver 7276 13864 [31;1mHTTP GET /api/regions/ 401 [0.06, 127.0.0.1:62198][0m
+WARNING 2026-04-19 12:47:49,176 runserver 7276 13864 [31;1mHTTP GET /api/categories/ 401 [0.06, 127.0.0.1:57163][0m
+INFO 2026-04-19 12:47:49,183 runserver 7276 13864 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.00, 127.0.0.1:57163][0m
+INFO 2026-04-19 12:47:49,188 runserver 7276 13864 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.01, 127.0.0.1:62198][0m
+INFO 2026-04-19 12:47:49,190 runserver 7276 13864 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.01, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:47:49,192 runserver 7276 13864 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.01, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:47:50,926 middleware 7276 2056 POST /api/auth/token/refresh/ 200 - 1.715s
+INFO 2026-04-19 12:47:50,930 runserver 7276 13864 [mHTTP POST /api/auth/token/refresh/ 200 [1.73, 127.0.0.1:62198][0m
+INFO 2026-04-19 12:47:50,931 middleware 7276 9348 POST /api/auth/token/refresh/ 200 - 1.726s
+INFO 2026-04-19 12:47:50,931 middleware 7276 1460 POST /api/auth/token/refresh/ 200 - 1.725s
+INFO 2026-04-19 12:47:50,936 runserver 7276 13864 [mHTTP POST /api/auth/token/refresh/ 200 [1.75, 127.0.0.1:57163][0m
+INFO 2026-04-19 12:47:50,937 runserver 7276 13864 [mHTTP POST /api/auth/token/refresh/ 200 [1.74, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:47:50,954 middleware 7276 16056 POST /api/auth/token/refresh/ 200 - 1.742s
+INFO 2026-04-19 12:47:50,982 runserver 7276 13864 [mHTTP POST /api/auth/token/refresh/ 200 [1.78, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:47:53,057 middleware 7276 14692 GET /api/categories/ 200 - 2.112s
+INFO 2026-04-19 12:47:53,060 runserver 7276 13864 [mHTTP GET /api/categories/ 200 [2.12, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:47:53,542 middleware 7276 6200 GET /api/favorites/ 200 - 2.585s
+INFO 2026-04-19 12:47:53,543 runserver 7276 13864 [mHTTP GET /api/favorites/ 200 [2.60, 127.0.0.1:57163][0m
+INFO 2026-04-19 12:47:54,048 middleware 7276 16584 GET /api/listings/ 200 - 3.091s
+INFO 2026-04-19 12:47:54,050 runserver 7276 13864 [mHTTP GET /api/listings/?page_size=20 200 [3.10, 127.0.0.1:62198][0m
+INFO 2026-04-19 12:47:54,372 middleware 7276 15520 GET /api/regions/ 200 - 3.381s
+INFO 2026-04-19 12:47:54,374 runserver 7276 13864 [mHTTP GET /api/regions/ 200 [3.39, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:47:56,215 middleware 7276 5408 GET /api/favorites/ 200 - 2.644s
+INFO 2026-04-19 12:47:56,217 runserver 7276 13864 [mHTTP GET /api/favorites/ 200 [2.65, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:47:56,237 runserver 7276 13864 [mHTTP OPTIONS /api/listings/8/ 200 [0.00, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:47:59,496 middleware 7276 14888 GET /api/listings/8/ 200 - 3.253s
+INFO 2026-04-19 12:47:59,498 runserver 7276 13864 [mHTTP GET /api/listings/8/ 200 [3.26, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:48:48,355 runserver 7276 13864 [mHTTP OPTIONS /api/profile/ 200 [0.00, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:48:48,356 runserver 7276 13864 [mHTTP OPTIONS /api/profile/ 200 [0.00, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:48:48,361 middleware 7276 9632 GET /api/profile/ 401 - 0.001s
+WARNING 2026-04-19 12:48:48,362 runserver 7276 13864 [31;1mHTTP GET /api/profile/ 401 [0.00, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:48:48,369 middleware 7276 19208 GET /api/profile/ 401 - 0.002s
+WARNING 2026-04-19 12:48:48,371 runserver 7276 13864 [31;1mHTTP GET /api/profile/ 401 [0.01, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:48:55,851 runserver 7276 13864 [mHTTP OPTIONS /api/auth/login/ 200 [0.00, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:48:58,587 middleware 7276 10200 POST /api/auth/login/ 200 - 2.731s
+INFO 2026-04-19 12:48:58,590 runserver 7276 13864 [mHTTP POST /api/auth/login/ 200 [2.74, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:48:58,630 runserver 7276 13864 [mHTTP OPTIONS /api/listings/my/ 200 [0.00, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:48:58,633 runserver 7276 13864 [mHTTP OPTIONS /api/bookings/for-my-listings/ 200 [0.00, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:48:58,636 runserver 7276 13864 [mHTTP OPTIONS /api/listings/my/ 200 [0.00, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:48:58,639 runserver 7276 13864 [mHTTP OPTIONS /api/bookings/for-my-listings/ 200 [0.00, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:49:00,940 middleware 7276 19032 GET /api/profile/ 200 - 2.324s
+INFO 2026-04-19 12:49:00,942 runserver 7276 13864 [mHTTP GET /api/profile/ 200 [2.33, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:49:01,124 middleware 7276 6412 GET /api/bookings/for-my-listings/ 200 - 2.185s
+INFO 2026-04-19 12:49:01,126 runserver 7276 13864 [mHTTP GET /api/bookings/for-my-listings/ 200 [2.19, 127.0.0.1:49156][0m
+INFO 2026-04-19 12:49:01,805 middleware 7276 13272 GET /api/listings/my/ 200 - 3.163s
+INFO 2026-04-19 12:49:01,807 runserver 7276 13864 [mHTTP GET /api/listings/my/ 200 [3.17, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:49:03,507 middleware 7276 6376 GET /api/bookings/for-my-listings/ 200 - 2.375s
+INFO 2026-04-19 12:49:03,509 runserver 7276 13864 [mHTTP GET /api/bookings/for-my-listings/ 200 [2.38, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:49:03,900 runserver 7276 13864 [mHTTP OPTIONS /api/categories/ 200 [0.00, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:49:03,901 runserver 7276 13864 [mHTTP OPTIONS /api/regions/ 200 [0.01, 127.0.0.1:60704][0m
+INFO 2026-04-19 12:49:03,902 runserver 7276 13864 [mHTTP OPTIONS /api/regions/ 200 [0.01, 127.0.0.1:54117][0m
+INFO 2026-04-19 12:49:03,903 runserver 7276 13864 [mHTTP OPTIONS /api/categories/ 200 [0.01, 127.0.0.1:54485][0m
+INFO 2026-04-19 12:49:05,023 middleware 7276 1176 GET /api/listings/my/ 200 - 3.210s
+INFO 2026-04-19 12:49:05,025 runserver 7276 13864 [mHTTP GET /api/listings/my/ 200 [3.22, 127.0.0.1:49156][0m
+INFO 2026-04-19 12:49:06,043 middleware 7276 14160 GET /api/categories/ 200 - 2.134s
+INFO 2026-04-19 12:49:06,045 runserver 7276 13864 [mHTTP GET /api/categories/ 200 [2.14, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:49:07,239 middleware 7276 2992 GET /api/regions/ 200 - 3.330s
+INFO 2026-04-19 12:49:07,241 runserver 7276 13864 [mHTTP GET /api/regions/ 200 [3.33, 127.0.0.1:60704][0m
+INFO 2026-04-19 12:49:09,805 middleware 7276 8144 GET /api/listings/my/ 200 - 4.776s
+INFO 2026-04-19 12:49:09,807 runserver 7276 13864 [mHTTP GET /api/listings/my/ 200 [4.78, 127.0.0.1:54485][0m
+INFO 2026-04-19 12:49:12,123 middleware 7276 18704 GET /api/categories/ 200 - 6.074s
+INFO 2026-04-19 12:49:12,124 runserver 7276 13864 [mHTTP GET /api/categories/ 200 [6.08, 127.0.0.1:49156][0m
+INFO 2026-04-19 12:49:14,927 middleware 7276 7664 GET /api/listings/my/ 200 - 5.117s
+INFO 2026-04-19 12:49:14,928 runserver 7276 13864 [mHTTP GET /api/listings/my/ 200 [5.12, 127.0.0.1:60704][0m
+INFO 2026-04-19 12:49:18,486 middleware 7276 11040 GET /api/regions/ 200 - 11.241s
+INFO 2026-04-19 12:49:18,488 runserver 7276 13864 [mHTTP GET /api/regions/ 200 [11.24, 127.0.0.1:58575][0m
+INFO 2026-04-19 12:50:28,415 runserver 7276 13864 [mHTTP OPTIONS /api/listings/14/ 200 [0.00, 127.0.0.1:51951][0m
+INFO 2026-04-19 12:50:31,530 middleware 7276 8600 PUT /api/listings/14/ 200 - 3.112s
+INFO 2026-04-19 12:50:31,532 runserver 7276 13864 [mHTTP PUT /api/listings/14/ 200 [3.12, 127.0.0.1:51951][0m
+INFO 2026-04-19 12:50:33,704 middleware 7276 9632 GET /api/categories/ 200 - 2.166s
+INFO 2026-04-19 12:50:33,707 runserver 7276 13864 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:59491][0m
+INFO 2026-04-19 12:50:34,566 middleware 7276 8948 GET /api/listings/my/ 200 - 3.029s
+INFO 2026-04-19 12:50:34,568 runserver 7276 13864 [mHTTP GET /api/listings/my/ 200 [3.03, 127.0.0.1:51951][0m
+INFO 2026-04-19 12:50:35,245 middleware 7276 15100 GET /api/regions/ 200 - 3.397s
+INFO 2026-04-19 12:50:35,247 runserver 7276 13864 [mHTTP GET /api/regions/ 200 [3.40, 127.0.0.1:54921][0m
+INFO 2026-04-19 12:53:13,847 autoreload 7276 18224 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\rentally_backend\settings.py changed, reloading.
+INFO 2026-04-19 12:53:15,267 autoreload 3832 2684 Watching for file changes with StatReloader
+INFO 2026-04-19 12:53:20,051 autoreload 3832 2684 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-19 12:53:21,087 autoreload 16668 13352 Watching for file changes with StatReloader
+INFO 2026-04-19 12:53:25,810 autoreload 16668 13352 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 12:53:27,235 autoreload 3344 11024 Watching for file changes with StatReloader
+INFO 2026-04-19 12:53:47,611 autoreload 3344 11024 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 12:53:48,865 autoreload 19068 2980 Watching for file changes with StatReloader
+INFO 2026-04-19 12:53:50,363 autoreload 19068 2980 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 12:53:51,536 autoreload 1572 14492 Watching for file changes with StatReloader
+INFO 2026-04-19 12:53:53,034 autoreload 1572 14492 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\urls.py changed, reloading.
+INFO 2026-04-19 12:53:54,259 autoreload 10192 10156 Watching for file changes with StatReloader
+INFO 2026-04-19 12:53:57,936 autoreload 10192 10156 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 12:53:59,160 autoreload 5376 5408 Watching for file changes with StatReloader
+INFO 2026-04-19 12:54:02,883 autoreload 5376 5408 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 12:54:04,096 autoreload 4352 9768 Watching for file changes with StatReloader
+INFO 2026-04-19 12:55:19,657 middleware 4352 6376 PUT /api/listings/14/ 200 - 2.981s
+INFO 2026-04-19 12:55:19,659 runserver 4352 2740 [mHTTP PUT /api/listings/14/ 200 [2.99, 127.0.0.1:59690][0m
+INFO 2026-04-19 12:55:21,997 middleware 4352 15540 GET /api/categories/ 200 - 2.331s
+INFO 2026-04-19 12:55:21,999 runserver 4352 2740 [mHTTP GET /api/categories/ 200 [2.34, 127.0.0.1:54255][0m
+INFO 2026-04-19 12:55:22,862 middleware 4352 10196 GET /api/listings/my/ 200 - 3.196s
+INFO 2026-04-19 12:55:22,864 runserver 4352 2740 [mHTTP GET /api/listings/my/ 200 [3.20, 127.0.0.1:59690][0m
+INFO 2026-04-19 12:55:23,654 middleware 4352 16808 GET /api/regions/ 200 - 3.685s
+INFO 2026-04-19 12:55:23,656 runserver 4352 2740 [mHTTP GET /api/regions/ 200 [3.69, 127.0.0.1:50465][0m
+INFO 2026-04-19 12:55:38,899 runserver 4352 2740 [mHTTP OPTIONS /api/upload/listing-image/ 200 [0.00, 127.0.0.1:50465][0m
+INFO 2026-04-19 12:55:40,919 middleware 4352 3892 POST /api/upload/listing-image/ 200 - 1.802s
+INFO 2026-04-19 12:55:40,922 runserver 4352 2740 [mHTTP POST /api/upload/listing-image/ 200 [1.82, 127.0.0.1:50465][0m
+INFO 2026-04-19 12:55:40,928 runserver 4352 2740 [mHTTP OPTIONS /api/listing-images/ 200 [0.00, 127.0.0.1:50465][0m
+INFO 2026-04-19 12:55:43,654 middleware 4352 3136 POST /api/listing-images/ 201 - 2.721s
+INFO 2026-04-19 12:55:43,655 runserver 4352 2740 [mHTTP POST /api/listing-images/ 201 [2.72, 127.0.0.1:50465][0m
+INFO 2026-04-19 12:55:43,990 middleware 4352 15040 GET /media/listings/95e248d514a04fd9adcf86fbcba7b872.png 404 - 0.018s
+WARNING 2026-04-19 12:55:43,993 runserver 4352 2740 [33mHTTP GET /media/listings/95e248d514a04fd9adcf86fbcba7b872.png 404 [0.02, 127.0.0.1:57013][0m
+INFO 2026-04-19 12:55:51,028 middleware 4352 2504 POST /api/upload/listing-image/ 200 - 1.680s
+INFO 2026-04-19 12:55:51,031 runserver 4352 2740 [mHTTP POST /api/upload/listing-image/ 200 [1.69, 127.0.0.1:50465][0m
+INFO 2026-04-19 12:55:53,369 middleware 4352 13936 POST /api/listing-images/ 201 - 2.332s
+INFO 2026-04-19 12:55:53,371 runserver 4352 2740 [mHTTP POST /api/listing-images/ 201 [2.34, 127.0.0.1:50465][0m
+INFO 2026-04-19 12:55:53,386 middleware 4352 15772 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.004s
+WARNING 2026-04-19 12:55:53,389 runserver 4352 2740 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:64021][0m
+INFO 2026-04-19 12:56:27,243 middleware 4352 11676 PUT /api/listings/14/ 200 - 3.001s
+INFO 2026-04-19 12:56:27,245 runserver 4352 2740 [mHTTP PUT /api/listings/14/ 200 [3.01, 127.0.0.1:50465][0m
+INFO 2026-04-19 12:56:29,677 middleware 4352 18112 GET /api/categories/ 200 - 2.122s
+INFO 2026-04-19 12:56:29,679 runserver 4352 2740 [mHTTP GET /api/categories/ 200 [2.13, 127.0.0.1:50552][0m
+INFO 2026-04-19 12:56:30,303 middleware 4352 5704 GET /api/listings/my/ 200 - 3.052s
+INFO 2026-04-19 12:56:30,305 runserver 4352 2740 [mHTTP GET /api/listings/my/ 200 [3.06, 127.0.0.1:50465][0m
+INFO 2026-04-19 12:56:31,008 middleware 4352 10588 GET /api/regions/ 200 - 3.453s
+INFO 2026-04-19 12:56:31,010 runserver 4352 2740 [mHTTP GET /api/regions/ 200 [3.46, 127.0.0.1:55677][0m
+INFO 2026-04-19 12:56:31,331 middleware 4352 15316 GET /media/listings/95e248d514a04fd9adcf86fbcba7b872.png 404 - 0.003s
+WARNING 2026-04-19 12:56:31,332 runserver 4352 2740 [33mHTTP GET /media/listings/95e248d514a04fd9adcf86fbcba7b872.png 404 [0.01, 127.0.0.1:64239][0m
+INFO 2026-04-19 12:56:33,903 middleware 4352 3900 GET /media/listings/95e248d514a04fd9adcf86fbcba7b872.png 404 - 0.004s
+WARNING 2026-04-19 12:56:33,905 runserver 4352 2740 [33mHTTP GET /media/listings/95e248d514a04fd9adcf86fbcba7b872.png 404 [0.01, 127.0.0.1:59177][0m
+INFO 2026-04-19 12:56:34,204 middleware 4352 15656 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.004s
+WARNING 2026-04-19 12:56:34,207 runserver 4352 2740 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:58534][0m
+INFO 2026-04-19 12:57:48,247 middleware 4352 5256 GET /api/profile/ 200 - 2.165s
+INFO 2026-04-19 12:57:48,249 runserver 4352 2740 [mHTTP GET /api/profile/ 200 [2.17, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:57:50,420 middleware 4352 6464 GET /api/profile/ 200 - 2.168s
+INFO 2026-04-19 12:57:50,422 runserver 4352 2740 [mHTTP GET /api/profile/ 200 [2.17, 127.0.0.1:59625][0m
+INFO 2026-04-19 12:57:50,760 middleware 4352 15244 GET /api/categories/ 200 - 2.180s
+INFO 2026-04-19 12:57:50,762 runserver 4352 2740 [mHTTP GET /api/categories/ 200 [2.18, 127.0.0.1:55435][0m
+INFO 2026-04-19 12:57:51,330 middleware 4352 7452 GET /api/listings/my/ 200 - 3.055s
+INFO 2026-04-19 12:57:51,331 runserver 4352 2740 [mHTTP GET /api/listings/my/ 200 [3.06, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:57:52,092 middleware 4352 2684 GET /api/regions/ 200 - 3.511s
+INFO 2026-04-19 12:57:52,094 runserver 4352 2740 [mHTTP GET /api/regions/ 200 [3.52, 127.0.0.1:63502][0m
+INFO 2026-04-19 12:57:52,420 middleware 4352 12592 GET /media/listings/95e248d514a04fd9adcf86fbcba7b872.png 404 - 0.003s
+WARNING 2026-04-19 12:57:52,421 runserver 4352 2740 [33mHTTP GET /media/listings/95e248d514a04fd9adcf86fbcba7b872.png 404 [0.01, 127.0.0.1:58547][0m
+INFO 2026-04-19 12:57:52,879 middleware 4352 18708 GET /api/categories/ 200 - 2.115s
+INFO 2026-04-19 12:57:52,881 runserver 4352 2740 [mHTTP GET /api/categories/ 200 [2.12, 127.0.0.1:59625][0m
+INFO 2026-04-19 12:57:54,324 middleware 4352 4088 GET /api/listings/my/ 200 - 2.990s
+INFO 2026-04-19 12:57:54,325 runserver 4352 2740 [mHTTP GET /api/listings/my/ 200 [2.99, 127.0.0.1:55435][0m
+INFO 2026-04-19 12:57:55,489 middleware 4352 14868 GET /api/regions/ 200 - 3.391s
+INFO 2026-04-19 12:57:55,492 runserver 4352 2740 [mHTTP GET /api/regions/ 200 [3.40, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:01,046 middleware 4352 10784 GET /media/listings/95e248d514a04fd9adcf86fbcba7b872.png 404 - 0.004s
+WARNING 2026-04-19 12:58:01,048 runserver 4352 2740 [33mHTTP GET /media/listings/95e248d514a04fd9adcf86fbcba7b872.png 404 [0.01, 127.0.0.1:57623][0m
+INFO 2026-04-19 12:58:01,351 middleware 4352 3612 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.003s
+WARNING 2026-04-19 12:58:01,353 runserver 4352 2740 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:52432][0m
+INFO 2026-04-19 12:58:05,060 runserver 4352 2740 [mHTTP OPTIONS /api/listing-images/3/ 200 [0.00, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:07,621 middleware 4352 15768 DELETE /api/listing-images/3/ 204 - 2.557s
+INFO 2026-04-19 12:58:07,623 runserver 4352 2740 [mHTTP DELETE /api/listing-images/3/ 204 [2.56, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:07,627 runserver 4352 2740 [mHTTP OPTIONS /api/listing-images/4/ 200 [0.00, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:08,479 middleware 4352 9528 PATCH /api/listing-images/3/ 404 - 1.915s
+WARNING 2026-04-19 12:58:08,481 runserver 4352 2740 [33mHTTP PATCH /api/listing-images/3/ 404 [1.92, 127.0.0.1:55435][0m
+INFO 2026-04-19 12:58:10,167 middleware 4352 17904 PATCH /api/listing-images/4/ 200 - 2.535s
+INFO 2026-04-19 12:58:10,169 runserver 4352 2740 [mHTTP PATCH /api/listing-images/4/ 200 [2.54, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:12,012 middleware 4352 15568 POST /api/upload/listing-image/ 200 - 1.703s
+INFO 2026-04-19 12:58:12,014 runserver 4352 2740 [mHTTP POST /api/upload/listing-image/ 200 [1.71, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:14,416 middleware 4352 2056 POST /api/listing-images/ 201 - 2.397s
+INFO 2026-04-19 12:58:14,418 runserver 4352 2740 [mHTTP POST /api/listing-images/ 201 [2.40, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:14,734 middleware 4352 2200 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.003s
+WARNING 2026-04-19 12:58:14,735 runserver 4352 2740 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.01, 127.0.0.1:61395][0m
+INFO 2026-04-19 12:58:19,069 middleware 4352 18524 PATCH /api/listing-images/4/ 200 - 2.723s
+INFO 2026-04-19 12:58:19,071 runserver 4352 2740 [mHTTP PATCH /api/listing-images/4/ 200 [2.73, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:19,076 runserver 4352 2740 [mHTTP OPTIONS /api/listing-images/5/ 200 [0.00, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:21,892 middleware 4352 17664 PATCH /api/listing-images/5/ 200 - 2.811s
+INFO 2026-04-19 12:58:21,894 runserver 4352 2740 [mHTTP PATCH /api/listing-images/5/ 200 [2.82, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:35,265 middleware 4352 9032 PUT /api/listings/14/ 200 - 3.023s
+INFO 2026-04-19 12:58:35,266 runserver 4352 2740 [mHTTP PUT /api/listings/14/ 200 [3.03, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:37,734 middleware 4352 11652 GET /api/categories/ 200 - 2.460s
+INFO 2026-04-19 12:58:37,735 runserver 4352 2740 [mHTTP GET /api/categories/ 200 [2.47, 127.0.0.1:55435][0m
+INFO 2026-04-19 12:58:39,468 middleware 4352 3304 GET /api/listings/my/ 200 - 4.195s
+INFO 2026-04-19 12:58:39,471 runserver 4352 2740 [mHTTP GET /api/listings/my/ 200 [4.20, 127.0.0.1:61151][0m
+INFO 2026-04-19 12:58:41,109 middleware 4352 5884 GET /api/regions/ 200 - 5.836s
+INFO 2026-04-19 12:58:41,111 runserver 4352 2740 [mHTTP GET /api/regions/ 200 [5.84, 127.0.0.1:59625][0m
+INFO 2026-04-19 12:58:41,151 middleware 4352 13352 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.004s
+WARNING 2026-04-19 12:58:41,153 runserver 4352 2740 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:50834][0m
+INFO 2026-04-19 12:59:04,119 middleware 4352 3516 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.008s
+INFO 2026-04-19 12:59:04,119 middleware 4352 6616 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.008s
+WARNING 2026-04-19 12:59:04,123 runserver 4352 2740 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.02, 127.0.0.1:57643][0m
+WARNING 2026-04-19 12:59:04,124 runserver 4352 2740 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.02, 127.0.0.1:52459][0m
+INFO 2026-04-19 13:01:05,153 autoreload 4352 9768 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 13:01:06,458 autoreload 14384 3164 Watching for file changes with StatReloader
+INFO 2026-04-19 13:01:13,332 autoreload 14384 3164 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 13:01:14,495 autoreload 5704 18112 Watching for file changes with StatReloader
+INFO 2026-04-19 13:01:27,642 autoreload 5704 18112 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-19 13:01:28,874 autoreload 5156 14716 Watching for file changes with StatReloader
+INFO 2026-04-19 13:01:35,553 autoreload 5156 14716 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-19 13:01:36,752 autoreload 18088 7120 Watching for file changes with StatReloader
+INFO 2026-04-19 13:01:47,753 autoreload 18088 7120 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-19 13:01:49,044 autoreload 5704 11404 Watching for file changes with StatReloader
+INFO 2026-04-19 14:10:49,829 middleware 5704 16988 PUT /api/listings/14/ 401 - 0.034s
+WARNING 2026-04-19 14:10:49,835 runserver 5704 2956 [31;1mHTTP PUT /api/listings/14/ 401 [0.07, 127.0.0.1:59403][0m
+INFO 2026-04-19 14:11:11,478 middleware 5704 13624 POST /api/auth/login/ 200 - 3.479s
+INFO 2026-04-19 14:11:11,481 runserver 5704 2956 [mHTTP POST /api/auth/login/ 200 [3.48, 127.0.0.1:59403][0m
+INFO 2026-04-19 14:11:13,743 middleware 5704 20368 GET /api/profile/ 200 - 2.209s
+INFO 2026-04-19 14:11:13,745 runserver 5704 2956 [mHTTP GET /api/profile/ 200 [2.22, 127.0.0.1:59403][0m
+INFO 2026-04-19 14:11:14,005 middleware 5704 12596 GET /api/bookings/for-my-listings/ 200 - 2.156s
+INFO 2026-04-19 14:11:14,008 runserver 5704 2956 [mHTTP GET /api/bookings/for-my-listings/ 200 [2.16, 127.0.0.1:53771][0m
+INFO 2026-04-19 14:11:14,174 middleware 5704 13212 GET /api/listings/my/ 200 - 2.631s
+INFO 2026-04-19 14:11:14,177 runserver 5704 2956 [mHTTP GET /api/listings/my/ 200 [2.64, 127.0.0.1:62259][0m
+INFO 2026-04-19 14:11:16,189 middleware 5704 4156 GET /api/bookings/for-my-listings/ 200 - 2.162s
+INFO 2026-04-19 14:11:16,191 runserver 5704 2956 [mHTTP GET /api/bookings/for-my-listings/ 200 [2.17, 127.0.0.1:59403][0m
+INFO 2026-04-19 14:11:16,741 middleware 5704 13484 GET /api/listings/my/ 200 - 2.552s
+INFO 2026-04-19 14:11:16,743 runserver 5704 2956 [mHTTP GET /api/listings/my/ 200 [2.56, 127.0.0.1:53771][0m
+INFO 2026-04-19 14:11:17,687 middleware 5704 8516 GET /api/categories/ 200 - 2.153s
+INFO 2026-04-19 14:11:17,689 runserver 5704 2956 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:62259][0m
+INFO 2026-04-19 14:11:19,233 middleware 5704 19616 GET /api/regions/ 200 - 3.394s
+INFO 2026-04-19 14:11:19,235 runserver 5704 2956 [mHTTP GET /api/regions/ 200 [3.40, 127.0.0.1:57918][0m
+INFO 2026-04-19 14:11:19,341 middleware 5704 18244 GET /api/listings/my/ 200 - 2.585s
+INFO 2026-04-19 14:11:19,343 runserver 5704 2956 [mHTTP GET /api/listings/my/ 200 [2.59, 127.0.0.1:59403][0m
+INFO 2026-04-19 14:11:19,702 middleware 5704 13676 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.008s
+WARNING 2026-04-19 14:11:19,705 runserver 5704 2956 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:51892][0m
+INFO 2026-04-19 14:11:19,863 middleware 5704 19836 GET /api/categories/ 200 - 2.162s
+INFO 2026-04-19 14:11:19,864 runserver 5704 2956 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:53771][0m
+INFO 2026-04-19 14:11:21,949 middleware 5704 4976 GET /api/listings/my/ 200 - 2.596s
+INFO 2026-04-19 14:11:21,951 runserver 5704 2956 [mHTTP GET /api/listings/my/ 200 [2.60, 127.0.0.1:57918][0m
+INFO 2026-04-19 14:11:22,694 middleware 5704 19896 GET /api/regions/ 200 - 3.451s
+INFO 2026-04-19 14:11:22,695 runserver 5704 2956 [mHTTP GET /api/regions/ 200 [3.46, 127.0.0.1:62259][0m
+INFO 2026-04-19 14:11:36,994 middleware 5704 19564 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.005s
+WARNING 2026-04-19 14:11:36,997 runserver 5704 2956 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:56061][0m
+INFO 2026-04-19 14:11:37,299 middleware 5704 19644 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.004s
+WARNING 2026-04-19 14:11:37,301 runserver 5704 2956 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.01, 127.0.0.1:51722][0m
+INFO 2026-04-19 14:11:38,582 middleware 5704 19856 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.007s
+INFO 2026-04-19 14:11:38,582 middleware 5704 3832 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.007s
+WARNING 2026-04-19 14:11:38,585 runserver 5704 2956 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:49986][0m
+WARNING 2026-04-19 14:11:38,586 runserver 5704 2956 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.01, 127.0.0.1:49427][0m
+INFO 2026-04-19 14:11:54,461 middleware 5704 2372 PUT /api/listings/14/ 200 - 4.614s
+INFO 2026-04-19 14:11:54,463 runserver 5704 2956 [mHTTP PUT /api/listings/14/ 200 [4.62, 127.0.0.1:62259][0m
+INFO 2026-04-19 14:11:56,639 middleware 5704 17904 GET /api/categories/ 200 - 2.154s
+INFO 2026-04-19 14:11:56,641 runserver 5704 2956 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:57918][0m
+INFO 2026-04-19 14:11:57,052 middleware 5704 2068 GET /api/listings/my/ 200 - 2.567s
+INFO 2026-04-19 14:11:57,054 runserver 5704 2956 [mHTTP GET /api/listings/my/ 200 [2.58, 127.0.0.1:62259][0m
+INFO 2026-04-19 14:11:57,999 middleware 5704 8992 GET /api/regions/ 200 - 3.513s
+INFO 2026-04-19 14:11:58,000 runserver 5704 2956 [mHTTP GET /api/regions/ 200 [3.52, 127.0.0.1:53771][0m
+INFO 2026-04-19 14:11:58,033 middleware 5704 9456 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.004s
+WARNING 2026-04-19 14:11:58,035 runserver 5704 2956 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:54412][0m
+INFO 2026-04-19 14:12:00,288 middleware 5704 15944 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.007s
+INFO 2026-04-19 14:12:00,288 middleware 5704 14088 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.007s
+WARNING 2026-04-19 14:12:00,292 runserver 5704 2956 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.02, 127.0.0.1:51762][0m
+WARNING 2026-04-19 14:12:00,293 runserver 5704 2956 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.02, 127.0.0.1:63928][0m
+INFO 2026-04-19 14:12:16,808 runserver 5704 2956 [mHTTP OPTIONS /api/listings/ 200 [0.00, 127.0.0.1:53771][0m
+INFO 2026-04-19 14:12:16,816 middleware 5704 16244 GET /api/listings/ 401 - 0.002s
+WARNING 2026-04-19 14:12:16,818 runserver 5704 2956 [31;1mHTTP GET /api/listings/ 401 [0.01, 127.0.0.1:53771][0m
+INFO 2026-04-19 14:12:19,293 middleware 5704 3516 POST /api/auth/token/refresh/ 200 - 1.880s
+INFO 2026-04-19 14:12:19,295 runserver 5704 2956 [mHTTP POST /api/auth/token/refresh/ 200 [1.89, 127.0.0.1:53771][0m
+INFO 2026-04-19 14:12:22,492 middleware 5704 6768 GET /api/listings/ 200 - 3.168s
+INFO 2026-04-19 14:12:22,493 runserver 5704 2956 [mHTTP GET /api/listings/ 200 [3.17, 127.0.0.1:53771][0m
+INFO 2026-04-19 14:12:33,173 middleware 5704 8664 GET /api/listings/14/ 200 - 3.012s
+INFO 2026-04-19 14:12:33,176 runserver 5704 2956 [mHTTP GET /api/listings/14/ 200 [3.02, 127.0.0.1:52871][0m
+INFO 2026-04-19 14:12:33,202 middleware 5704 6688 GET /api/mongolia/utility-estimate/ 200 - 0.002s
+INFO 2026-04-19 14:12:33,205 runserver 5704 2956 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [0.01, 127.0.0.1:52871][0m
+INFO 2026-04-19 14:12:33,886 middleware 5704 408 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.004s
+WARNING 2026-04-19 14:12:33,889 runserver 5704 2956 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:58249][0m
+INFO 2026-04-19 14:12:34,190 middleware 5704 3420 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.003s
+WARNING 2026-04-19 14:12:34,192 runserver 5704 2956 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.01, 127.0.0.1:50498][0m
+INFO 2026-04-19 14:14:24,905 middleware 5704 13272 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.007s
+INFO 2026-04-19 14:14:24,905 middleware 5704 19864 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.007s
+WARNING 2026-04-19 14:14:24,908 runserver 5704 2956 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:56721][0m
+WARNING 2026-04-19 14:14:24,909 runserver 5704 2956 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.01, 127.0.0.1:61146][0m
+INFO 2026-04-19 14:16:32,974 autoreload 5704 11404 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\rentally_backend\settings.py changed, reloading.
+INFO 2026-04-19 14:16:34,479 autoreload 12484 4168 Watching for file changes with StatReloader
+INFO 2026-04-19 14:16:36,056 autoreload 12484 4168 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 14:16:37,181 autoreload 3344 10948 Watching for file changes with StatReloader
+INFO 2026-04-19 14:17:25,660 middleware 3344 7084 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.006s
+INFO 2026-04-19 14:17:25,664 middleware 3344 19472 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.009s
+WARNING 2026-04-19 14:17:25,667 runserver 3344 13152 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.02, 127.0.0.1:63130][0m
+WARNING 2026-04-19 14:17:25,667 runserver 3344 13152 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.02, 127.0.0.1:60706][0m
+INFO 2026-04-19 14:19:38,590 autoreload 3344 10948 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\rentally_backend\settings.py changed, reloading.
+INFO 2026-04-19 14:19:40,021 autoreload 19740 20452 Watching for file changes with StatReloader
+INFO 2026-04-19 14:19:44,909 autoreload 19740 20452 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\rentally_backend\settings.py changed, reloading.
+INFO 2026-04-19 14:19:46,510 autoreload 19848 11708 Watching for file changes with StatReloader
+INFO 2026-04-19 14:19:50,508 middleware 19848 8828 GET / 404 - 0.010s
+WARNING 2026-04-19 14:19:50,512 runserver 19848 8260 [33mHTTP GET / 404 [0.03, 127.0.0.1:58030][0m
+INFO 2026-04-19 14:19:50,715 middleware 19848 20196 GET /favicon.ico 404 - 0.006s
+WARNING 2026-04-19 14:19:50,717 runserver 19848 8260 [33mHTTP GET /favicon.ico 404 [0.01, 127.0.0.1:58030][0m
+INFO 2026-04-19 14:19:54,613 autoreload 19848 11708 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 14:19:56,286 autoreload 19160 17152 Watching for file changes with StatReloader
+INFO 2026-04-19 14:20:01,624 middleware 19160 19776 GET /admin/ 302 - 0.022s
+INFO 2026-04-19 14:20:01,627 runserver 19160 13268 [32mHTTP GET /admin/ 302 [0.04, 127.0.0.1:60394][0m
+INFO 2026-04-19 14:20:01,826 middleware 19160 9768 GET /admin/login/ 200 - 0.192s
+INFO 2026-04-19 14:20:01,828 runserver 19160 13268 [mHTTP GET /admin/login/?next=/admin/ 200 [0.20, 127.0.0.1:60394][0m
+INFO 2026-04-19 14:20:02,007 runserver 19160 13268 [mHTTP GET /static/admin/css/dark_mode.css 200 [0.17, 127.0.0.1:63764][0m
+INFO 2026-04-19 14:20:02,017 runserver 19160 13268 [mHTTP GET /static/admin/css/base.css 200 [0.18, 127.0.0.1:60394][0m
+INFO 2026-04-19 14:20:02,025 runserver 19160 13268 [mHTTP GET /static/admin/css/nav_sidebar.css 200 [0.02, 127.0.0.1:63764][0m
+INFO 2026-04-19 14:20:02,035 runserver 19160 13268 [mHTTP GET /static/admin/css/login.css 200 [0.01, 127.0.0.1:60394][0m
+INFO 2026-04-19 14:20:02,042 runserver 19160 13268 [mHTTP GET /static/admin/js/theme.js 200 [0.20, 127.0.0.1:58411][0m
+INFO 2026-04-19 14:20:02,047 runserver 19160 13268 [mHTTP GET /static/admin/css/responsive.css 200 [0.02, 127.0.0.1:63764][0m
+INFO 2026-04-19 14:20:02,078 runserver 19160 13268 [mHTTP GET /static/admin/js/nav_sidebar.js 200 [0.03, 127.0.0.1:58411][0m
+INFO 2026-04-19 14:20:10,155 middleware 19160 8828 POST /admin/login/ 302 - 2.873s
+INFO 2026-04-19 14:20:10,158 runserver 19160 13268 [32mHTTP POST /admin/login/?next=/admin/ 302 [2.88, 127.0.0.1:58411][0m
+INFO 2026-04-19 14:20:12,183 middleware 19160 1636 GET /admin/ 200 - 2.019s
+INFO 2026-04-19 14:20:12,185 runserver 19160 13268 [mHTTP GET /admin/ 200 [2.02, 127.0.0.1:58411][0m
+INFO 2026-04-19 14:20:12,228 runserver 19160 13268 [mHTTP GET /static/admin/css/dashboard.css 200 [0.02, 127.0.0.1:58411][0m
+INFO 2026-04-19 14:20:12,254 runserver 19160 13268 [mHTTP GET /static/admin/img/icon-addlink.svg 200 [0.02, 127.0.0.1:58411][0m
+INFO 2026-04-19 14:20:12,255 runserver 19160 13268 [mHTTP GET /static/admin/img/icon-changelink.svg 200 [0.02, 127.0.0.1:63764][0m
+INFO 2026-04-19 14:20:23,552 middleware 19160 18028 GET /admin/api/listing/ 200 - 5.005s
+INFO 2026-04-19 14:20:23,555 runserver 19160 13268 [mHTTP GET /admin/api/listing/ 200 [5.01, 127.0.0.1:63764][0m
+INFO 2026-04-19 14:20:23,601 runserver 19160 13268 [mHTTP GET /static/admin/css/changelists.css 200 [0.02, 127.0.0.1:63764][0m
+INFO 2026-04-19 14:20:23,611 runserver 19160 13268 [mHTTP GET /static/admin/css/forms.css 200 [0.03, 127.0.0.1:58411][0m
+INFO 2026-04-19 14:20:23,622 runserver 19160 13268 [mHTTP GET /static/admin/js/jquery.init.js 200 [0.04, 127.0.0.1:54066][0m
+INFO 2026-04-19 14:20:23,644 runserver 19160 13268 [mHTTP GET /static/admin/js/core.js 200 [0.06, 127.0.0.1:53978][0m
+INFO 2026-04-19 14:20:23,653 runserver 19160 13268 [mHTTP GET /static/admin/js/actions.js 200 [0.04, 127.0.0.1:58411][0m
+INFO 2026-04-19 14:20:23,654 runserver 19160 13268 [mHTTP GET /static/admin/js/urlify.js 200 [0.02, 127.0.0.1:54066][0m
+INFO 2026-04-19 14:20:23,661 runserver 19160 13268 [mHTTP GET /static/admin/js/admin/RelatedObjectLookups.js 200 [0.06, 127.0.0.1:63764][0m
+INFO 2026-04-19 14:20:23,667 runserver 19160 13268 [mHTTP GET /static/admin/css/widgets.css 200 [0.02, 127.0.0.1:53978][0m
+INFO 2026-04-19 14:20:23,678 runserver 19160 13268 [mHTTP GET /static/admin/img/search.svg 200 [0.01, 127.0.0.1:63764][0m
+INFO 2026-04-19 14:20:23,680 runserver 19160 13268 [mHTTP GET /static/admin/js/prepopulate.js 200 [0.02, 127.0.0.1:58411][0m
+INFO 2026-04-19 14:20:23,689 runserver 19160 13268 [mHTTP GET /static/admin/js/vendor/jquery/jquery.js 200 [0.10, 127.0.0.1:65458][0m
+INFO 2026-04-19 14:20:23,758 runserver 19160 13268 [mHTTP GET /static/admin/js/vendor/xregexp/xregexp.js 200 [0.10, 127.0.0.1:54066][0m
+INFO 2026-04-19 14:20:23,781 runserver 19160 13268 [mHTTP GET /static/admin/js/filters.js 200 [0.02, 127.0.0.1:54066][0m
+INFO 2026-04-19 14:20:25,380 middleware 19160 17256 GET /admin/jsi18n/ 200 - 1.783s
+INFO 2026-04-19 14:20:25,383 runserver 19160 13268 [mHTTP GET /admin/jsi18n/ 200 [1.80, 127.0.0.1:60394][0m
+INFO 2026-04-19 14:20:25,423 runserver 19160 13268 [mHTTP GET /static/admin/img/tooltag-add.svg 200 [0.02, 127.0.0.1:60394][0m
+INFO 2026-04-19 14:20:25,425 runserver 19160 13268 [mHTTP GET /static/admin/img/icon-viewlink.svg 200 [0.02, 127.0.0.1:54066][0m
+INFO 2026-04-19 14:20:25,430 runserver 19160 13268 [mHTTP GET /static/admin/img/sorting-icons.svg 200 [0.02, 127.0.0.1:65458][0m
+INFO 2026-04-19 14:20:33,918 middleware 19160 13620 GET /admin/api/listing/14/change/ 200 - 6.214s
+INFO 2026-04-19 14:20:33,920 runserver 19160 13268 [mHTTP GET /admin/api/listing/14/change/ 200 [6.22, 127.0.0.1:65458][0m
+INFO 2026-04-19 14:20:33,976 runserver 19160 13268 [mHTTP GET /static/admin/js/inlines.js 200 [0.03, 127.0.0.1:54066][0m
+INFO 2026-04-19 14:20:34,261 middleware 19160 18768 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.007s
+INFO 2026-04-19 14:20:34,261 middleware 19160 19464 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.007s
+WARNING 2026-04-19 14:20:34,265 runserver 19160 13268 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.02, 127.0.0.1:64343][0m
+WARNING 2026-04-19 14:20:34,266 runserver 19160 13268 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.02, 127.0.0.1:60611][0m
+INFO 2026-04-19 14:20:34,299 runserver 19160 13268 [mHTTP GET /static/admin/js/prepopulate_init.js 200 [0.03, 127.0.0.1:54066][0m
+INFO 2026-04-19 14:20:34,321 runserver 19160 13268 [mHTTP GET /static/admin/img/icon-deletelink.svg 200 [0.02, 127.0.0.1:54066][0m
+INFO 2026-04-19 14:20:34,348 runserver 19160 13268 [mHTTP GET /static/admin/js/change_form.js 200 [0.02, 127.0.0.1:54066][0m
+INFO 2026-04-19 14:20:35,715 middleware 19160 5628 GET /admin/jsi18n/ 200 - 1.769s
+INFO 2026-04-19 14:20:35,717 runserver 19160 13268 [mHTTP GET /admin/jsi18n/ 200 [1.78, 127.0.0.1:65458][0m
+INFO 2026-04-19 14:20:35,802 runserver 19160 13268 [mHTTP GET /static/admin/img/inline-delete.svg 200 [0.02, 127.0.0.1:65458][0m
+INFO 2026-04-19 14:21:44,149 middleware 19160 7616 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.007s
+INFO 2026-04-19 14:21:44,149 middleware 19160 4472 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.007s
+WARNING 2026-04-19 14:21:44,152 runserver 19160 13268 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:50755][0m
+WARNING 2026-04-19 14:21:44,153 runserver 19160 13268 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.01, 127.0.0.1:50693][0m
+INFO 2026-04-19 14:27:48,388 autoreload 8664 416 Watching for file changes with StatReloader
+INFO 2026-04-19 14:29:27,038 middleware 8664 15524 GET /api/profile/ 200 - 2.186s
+INFO 2026-04-19 14:29:27,040 runserver 8664 14304 [mHTTP GET /api/profile/ 200 [2.19, 127.0.0.1:62345][0m
+INFO 2026-04-19 14:29:29,157 middleware 8664 11756 GET /api/profile/ 200 - 2.105s
+INFO 2026-04-19 14:29:29,159 runserver 8664 14304 [mHTTP GET /api/profile/ 200 [2.11, 127.0.0.1:50910][0m
+INFO 2026-04-19 14:29:29,575 middleware 8664 20288 GET /api/categories/ 200 - 2.177s
+INFO 2026-04-19 14:29:29,579 runserver 8664 14304 [mHTTP GET /api/categories/ 200 [2.19, 127.0.0.1:57538][0m
+INFO 2026-04-19 14:29:30,023 middleware 8664 18284 GET /api/listings/my/ 200 - 2.625s
+INFO 2026-04-19 14:29:30,025 runserver 8664 14304 [mHTTP GET /api/listings/my/ 200 [2.63, 127.0.0.1:58422][0m
+INFO 2026-04-19 14:29:30,568 middleware 8664 3836 GET /api/regions/ 200 - 3.479s
+INFO 2026-04-19 14:29:30,570 runserver 8664 14304 [mHTTP GET /api/regions/ 200 [3.48, 127.0.0.1:62345][0m
+INFO 2026-04-19 14:29:30,930 middleware 8664 14604 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.005s
+WARNING 2026-04-19 14:29:30,935 runserver 8664 14304 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:49397][0m
+INFO 2026-04-19 14:29:31,719 middleware 8664 10588 GET /api/categories/ 200 - 2.122s
+INFO 2026-04-19 14:29:31,721 runserver 8664 14304 [mHTTP GET /api/categories/ 200 [2.13, 127.0.0.1:50910][0m
+INFO 2026-04-19 14:29:32,489 middleware 8664 4928 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.005s
+WARNING 2026-04-19 14:29:32,492 runserver 8664 14304 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:65218][0m
+INFO 2026-04-19 14:29:32,581 middleware 8664 5884 GET /api/listings/my/ 200 - 2.547s
+INFO 2026-04-19 14:29:32,583 runserver 8664 14304 [mHTTP GET /api/listings/my/ 200 [2.55, 127.0.0.1:57538][0m
+INFO 2026-04-19 14:29:32,788 middleware 8664 9212 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.004s
+WARNING 2026-04-19 14:29:32,790 runserver 8664 14304 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.01, 127.0.0.1:60996][0m
+INFO 2026-04-19 14:29:33,971 middleware 8664 10408 GET /api/regions/ 200 - 3.389s
+INFO 2026-04-19 14:29:33,973 runserver 8664 14304 [mHTTP GET /api/regions/ 200 [3.39, 127.0.0.1:58422][0m
+INFO 2026-04-19 14:29:43,170 middleware 8664 18408 DELETE /api/listing-images/4/ 204 - 2.542s
+INFO 2026-04-19 14:29:43,172 runserver 8664 14304 [mHTTP DELETE /api/listing-images/4/ 204 [2.55, 127.0.0.1:57538][0m
+INFO 2026-04-19 14:29:44,399 middleware 8664 10800 DELETE /api/listing-images/5/ 204 - 2.581s
+INFO 2026-04-19 14:29:44,401 runserver 8664 14304 [mHTTP DELETE /api/listing-images/5/ 204 [2.59, 127.0.0.1:50910][0m
+INFO 2026-04-19 14:29:44,748 middleware 8664 19204 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.004s
+WARNING 2026-04-19 14:29:44,750 runserver 8664 14304 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.01, 127.0.0.1:56278][0m
+INFO 2026-04-19 14:29:45,160 middleware 8664 17640 PATCH /api/listing-images/5/ 404 - 1.935s
+WARNING 2026-04-19 14:29:45,162 runserver 8664 14304 [33mHTTP PATCH /api/listing-images/5/ 404 [1.94, 127.0.0.1:57538][0m
+INFO 2026-04-19 14:29:46,378 middleware 8664 10196 PATCH /api/listing-images/4/ 404 - 1.932s
+WARNING 2026-04-19 14:29:46,381 runserver 8664 14304 [33mHTTP PATCH /api/listing-images/4/ 404 [1.94, 127.0.0.1:50910][0m
+INFO 2026-04-19 14:29:50,427 middleware 8664 2504 DELETE /api/listing-images/4/ 404 - 1.898s
+WARNING 2026-04-19 14:29:50,429 runserver 8664 14304 [33mHTTP DELETE /api/listing-images/4/ 404 [1.90, 127.0.0.1:50910][0m
+INFO 2026-04-19 14:30:24,076 middleware 8664 19452 POST /api/upload/listing-image/ 500 - 5.823s
+ERROR 2026-04-19 14:30:24,079 runserver 8664 14304 [35;1mHTTP POST /api/upload/listing-image/ 500 [5.84, 127.0.0.1:58422][0m
+INFO 2026-04-19 14:30:54,183 middleware 8664 2576 POST /api/upload/listing-image/ 500 - 1.985s
+ERROR 2026-04-19 14:30:54,186 runserver 8664 14304 [35;1mHTTP POST /api/upload/listing-image/ 500 [1.99, 127.0.0.1:58422][0m
+INFO 2026-04-19 14:31:10,741 middleware 8664 7036 GET /api/profile/ 200 - 2.348s
+INFO 2026-04-19 14:31:10,743 runserver 8664 14304 [mHTTP GET /api/profile/ 200 [2.35, 127.0.0.1:62230][0m
+INFO 2026-04-19 14:31:12,990 middleware 8664 19024 GET /api/profile/ 200 - 2.229s
+INFO 2026-04-19 14:31:12,992 runserver 8664 14304 [mHTTP GET /api/profile/ 200 [2.23, 127.0.0.1:49381][0m
+INFO 2026-04-19 14:31:13,225 middleware 8664 15224 GET /api/categories/ 200 - 2.129s
+INFO 2026-04-19 14:31:13,226 runserver 8664 14304 [mHTTP GET /api/categories/ 200 [2.13, 127.0.0.1:55069][0m
+INFO 2026-04-19 14:31:13,576 middleware 8664 6292 GET /api/listings/my/ 200 - 2.785s
+INFO 2026-04-19 14:31:13,578 runserver 8664 14304 [mHTTP GET /api/listings/my/ 200 [2.79, 127.0.0.1:62230][0m
+INFO 2026-04-19 14:31:14,793 middleware 8664 9640 GET /api/regions/ 200 - 3.697s
+INFO 2026-04-19 14:31:14,795 runserver 8664 14304 [mHTTP GET /api/regions/ 200 [3.70, 127.0.0.1:65317][0m
+INFO 2026-04-19 14:31:15,602 middleware 8664 13872 GET /api/categories/ 200 - 2.362s
+INFO 2026-04-19 14:31:15,604 runserver 8664 14304 [mHTTP GET /api/categories/ 200 [2.37, 127.0.0.1:49381][0m
+INFO 2026-04-19 14:31:17,268 middleware 8664 8916 GET /api/listings/my/ 200 - 3.681s
+INFO 2026-04-19 14:31:17,271 runserver 8664 14304 [mHTTP GET /api/listings/my/ 200 [3.69, 127.0.0.1:55069][0m
+INFO 2026-04-19 14:31:18,491 middleware 8664 16024 GET /api/regions/ 200 - 3.670s
+INFO 2026-04-19 14:31:18,494 runserver 8664 14304 [mHTTP GET /api/regions/ 200 [3.68, 127.0.0.1:62230][0m
+INFO 2026-04-19 14:33:12,422 middleware 8664 11716 POST /api/upload/listing-image/ 500 - 2.211s
+ERROR 2026-04-19 14:33:12,424 runserver 8664 14304 [35;1mHTTP POST /api/upload/listing-image/ 500 [2.22, 127.0.0.1:61373][0m
+INFO 2026-04-19 14:36:16,060 autoreload 8664 416 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 14:36:17,495 autoreload 15228 19532 Watching for file changes with StatReloader
+INFO 2026-04-19 14:36:23,368 autoreload 15228 19532 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-19 14:36:24,758 autoreload 8860 3092 Watching for file changes with StatReloader
+INFO 2026-04-19 15:06:31,014 runserver 8860 13668 [mHTTP OPTIONS /api/upload/listing-image/ 200 [0.01, 127.0.0.1:55351][0m
+INFO 2026-04-19 15:07:03,803 autoreload 20524 20264 Watching for file changes with StatReloader
+INFO 2026-04-19 15:07:07,510 runserver 20524 20848 [mHTTP OPTIONS /api/profile/ 200 [0.00, 127.0.0.1:63427][0m
+INFO 2026-04-19 15:07:07,511 runserver 20524 20848 [mHTTP OPTIONS /api/profile/ 200 [0.00, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:07:09,740 middleware 20524 19768 GET /api/profile/ 200 - 2.218s
+INFO 2026-04-19 15:07:09,743 runserver 20524 20848 [mHTTP GET /api/profile/ 200 [2.23, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:07:09,781 runserver 20524 20848 [mHTTP OPTIONS /api/listings/my/ 200 [0.00, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:07:09,782 runserver 20524 20848 [mHTTP OPTIONS /api/categories/ 200 [0.00, 127.0.0.1:63308][0m
+INFO 2026-04-19 15:07:09,789 runserver 20524 20848 [mHTTP OPTIONS /api/regions/ 200 [0.00, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:07:09,790 runserver 20524 20848 [mHTTP OPTIONS /api/listings/my/ 200 [0.00, 127.0.0.1:63308][0m
+INFO 2026-04-19 15:07:09,795 runserver 20524 20848 [mHTTP OPTIONS /api/categories/ 200 [0.00, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:07:09,797 runserver 20524 20848 [mHTTP OPTIONS /api/regions/ 200 [0.00, 127.0.0.1:63308][0m
+INFO 2026-04-19 15:07:11,878 middleware 20524 19548 GET /api/profile/ 200 - 2.125s
+INFO 2026-04-19 15:07:11,880 runserver 20524 20848 [mHTTP GET /api/profile/ 200 [2.13, 127.0.0.1:63427][0m
+INFO 2026-04-19 15:07:11,967 middleware 20524 20212 GET /api/categories/ 200 - 2.164s
+INFO 2026-04-19 15:07:11,970 runserver 20524 20848 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:63308][0m
+INFO 2026-04-19 15:07:12,441 middleware 20524 11412 GET /api/listings/my/ 200 - 2.638s
+INFO 2026-04-19 15:07:12,443 runserver 20524 20848 [mHTTP GET /api/listings/my/ 200 [2.64, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:07:13,572 middleware 20524 20060 GET /api/regions/ 200 - 3.479s
+INFO 2026-04-19 15:07:13,574 runserver 20524 20848 [mHTTP GET /api/regions/ 200 [3.48, 127.0.0.1:52928][0m
+INFO 2026-04-19 15:07:14,105 middleware 20524 19820 GET /api/categories/ 200 - 2.129s
+INFO 2026-04-19 15:07:14,107 runserver 20524 20848 [mHTTP GET /api/categories/ 200 [2.13, 127.0.0.1:63427][0m
+INFO 2026-04-19 15:07:15,013 middleware 20524 15108 GET /api/listings/my/ 200 - 2.557s
+INFO 2026-04-19 15:07:15,015 runserver 20524 20848 [mHTTP GET /api/listings/my/ 200 [2.56, 127.0.0.1:63308][0m
+INFO 2026-04-19 15:07:17,023 middleware 20524 20644 GET /api/regions/ 200 - 3.435s
+INFO 2026-04-19 15:07:17,025 runserver 20524 20848 [mHTTP GET /api/regions/ 200 [3.44, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:08:08,107 middleware 20524 10036 POST /api/upload/listing-image/ 200 - 5.141s
+INFO 2026-04-19 15:08:08,110 runserver 20524 20848 [mHTTP POST /api/upload/listing-image/ 200 [5.16, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:08:08,118 runserver 20524 20848 [mHTTP OPTIONS /api/listing-images/ 200 [0.00, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:08:10,710 middleware 20524 18672 POST /api/listing-images/ 201 - 2.582s
+INFO 2026-04-19 15:08:10,712 runserver 20524 20848 [mHTTP POST /api/listing-images/ 201 [2.59, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:08:30,061 runserver 20524 20848 [mHTTP OPTIONS /api/listings/14/ 200 [0.00, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:08:34,332 middleware 20524 20620 PUT /api/listings/14/ 200 - 4.245s
+INFO 2026-04-19 15:08:34,333 runserver 20524 20848 [mHTTP PUT /api/listings/14/ 200 [4.25, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:08:36,782 middleware 20524 20048 GET /api/categories/ 200 - 2.116s
+INFO 2026-04-19 15:08:36,784 runserver 20524 20848 [mHTTP GET /api/categories/ 200 [2.12, 127.0.0.1:49800][0m
+INFO 2026-04-19 15:08:36,950 middleware 20524 15944 GET /api/listings/my/ 200 - 2.601s
+INFO 2026-04-19 15:08:36,952 runserver 20524 20848 [mHTTP GET /api/listings/my/ 200 [2.61, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:08:38,111 middleware 20524 15844 GET /api/regions/ 200 - 3.446s
+INFO 2026-04-19 15:08:38,114 runserver 20524 20848 [mHTTP GET /api/regions/ 200 [3.45, 127.0.0.1:57290][0m
+INFO 2026-04-19 15:08:43,451 runserver 20524 20848 [mHTTP OPTIONS /api/messages/ 200 [0.00, 127.0.0.1:57290][0m
+INFO 2026-04-19 15:08:47,312 middleware 20524 20512 GET /api/listings/ 200 - 3.019s
+INFO 2026-04-19 15:08:47,314 runserver 20524 20848 [mHTTP GET /api/listings/ 200 [3.02, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:08:48,182 middleware 20524 19940 GET /api/messages/ 200 - 4.724s
+INFO 2026-04-19 15:08:48,184 runserver 20524 20848 [mHTTP GET /api/messages/ 200 [4.73, 127.0.0.1:57290][0m
+INFO 2026-04-19 15:08:55,215 middleware 20524 20952 GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 - 0.009s
+INFO 2026-04-19 15:08:55,215 middleware 20524 20904 GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 - 0.009s
+WARNING 2026-04-19 15:08:55,220 runserver 20524 20848 [33mHTTP GET /media/listings/be1d5c4230624fa694cb15475e33b287.jpg 404 [0.02, 127.0.0.1:63122][0m
+WARNING 2026-04-19 15:08:55,221 runserver 20524 20848 [33mHTTP GET /media/listings/4ae1ec5b44d94eef9afc8edcc4112076.jpg 404 [0.02, 127.0.0.1:60056][0m
+INFO 2026-04-19 15:08:57,926 middleware 20524 17592 GET /api/listings/14/ 200 - 3.029s
+INFO 2026-04-19 15:08:57,928 runserver 20524 20848 [mHTTP GET /api/listings/14/ 200 [3.03, 127.0.0.1:55741][0m
+INFO 2026-04-19 15:08:57,947 middleware 20524 21004 GET /api/mongolia/utility-estimate/ 200 - 0.002s
+INFO 2026-04-19 15:08:57,950 runserver 20524 20848 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [0.01, 127.0.0.1:55741][0m
+INFO 2026-04-19 15:09:20,898 middleware 20524 6616 POST /api/upload/listing-image/ 200 - 2.282s
+INFO 2026-04-19 15:09:20,900 runserver 20524 20848 [mHTTP POST /api/upload/listing-image/ 200 [2.29, 127.0.0.1:57290][0m
+INFO 2026-04-19 15:09:23,345 middleware 20524 1540 POST /api/listing-images/ 201 - 2.416s
+INFO 2026-04-19 15:09:23,347 runserver 20524 20848 [mHTTP POST /api/listing-images/ 201 [2.42, 127.0.0.1:57290][0m
+INFO 2026-04-19 15:09:31,978 middleware 20524 5588 PUT /api/listings/14/ 200 - 4.225s
+INFO 2026-04-19 15:09:31,981 runserver 20524 20848 [mHTTP PUT /api/listings/14/ 200 [4.23, 127.0.0.1:57290][0m
+INFO 2026-04-19 15:09:34,122 middleware 20524 4900 GET /api/categories/ 200 - 2.125s
+INFO 2026-04-19 15:09:34,125 runserver 20524 20848 [mHTTP GET /api/categories/ 200 [2.13, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:09:34,551 middleware 20524 9640 GET /api/listings/my/ 200 - 2.554s
+INFO 2026-04-19 15:09:34,553 runserver 20524 20848 [mHTTP GET /api/listings/my/ 200 [2.56, 127.0.0.1:57290][0m
+INFO 2026-04-19 15:09:35,424 middleware 20524 21140 GET /api/regions/ 200 - 3.427s
+INFO 2026-04-19 15:09:35,425 runserver 20524 20848 [mHTTP GET /api/regions/ 200 [3.43, 127.0.0.1:49800][0m
+INFO 2026-04-19 15:10:21,713 runserver 20524 20848 [mHTTP OPTIONS /api/listings/?page_size=20 200 [0.01, 127.0.0.1:49800][0m
+INFO 2026-04-19 15:10:21,714 runserver 20524 20848 [mHTTP OPTIONS /api/categories/ 200 [0.01, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:10:21,715 runserver 20524 20848 [mHTTP OPTIONS /api/favorites/ 200 [0.01, 127.0.0.1:57290][0m
+INFO 2026-04-19 15:10:21,721 runserver 20524 20848 [mHTTP OPTIONS /api/regions/ 200 [0.01, 127.0.0.1:49800][0m
+INFO 2026-04-19 15:10:23,890 middleware 20524 2756 GET /api/categories/ 200 - 2.154s
+INFO 2026-04-19 15:10:23,893 runserver 20524 20848 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:49800][0m
+INFO 2026-04-19 15:10:24,323 middleware 20524 2332 GET /api/favorites/ 200 - 2.594s
+INFO 2026-04-19 15:10:24,326 runserver 20524 20848 [mHTTP GET /api/favorites/ 200 [2.61, 127.0.0.1:57290][0m
+INFO 2026-04-19 15:10:24,753 middleware 20524 10828 GET /api/listings/ 200 - 3.025s
+INFO 2026-04-19 15:10:24,755 runserver 20524 20848 [mHTTP GET /api/listings/?page_size=20 200 [3.04, 127.0.0.1:61679][0m
+INFO 2026-04-19 15:10:25,485 middleware 20524 11796 GET /api/regions/ 200 - 3.473s
+INFO 2026-04-19 15:10:25,486 runserver 20524 20848 [mHTTP GET /api/regions/ 200 [3.48, 127.0.0.1:55262][0m
+INFO 2026-04-19 15:10:27,408 middleware 20524 20204 GET /api/listings/ 200 - 3.014s
+INFO 2026-04-19 15:10:27,410 runserver 20524 20848 [mHTTP GET /api/listings/ 200 [3.02, 127.0.0.1:57290][0m
+INFO 2026-04-19 15:10:43,631 middleware 20524 18616 GET /api/listings/14/ 200 - 3.008s
+INFO 2026-04-19 15:10:43,634 runserver 20524 20848 [mHTTP GET /api/listings/14/ 200 [3.01, 127.0.0.1:54387][0m
+INFO 2026-04-19 15:10:43,654 middleware 20524 3224 GET /api/mongolia/utility-estimate/ 200 - 0.001s
+INFO 2026-04-19 15:10:43,656 runserver 20524 20848 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [0.01, 127.0.0.1:54387][0m
+INFO 2026-04-19 15:14:31,676 middleware 20524 2984 PUT /api/listings/14/ 401 - 0.004s
+WARNING 2026-04-19 15:14:31,679 runserver 20524 20848 [31;1mHTTP PUT /api/listings/14/ 401 [0.01, 127.0.0.1:54463][0m
+INFO 2026-04-19 15:14:58,777 middleware 20524 20692 GET /api/listings/ 401 - 0.004s
+INFO 2026-04-19 15:14:58,779 middleware 20524 3536 GET /api/favorites/ 401 - 0.005s
+WARNING 2026-04-19 15:14:58,792 runserver 20524 20848 [31;1mHTTP GET /api/listings/?page_size=20 401 [0.03, 127.0.0.1:54463][0m
+WARNING 2026-04-19 15:14:58,794 runserver 20524 20848 [31;1mHTTP GET /api/favorites/ 401 [0.03, 127.0.0.1:64029][0m
+INFO 2026-04-19 15:14:59,076 middleware 20524 20540 GET /api/categories/ 401 - 0.003s
+INFO 2026-04-19 15:14:59,076 middleware 20524 19108 GET /api/regions/ 401 - 0.003s
+WARNING 2026-04-19 15:14:59,082 runserver 20524 20848 [31;1mHTTP GET /api/categories/ 401 [0.01, 127.0.0.1:54714][0m
+WARNING 2026-04-19 15:14:59,084 runserver 20524 20848 [31;1mHTTP GET /api/regions/ 401 [0.01, 127.0.0.1:51930][0m
+INFO 2026-04-19 15:14:59,353 runserver 20524 20848 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.00, 127.0.0.1:54463][0m
+INFO 2026-04-19 15:15:01,747 middleware 20524 20476 POST /api/auth/token/refresh/ 200 - 2.070s
+INFO 2026-04-19 15:15:01,749 runserver 20524 20848 [mHTTP POST /api/auth/token/refresh/ 200 [2.08, 127.0.0.1:51930][0m
+INFO 2026-04-19 15:15:01,789 middleware 20524 1496 POST /api/auth/token/refresh/ 200 - 2.094s
+INFO 2026-04-19 15:15:01,792 runserver 20524 20848 [mHTTP POST /api/auth/token/refresh/ 200 [2.10, 127.0.0.1:54714][0m
+INFO 2026-04-19 15:15:02,247 middleware 20524 21488 POST /api/auth/token/refresh/ 200 - 2.861s
+INFO 2026-04-19 15:15:02,249 runserver 20524 20848 [mHTTP POST /api/auth/token/refresh/ 200 [2.87, 127.0.0.1:54463][0m
+INFO 2026-04-19 15:15:02,287 middleware 20524 9500 POST /api/auth/token/refresh/ 200 - 2.890s
+INFO 2026-04-19 15:15:02,289 runserver 20524 20848 [mHTTP POST /api/auth/token/refresh/ 200 [2.90, 127.0.0.1:64029][0m
+INFO 2026-04-19 15:15:04,339 middleware 20524 10600 GET /api/categories/ 200 - 2.577s
+INFO 2026-04-19 15:15:04,341 runserver 20524 20848 [mHTTP GET /api/categories/ 200 [2.58, 127.0.0.1:51930][0m
+INFO 2026-04-19 15:15:05,942 middleware 20524 7860 GET /api/listings/ 200 - 3.670s
+INFO 2026-04-19 15:15:05,942 middleware 20524 20788 GET /api/regions/ 200 - 4.137s
+INFO 2026-04-19 15:15:05,944 runserver 20524 20848 [mHTTP GET /api/listings/?page_size=20 200 [3.67, 127.0.0.1:54463][0m
+INFO 2026-04-19 15:15:05,945 runserver 20524 20848 [mHTTP GET /api/regions/ 200 [4.14, 127.0.0.1:54714][0m
+INFO 2026-04-19 15:15:13,960 middleware 20524 19932 GET /api/categories/ 200 - 2.562s
+INFO 2026-04-19 15:15:13,962 runserver 20524 20848 [mHTTP GET /api/categories/ 200 [2.57, 127.0.0.1:51930][0m
+INFO 2026-04-19 15:15:14,644 middleware 20524 21384 GET /api/favorites/ 200 - 3.247s
+INFO 2026-04-19 15:15:14,646 runserver 20524 20848 [mHTTP GET /api/favorites/ 200 [3.26, 127.0.0.1:54714][0m
+INFO 2026-04-19 15:15:15,137 middleware 20524 13184 GET /api/listings/ 200 - 3.739s
+INFO 2026-04-19 15:15:15,139 runserver 20524 20848 [mHTTP GET /api/listings/?page_size=20 200 [3.75, 127.0.0.1:54463][0m
+INFO 2026-04-19 15:15:16,080 middleware 20524 10908 GET /api/regions/ 200 - 4.381s
+INFO 2026-04-19 15:15:16,082 runserver 20524 20848 [mHTTP GET /api/regions/ 200 [4.39, 127.0.0.1:62462][0m
+INFO 2026-04-19 15:15:25,860 middleware 20524 5292 GET /api/listings/ 200 - 3.507s
+INFO 2026-04-19 15:15:25,862 runserver 20524 20848 [mHTTP GET /api/listings/ 200 [3.51, 127.0.0.1:62462][0m
+INFO 2026-04-19 15:15:49,664 middleware 20524 14936 GET /api/listings/14/ 200 - 10.558s
+INFO 2026-04-19 15:15:49,666 runserver 20524 20848 [mHTTP GET /api/listings/14/ 200 [10.56, 127.0.0.1:55674][0m
+INFO 2026-04-19 15:15:49,695 middleware 20524 5072 GET /api/mongolia/utility-estimate/ 200 - 0.002s
+INFO 2026-04-19 15:15:49,697 runserver 20524 20848 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [0.01, 127.0.0.1:55674][0m
+INFO 2026-04-19 15:38:27,755 autoreload 20524 20264 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-19 15:38:30,285 autoreload 21636 5804 Watching for file changes with StatReloader
+INFO 2026-04-19 15:38:34,117 runserver 21636 11676 [mHTTP OPTIONS /api/favorites/?page=1&page_size=100 200 [0.01, 127.0.0.1:55124][0m
+INFO 2026-04-19 15:38:36,340 middleware 21636 19508 GET /api/categories/ 200 - 2.220s
+INFO 2026-04-19 15:38:36,343 runserver 21636 11676 [mHTTP GET /api/categories/ 200 [2.23, 127.0.0.1:64921][0m
+INFO 2026-04-19 15:38:36,786 middleware 21636 15120 GET /api/favorites/ 200 - 2.662s
+INFO 2026-04-19 15:38:36,789 runserver 21636 11676 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.67, 127.0.0.1:55124][0m
+INFO 2026-04-19 15:38:37,606 middleware 21636 13620 GET /api/regions/ 200 - 3.484s
+INFO 2026-04-19 15:38:37,609 runserver 21636 11676 [mHTTP GET /api/regions/ 200 [3.50, 127.0.0.1:62385][0m
+INFO 2026-04-19 15:38:37,654 middleware 21636 20696 GET /api/listings/ 200 - 3.549s
+INFO 2026-04-19 15:38:37,656 runserver 21636 11676 [mHTTP GET /api/listings/?page_size=20 200 [3.56, 127.0.0.1:50157][0m
+INFO 2026-04-19 15:38:38,529 middleware 21636 15760 GET /api/categories/ 200 - 2.173s
+INFO 2026-04-19 15:38:38,531 runserver 21636 11676 [mHTTP GET /api/categories/ 200 [2.18, 127.0.0.1:63157][0m
+INFO 2026-04-19 15:38:39,420 middleware 21636 22468 GET /api/favorites/ 200 - 2.597s
+INFO 2026-04-19 15:38:39,423 runserver 21636 11676 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.62, 127.0.0.1:64921][0m
+INFO 2026-04-19 15:38:41,029 middleware 21636 20304 GET /api/regions/ 200 - 3.401s
+INFO 2026-04-19 15:38:41,030 runserver 21636 11676 [mHTTP GET /api/regions/ 200 [3.41, 127.0.0.1:55124][0m
+INFO 2026-04-19 15:38:41,094 middleware 21636 21060 GET /api/listings/ 200 - 3.426s
+INFO 2026-04-19 15:38:41,096 runserver 21636 11676 [mHTTP GET /api/listings/?page_size=20 200 [3.43, 127.0.0.1:62385][0m
+INFO 2026-04-19 15:38:48,383 middleware 21636 21264 GET /api/categories/ 200 - 2.091s
+INFO 2026-04-19 15:38:48,386 runserver 21636 11676 [mHTTP GET /api/categories/ 200 [2.10, 127.0.0.1:64921][0m
+INFO 2026-04-19 15:38:49,088 middleware 21636 612 GET /api/favorites/ 200 - 2.796s
+INFO 2026-04-19 15:38:49,091 runserver 21636 11676 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.81, 127.0.0.1:55124][0m
+INFO 2026-04-19 15:38:49,832 middleware 21636 22188 GET /api/listings/ 200 - 3.540s
+INFO 2026-04-19 15:38:49,835 runserver 21636 11676 [mHTTP GET /api/listings/?page_size=20 200 [3.55, 127.0.0.1:62385][0m
+INFO 2026-04-19 15:38:49,837 middleware 21636 20096 GET /api/regions/ 200 - 3.544s
+INFO 2026-04-19 15:38:49,839 runserver 21636 11676 [mHTTP GET /api/regions/ 200 [3.55, 127.0.0.1:63157][0m
+INFO 2026-04-19 15:38:56,367 middleware 21636 3516 GET /api/categories/ 200 - 2.145s
+INFO 2026-04-19 15:38:56,369 runserver 21636 11676 [mHTTP GET /api/categories/ 200 [2.15, 127.0.0.1:55124][0m
+INFO 2026-04-19 15:38:56,791 middleware 21636 20184 GET /api/favorites/ 200 - 2.568s
+INFO 2026-04-19 15:38:56,793 runserver 21636 11676 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.58, 127.0.0.1:62385][0m
+INFO 2026-04-19 15:38:57,637 middleware 21636 1896 GET /api/listings/ 200 - 3.414s
+INFO 2026-04-19 15:38:57,639 runserver 21636 11676 [mHTTP GET /api/listings/?page_size=20 200 [3.42, 127.0.0.1:63157][0m
+INFO 2026-04-19 15:38:57,759 middleware 21636 22568 GET /api/regions/ 200 - 3.536s
+INFO 2026-04-19 15:38:57,761 runserver 21636 11676 [mHTTP GET /api/regions/ 200 [3.55, 127.0.0.1:64921][0m
+INFO 2026-04-19 15:38:59,359 middleware 21636 23204 GET /api/categories/ 200 - 2.128s
+INFO 2026-04-19 15:38:59,361 runserver 21636 11676 [mHTTP GET /api/categories/ 200 [2.13, 127.0.0.1:55124][0m
+INFO 2026-04-19 15:38:59,774 middleware 21636 23468 GET /api/favorites/ 200 - 2.544s
+INFO 2026-04-19 15:38:59,777 runserver 21636 11676 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.55, 127.0.0.1:62385][0m
+INFO 2026-04-19 15:39:01,063 middleware 21636 13740 GET /api/listings/ 200 - 3.417s
+INFO 2026-04-19 15:39:01,065 runserver 21636 11676 [mHTTP GET /api/listings/?page_size=20 200 [3.42, 127.0.0.1:50157][0m
+INFO 2026-04-19 15:39:01,183 middleware 21636 15452 GET /api/regions/ 200 - 3.408s
+INFO 2026-04-19 15:39:01,186 runserver 21636 11676 [mHTTP GET /api/regions/ 200 [3.41, 127.0.0.1:63157][0m
+INFO 2026-04-19 15:39:04,352 middleware 21636 2436 GET /api/categories/ 200 - 2.120s
+INFO 2026-04-19 15:39:04,355 runserver 21636 11676 [mHTTP GET /api/categories/ 200 [2.13, 127.0.0.1:62385][0m
+INFO 2026-04-19 15:39:04,800 middleware 21636 22764 GET /api/favorites/ 200 - 2.568s
+INFO 2026-04-19 15:39:04,803 runserver 21636 11676 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.58, 127.0.0.1:50157][0m
+INFO 2026-04-19 15:39:05,698 middleware 21636 21056 GET /api/regions/ 200 - 3.466s
+INFO 2026-04-19 15:39:05,700 runserver 21636 11676 [mHTTP GET /api/regions/ 200 [3.47, 127.0.0.1:55124][0m
+INFO 2026-04-19 15:39:05,729 middleware 21636 23436 GET /api/listings/ 200 - 3.498s
+INFO 2026-04-19 15:39:05,731 runserver 21636 11676 [mHTTP GET /api/listings/?page_size=20 200 [3.51, 127.0.0.1:63157][0m
+INFO 2026-04-19 15:39:15,186 autoreload 21636 5804 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-19 15:39:16,466 autoreload 21036 22804 Watching for file changes with StatReloader
+INFO 2026-04-19 15:39:48,074 middleware 21036 10544 GET /api/favorites/ 200 - 4.020s
+INFO 2026-04-19 15:39:48,077 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [4.03, 127.0.0.1:57885][0m
+INFO 2026-04-19 15:39:48,087 runserver 21036 21848 [mHTTP OPTIONS /api/listings/8/ 200 [0.00, 127.0.0.1:57885][0m
+INFO 2026-04-19 15:39:51,517 middleware 21036 22196 GET /api/listings/8/ 200 - 3.425s
+INFO 2026-04-19 15:39:51,520 runserver 21036 21848 [mHTTP GET /api/listings/8/ 200 [3.43, 127.0.0.1:57885][0m
+INFO 2026-04-19 15:39:54,917 middleware 21036 20756 GET /api/categories/ 200 - 2.151s
+INFO 2026-04-19 15:39:54,919 runserver 21036 21848 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:51420][0m
+INFO 2026-04-19 15:39:55,006 middleware 21036 2372 GET /api/favorites/ 200 - 2.541s
+INFO 2026-04-19 15:39:55,008 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.55, 127.0.0.1:65328][0m
+INFO 2026-04-19 15:39:55,940 middleware 21036 20700 GET /api/listings/ 200 - 3.475s
+INFO 2026-04-19 15:39:55,942 runserver 21036 21848 [mHTTP GET /api/listings/?page_size=20 200 [3.48, 127.0.0.1:57885][0m
+INFO 2026-04-19 15:39:56,206 middleware 21036 8364 GET /api/regions/ 200 - 3.440s
+INFO 2026-04-19 15:39:56,208 runserver 21036 21848 [mHTTP GET /api/regions/ 200 [3.45, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:40:07,635 middleware 21036 20124 GET /api/categories/ 200 - 2.149s
+INFO 2026-04-19 15:40:07,637 runserver 21036 21848 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:65328][0m
+INFO 2026-04-19 15:40:08,080 middleware 21036 23244 GET /api/favorites/ 200 - 2.594s
+INFO 2026-04-19 15:40:08,081 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.61, 127.0.0.1:57885][0m
+INFO 2026-04-19 15:40:08,921 middleware 21036 20504 GET /api/listings/ 200 - 3.436s
+INFO 2026-04-19 15:40:08,923 runserver 21036 21848 [mHTTP GET /api/listings/?page_size=20 200 [3.45, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:40:08,981 middleware 21036 20776 GET /api/regions/ 200 - 3.495s
+INFO 2026-04-19 15:40:08,983 runserver 21036 21848 [mHTTP GET /api/regions/ 200 [3.51, 127.0.0.1:51420][0m
+INFO 2026-04-19 15:40:16,824 middleware 21036 14112 GET /api/favorites/ 200 - 2.581s
+INFO 2026-04-19 15:40:16,826 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.59, 127.0.0.1:51420][0m
+INFO 2026-04-19 15:40:20,237 middleware 21036 7920 GET /api/listings/8/ 200 - 3.388s
+INFO 2026-04-19 15:40:20,239 runserver 21036 21848 [mHTTP GET /api/listings/8/ 200 [3.39, 127.0.0.1:51420][0m
+INFO 2026-04-19 15:40:27,629 middleware 21036 1128 GET /api/listings/ 200 - 3.975s
+INFO 2026-04-19 15:40:27,631 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [3.98, 127.0.0.1:51420][0m
+INFO 2026-04-19 15:40:47,166 middleware 21036 21368 GET /api/messages/ 200 - 4.824s
+INFO 2026-04-19 15:40:47,169 runserver 21036 21848 [mHTTP GET /api/messages/ 200 [4.83, 127.0.0.1:51420][0m
+INFO 2026-04-19 15:40:53,705 runserver 21036 21848 [mHTTP OPTIONS /api/bookings/ 200 [0.01, 127.0.0.1:51420][0m
+INFO 2026-04-19 15:41:01,070 middleware 21036 14000 GET /api/bookings/ 200 - 7.354s
+INFO 2026-04-19 15:41:01,074 runserver 21036 21848 [mHTTP GET /api/bookings/ 200 [7.36, 127.0.0.1:51420][0m
+INFO 2026-04-19 15:41:02,293 middleware 21036 18844 GET /api/favorites/ 200 - 8.584s
+INFO 2026-04-19 15:41:02,294 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [8.59, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:41:06,902 middleware 21036 7112 GET /api/messages/ 200 - 13.193s
+INFO 2026-04-19 15:41:06,904 runserver 21036 21848 [mHTTP GET /api/messages/ 200 [13.20, 127.0.0.1:57885][0m
+INFO 2026-04-19 15:41:07,136 middleware 21036 4976 GET /api/listings/ 200 - 7.700s
+INFO 2026-04-19 15:41:07,139 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [7.71, 127.0.0.1:65328][0m
+INFO 2026-04-19 15:41:13,471 middleware 21036 22264 GET /api/messages/ 200 - 6.553s
+INFO 2026-04-19 15:41:13,473 runserver 21036 21848 [mHTTP GET /api/messages/ 200 [6.56, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:41:58,734 runserver 21036 21848 [mHTTP OPTIONS /api/listings/14/ 200 [0.00, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:42:02,205 middleware 21036 20016 GET /api/listings/14/ 200 - 3.464s
+INFO 2026-04-19 15:42:02,206 runserver 21036 21848 [mHTTP GET /api/listings/14/ 200 [3.47, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:42:02,224 runserver 21036 21848 [mHTTP OPTIONS /api/favorites/14/check/ 200 [0.00, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:42:04,390 middleware 21036 17148 GET /api/favorites/14/check/ 200 - 2.161s
+INFO 2026-04-19 15:42:04,392 runserver 21036 21848 [mHTTP GET /api/favorites/14/check/ 200 [2.17, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:42:04,408 runserver 21036 21848 [mHTTP OPTIONS /api/mongolia/utility-estimate/?area_sqm=45 200 [0.00, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:42:06,158 middleware 21036 22532 GET /api/mongolia/utility-estimate/ 200 - 1.744s
+INFO 2026-04-19 15:42:06,160 runserver 21036 21848 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.75, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:42:10,957 middleware 21036 21476 GET /api/listings/ 200 - 5.000s
+INFO 2026-04-19 15:42:10,959 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [5.01, 127.0.0.1:65328][0m
+INFO 2026-04-19 15:42:15,547 middleware 21036 21752 GET /api/listings/ 200 - 4.574s
+INFO 2026-04-19 15:42:15,549 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [4.58, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:42:18,999 middleware 21036 23216 GET /api/listings/ 200 - 3.441s
+INFO 2026-04-19 15:42:19,002 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [3.45, 127.0.0.1:65328][0m
+INFO 2026-04-19 15:42:22,460 middleware 21036 1504 GET /api/listings/ 200 - 3.442s
+INFO 2026-04-19 15:42:22,462 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [3.45, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:42:25,873 middleware 21036 22680 GET /api/listings/ 200 - 3.397s
+INFO 2026-04-19 15:42:25,874 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [3.40, 127.0.0.1:65328][0m
+INFO 2026-04-19 15:42:29,280 middleware 21036 9052 GET /api/listings/ 200 - 3.383s
+INFO 2026-04-19 15:42:29,282 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [3.39, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:42:35,082 middleware 21036 21536 GET /api/listings/ 200 - 4.415s
+INFO 2026-04-19 15:42:35,085 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [4.42, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:42:59,025 middleware 21036 22864 GET /api/categories/ 200 - 2.152s
+INFO 2026-04-19 15:42:59,027 runserver 21036 21848 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:58034][0m
+INFO 2026-04-19 15:42:59,172 middleware 21036 18892 GET /api/favorites/ 200 - 2.603s
+INFO 2026-04-19 15:42:59,176 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.61, 127.0.0.1:65328][0m
+INFO 2026-04-19 15:42:59,962 middleware 21036 20604 GET /api/listings/ 200 - 3.393s
+INFO 2026-04-19 15:42:59,964 runserver 21036 21848 [mHTTP GET /api/listings/?page_size=20 200 [3.40, 127.0.0.1:54402][0m
+INFO 2026-04-19 15:43:00,359 middleware 21036 17612 GET /api/regions/ 200 - 3.486s
+INFO 2026-04-19 15:43:00,362 runserver 21036 21848 [mHTTP GET /api/regions/ 200 [3.49, 127.0.0.1:56631][0m
+INFO 2026-04-19 15:46:00,562 middleware 21036 21056 GET /api/favorites/ 200 - 6.241s
+INFO 2026-04-19 15:46:00,564 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [6.25, 127.0.0.1:61920][0m
+INFO 2026-04-19 15:46:02,780 middleware 21036 19780 GET /api/listings/ 200 - 4.575s
+INFO 2026-04-19 15:46:02,782 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [4.58, 127.0.0.1:54462][0m
+INFO 2026-04-19 15:46:06,163 middleware 21036 3908 GET /api/listings/8/ 200 - 5.587s
+INFO 2026-04-19 15:46:06,165 runserver 21036 21848 [mHTTP GET /api/listings/8/ 200 [5.59, 127.0.0.1:61920][0m
+INFO 2026-04-19 15:47:01,774 middleware 21036 17904 GET /api/listings/14/ 200 - 3.465s
+INFO 2026-04-19 15:47:01,777 runserver 21036 21848 [mHTTP GET /api/listings/14/ 200 [3.47, 127.0.0.1:61920][0m
+INFO 2026-04-19 15:47:03,921 middleware 21036 23512 GET /api/favorites/14/check/ 200 - 2.120s
+INFO 2026-04-19 15:47:03,924 runserver 21036 21848 [mHTTP GET /api/favorites/14/check/ 200 [2.13, 127.0.0.1:61920][0m
+INFO 2026-04-19 15:47:05,679 middleware 21036 23256 GET /api/mongolia/utility-estimate/ 200 - 1.729s
+INFO 2026-04-19 15:47:05,681 runserver 21036 21848 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.74, 127.0.0.1:61920][0m
+INFO 2026-04-19 15:48:37,491 middleware 21036 15548 GET /admin/api/message/ 302 - 0.017s
+INFO 2026-04-19 15:48:37,494 runserver 21036 21848 [32mHTTP GET /admin/api/message/ 302 [0.02, 127.0.0.1:52285][0m
+INFO 2026-04-19 15:48:37,551 middleware 21036 22032 GET /admin/login/ 200 - 0.049s
+INFO 2026-04-19 15:48:37,552 runserver 21036 21848 [mHTTP GET /admin/login/?next=/admin/api/message/ 200 [0.05, 127.0.0.1:52285][0m
+INFO 2026-04-19 15:48:37,659 runserver 21036 21848 [mHTTP GET /static/admin/css/login.css 200 [0.08, 127.0.0.1:52285][0m
+INFO 2026-04-19 15:48:44,998 middleware 21036 4948 POST /admin/login/ 302 - 2.942s
+INFO 2026-04-19 15:48:44,999 runserver 21036 21848 [32mHTTP POST /admin/login/?next=/admin/api/message/ 302 [2.95, 127.0.0.1:52285][0m
+INFO 2026-04-19 15:48:57,591 middleware 21036 2516 GET /admin/api/message/ 200 - 12.586s
+INFO 2026-04-19 15:48:57,593 runserver 21036 21848 [mHTTP GET /admin/api/message/ 200 [12.59, 127.0.0.1:52285][0m
+INFO 2026-04-19 15:48:57,623 runserver 21036 21848 [mHTTP GET /static/admin/css/changelists.css 200 [0.00, 127.0.0.1:52285][0m
+INFO 2026-04-19 15:48:57,633 runserver 21036 21848 [mHTTP GET /static/admin/js/filters.js 200 [0.00, 127.0.0.1:52285][0m
+INFO 2026-04-19 15:48:59,320 middleware 21036 21304 GET /admin/jsi18n/ 200 - 1.693s
+INFO 2026-04-19 15:48:59,322 runserver 21036 21848 [mHTTP GET /admin/jsi18n/ 200 [1.70, 127.0.0.1:60679][0m
+INFO 2026-04-19 15:49:15,235 middleware 21036 22568 GET /admin/api/message/1/change/ 200 - 5.421s
+INFO 2026-04-19 15:49:15,237 runserver 21036 21848 [mHTTP GET /admin/api/message/1/change/ 200 [5.43, 127.0.0.1:60679][0m
+INFO 2026-04-19 15:49:15,267 runserver 21036 21848 [mHTTP GET /static/admin/css/forms.css 200 [0.01, 127.0.0.1:60679][0m
+INFO 2026-04-19 15:49:15,307 runserver 21036 21848 [mHTTP GET /static/admin/js/calendar.js 200 [0.05, 127.0.0.1:52285][0m
+INFO 2026-04-19 15:49:15,311 runserver 21036 21848 [mHTTP GET /static/admin/js/admin/DateTimeShortcuts.js 200 [0.05, 127.0.0.1:62647][0m
+INFO 2026-04-19 15:49:15,315 runserver 21036 21848 [mHTTP GET /static/admin/js/change_form.js 200 [0.00, 127.0.0.1:62647][0m
+INFO 2026-04-19 15:49:16,986 middleware 21036 22632 GET /admin/jsi18n/ 200 - 1.717s
+INFO 2026-04-19 15:49:16,988 runserver 21036 21848 [mHTTP GET /admin/jsi18n/ 200 [1.73, 127.0.0.1:64617][0m
+INFO 2026-04-19 15:49:17,060 runserver 21036 21848 [mHTTP GET /static/admin/img/icon-calendar.svg 200 [0.02, 127.0.0.1:64617][0m
+INFO 2026-04-19 15:49:17,061 runserver 21036 21848 [mHTTP GET /static/admin/img/icon-clock.svg 200 [0.02, 127.0.0.1:62647][0m
+INFO 2026-04-19 15:49:33,992 middleware 21036 9720 GET /admin/api/message/ 200 - 11.593s
+INFO 2026-04-19 15:49:33,994 runserver 21036 21848 [mHTTP GET /admin/api/message/ 200 [11.60, 127.0.0.1:62647][0m
+INFO 2026-04-19 15:49:42,662 middleware 21036 23484 POST /admin/api/message/ 302 - 2.139s
+INFO 2026-04-19 15:49:42,666 runserver 21036 21848 [32mHTTP POST /admin/api/message/ 302 [2.15, 127.0.0.1:62647][0m
+INFO 2026-04-19 15:49:55,945 middleware 21036 21020 POST /admin/api/message/ 200 - 11.677s
+INFO 2026-04-19 15:49:55,947 runserver 21036 21848 [mHTTP POST /admin/api/message/ 200 [11.68, 127.0.0.1:64617][0m
+INFO 2026-04-19 15:49:55,996 runserver 21036 21848 [mHTTP GET /static/admin/img/icon-alert-dark.svg 200 [0.01, 127.0.0.1:52285][0m
+INFO 2026-04-19 15:49:55,999 runserver 21036 21848 [mHTTP GET /static/admin/js/cancel.js 200 [0.03, 127.0.0.1:64617][0m
+INFO 2026-04-19 15:50:08,705 middleware 21036 23268 POST /api/favorites/ 200 - 2.859s
+INFO 2026-04-19 15:50:08,707 runserver 21036 21848 [mHTTP POST /api/favorites/ 200 [2.86, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:50:16,129 middleware 21036 22044 GET /api/favorites/ 200 - 2.779s
+INFO 2026-04-19 15:50:16,132 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.78, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:50:19,583 middleware 21036 21172 GET /api/listings/14/ 200 - 3.431s
+INFO 2026-04-19 15:50:19,585 runserver 21036 21848 [mHTTP GET /api/listings/14/ 200 [3.44, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:50:19,666 middleware 21036 20652 GET /api/listings/8/ 200 - 3.514s
+INFO 2026-04-19 15:50:19,668 runserver 21036 21848 [mHTTP GET /api/listings/8/ 200 [3.52, 127.0.0.1:57270][0m
+INFO 2026-04-19 15:50:33,264 middleware 21036 23276 GET /api/categories/ 200 - 2.115s
+INFO 2026-04-19 15:50:33,266 runserver 21036 21848 [mHTTP GET /api/categories/ 200 [2.12, 127.0.0.1:60976][0m
+INFO 2026-04-19 15:50:33,662 middleware 21036 6464 GET /api/favorites/ 200 - 2.806s
+INFO 2026-04-19 15:50:33,664 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.82, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:50:34,318 middleware 21036 13912 GET /api/listings/ 200 - 3.461s
+INFO 2026-04-19 15:50:34,320 runserver 21036 21848 [mHTTP GET /api/listings/?page_size=20 200 [3.48, 127.0.0.1:57270][0m
+INFO 2026-04-19 15:50:34,534 middleware 21036 3092 POST /admin/api/message/ 302 - 13.389s
+INFO 2026-04-19 15:50:34,536 runserver 21036 21848 [32mHTTP POST /admin/api/message/ 302 [13.39, 127.0.0.1:64617][0m
+INFO 2026-04-19 15:50:34,538 middleware 21036 20232 GET /api/regions/ 200 - 3.389s
+INFO 2026-04-19 15:50:34,542 runserver 21036 21848 [mHTTP GET /api/regions/ 200 [3.40, 127.0.0.1:61366][0m
+INFO 2026-04-19 15:50:36,931 middleware 21036 20816 GET /admin/api/message/ 200 - 2.386s
+INFO 2026-04-19 15:50:36,933 runserver 21036 21848 [mHTTP GET /admin/api/message/ 200 [2.39, 127.0.0.1:64617][0m
+INFO 2026-04-19 15:50:38,665 middleware 21036 21380 GET /admin/jsi18n/ 200 - 1.712s
+INFO 2026-04-19 15:50:38,667 runserver 21036 21848 [mHTTP GET /admin/jsi18n/ 200 [1.72, 127.0.0.1:64617][0m
+INFO 2026-04-19 15:50:38,697 runserver 21036 21848 [mHTTP GET /static/admin/img/icon-yes-dark.svg 200 [0.02, 127.0.0.1:64617][0m
+INFO 2026-04-19 15:50:46,865 middleware 21036 22164 GET /api/favorites/ 200 - 2.765s
+INFO 2026-04-19 15:50:46,867 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.77, 127.0.0.1:61366][0m
+INFO 2026-04-19 15:50:50,291 middleware 21036 18044 GET /api/listings/14/ 200 - 3.408s
+INFO 2026-04-19 15:50:50,292 runserver 21036 21848 [mHTTP GET /api/listings/14/ 200 [3.41, 127.0.0.1:61366][0m
+INFO 2026-04-19 15:50:50,307 middleware 21036 21880 GET /api/listings/8/ 200 - 3.424s
+INFO 2026-04-19 15:50:50,309 runserver 21036 21848 [mHTTP GET /api/listings/8/ 200 [3.43, 127.0.0.1:57270][0m
+INFO 2026-04-19 15:50:51,780 middleware 21036 17180 GET /api/messages/ 200 - 2.371s
+INFO 2026-04-19 15:50:51,782 runserver 21036 21848 [mHTTP GET /api/messages/ 200 [2.38, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:50:57,105 middleware 21036 22944 GET /api/listings/ 200 - 3.443s
+INFO 2026-04-19 15:50:57,107 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [3.45, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:51:04,018 middleware 21036 10692 GET /api/listings/14/ 200 - 3.644s
+INFO 2026-04-19 15:51:04,020 runserver 21036 21848 [mHTTP GET /api/listings/14/ 200 [3.65, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:51:06,201 middleware 21036 19552 GET /api/favorites/14/check/ 200 - 2.154s
+INFO 2026-04-19 15:51:06,203 runserver 21036 21848 [mHTTP GET /api/favorites/14/check/ 200 [2.16, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:51:07,981 middleware 21036 18568 GET /api/mongolia/utility-estimate/ 200 - 1.755s
+INFO 2026-04-19 15:51:07,984 runserver 21036 21848 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.76, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:51:15,184 middleware 21036 12468 POST /api/messages/ 201 - 2.638s
+INFO 2026-04-19 15:51:15,186 runserver 21036 21848 [mHTTP POST /api/messages/ 201 [2.64, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:51:24,319 middleware 21036 13144 GET /api/messages/ 200 - 3.669s
+INFO 2026-04-19 15:51:24,321 runserver 21036 21848 [mHTTP GET /api/messages/ 200 [3.67, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:51:30,315 runserver 21036 21848 [mHTTP OPTIONS /api/messages/18/ 200 [0.00, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:51:32,941 middleware 21036 21732 GET /api/messages/18/ 200 - 2.619s
+INFO 2026-04-19 15:51:32,943 runserver 21036 21848 [mHTTP GET /api/messages/18/ 200 [2.62, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:51:43,222 middleware 21036 8992 GET /api/categories/ 200 - 2.137s
+INFO 2026-04-19 15:51:43,225 runserver 21036 21848 [mHTTP GET /api/categories/ 200 [2.14, 127.0.0.1:61366][0m
+INFO 2026-04-19 15:51:43,905 middleware 21036 21988 GET /api/favorites/ 200 - 2.820s
+INFO 2026-04-19 15:51:43,907 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.83, 127.0.0.1:57270][0m
+INFO 2026-04-19 15:51:44,596 middleware 21036 20716 GET /api/listings/ 200 - 3.511s
+INFO 2026-04-19 15:51:44,598 runserver 21036 21848 [mHTTP GET /api/listings/?page_size=20 200 [3.52, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:51:44,915 middleware 21036 13708 GET /api/regions/ 200 - 3.520s
+INFO 2026-04-19 15:51:44,917 runserver 21036 21848 [mHTTP GET /api/regions/ 200 [3.52, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:52:42,127 runserver 21036 21848 [mHTTP OPTIONS /api/auth/login/ 200 [0.00, 127.0.0.1:53589][0m
+INFO 2026-04-19 15:52:42,473 middleware 21036 16548 GET /api/categories/ 200 - 2.144s
+INFO 2026-04-19 15:52:42,477 runserver 21036 21848 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:57270][0m
+INFO 2026-04-19 15:52:43,104 middleware 21036 7084 GET /api/favorites/ 200 - 2.775s
+INFO 2026-04-19 15:52:43,107 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.79, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:52:43,755 middleware 21036 9388 GET /api/listings/ 200 - 3.427s
+INFO 2026-04-19 15:52:43,757 runserver 21036 21848 [mHTTP GET /api/listings/?page_size=20 200 [3.44, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:52:43,796 middleware 21036 22332 GET /api/regions/ 200 - 3.467s
+INFO 2026-04-19 15:52:43,799 runserver 21036 21848 [mHTTP GET /api/regions/ 200 [3.48, 127.0.0.1:61366][0m
+INFO 2026-04-19 15:52:44,891 middleware 21036 20072 POST /api/auth/login/ 200 - 2.730s
+INFO 2026-04-19 15:52:44,894 runserver 21036 21848 [mHTTP POST /api/auth/login/ 200 [2.74, 127.0.0.1:53589][0m
+INFO 2026-04-19 15:52:45,010 runserver 21036 21848 [mHTTP OPTIONS /api/bookings/for-my-listings/ 200 [0.01, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:52:45,012 runserver 21036 21848 [mHTTP OPTIONS /api/bookings/for-my-listings/ 200 [0.00, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:52:47,146 middleware 21036 14492 GET /api/profile/ 200 - 2.175s
+INFO 2026-04-19 15:52:47,148 runserver 21036 21848 [mHTTP GET /api/profile/ 200 [2.18, 127.0.0.1:53589][0m
+INFO 2026-04-19 15:52:47,155 middleware 21036 19476 GET /api/bookings/for-my-listings/ 200 - 2.134s
+INFO 2026-04-19 15:52:47,157 runserver 21036 21848 [mHTTP GET /api/bookings/for-my-listings/ 200 [2.14, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:52:48,158 middleware 21036 10892 GET /api/listings/my/ 200 - 3.140s
+INFO 2026-04-19 15:52:48,161 runserver 21036 21848 [mHTTP GET /api/listings/my/ 200 [3.16, 127.0.0.1:61366][0m
+INFO 2026-04-19 15:52:49,306 middleware 21036 8364 GET /api/bookings/for-my-listings/ 200 - 2.137s
+INFO 2026-04-19 15:52:49,308 runserver 21036 21848 [mHTTP GET /api/bookings/for-my-listings/ 200 [2.14, 127.0.0.1:53589][0m
+INFO 2026-04-19 15:52:51,414 middleware 21036 20504 GET /api/listings/my/ 200 - 3.238s
+INFO 2026-04-19 15:52:51,416 runserver 21036 21848 [mHTTP GET /api/listings/my/ 200 [3.24, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:52:55,083 middleware 21036 21368 GET /api/categories/ 200 - 2.128s
+INFO 2026-04-19 15:52:55,086 runserver 21036 21848 [mHTTP GET /api/categories/ 200 [2.14, 127.0.0.1:53589][0m
+INFO 2026-04-19 15:52:56,226 middleware 21036 21476 GET /api/listings/my/ 200 - 3.272s
+INFO 2026-04-19 15:52:56,228 runserver 21036 21848 [mHTTP GET /api/listings/my/ 200 [3.28, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:52:56,361 middleware 21036 7112 GET /api/regions/ 200 - 3.406s
+INFO 2026-04-19 15:52:56,364 runserver 21036 21848 [mHTTP GET /api/regions/ 200 [3.42, 127.0.0.1:61366][0m
+INFO 2026-04-19 15:52:57,253 middleware 21036 15548 GET /api/categories/ 200 - 2.159s
+INFO 2026-04-19 15:52:57,255 runserver 21036 21848 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:52:59,463 middleware 21036 18844 GET /api/listings/my/ 200 - 3.229s
+INFO 2026-04-19 15:52:59,465 runserver 21036 21848 [mHTTP GET /api/listings/my/ 200 [3.23, 127.0.0.1:53589][0m
+INFO 2026-04-19 15:52:59,827 middleware 21036 7920 GET /api/regions/ 200 - 3.447s
+INFO 2026-04-19 15:52:59,830 runserver 21036 21848 [mHTTP GET /api/regions/ 200 [3.45, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:53:00,479 middleware 21036 5052 GET /api/categories/ 200 - 2.195s
+INFO 2026-04-19 15:53:00,481 runserver 21036 21848 [mHTTP GET /api/categories/ 200 [2.20, 127.0.0.1:57270][0m
+INFO 2026-04-19 15:53:01,082 middleware 21036 21332 GET /api/favorites/ 200 - 2.797s
+INFO 2026-04-19 15:53:01,084 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.81, 127.0.0.1:61366][0m
+INFO 2026-04-19 15:53:01,728 middleware 21036 21152 GET /api/listings/ 200 - 3.444s
+INFO 2026-04-19 15:53:01,731 runserver 21036 21848 [mHTTP GET /api/listings/?page_size=20 200 [3.45, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:53:03,330 middleware 21036 18000 GET /api/regions/ 200 - 3.480s
+INFO 2026-04-19 15:53:03,333 runserver 21036 21848 [mHTTP GET /api/regions/ 200 [3.49, 127.0.0.1:53589][0m
+INFO 2026-04-19 15:53:05,466 middleware 21036 18028 GET /api/categories/ 200 - 2.215s
+INFO 2026-04-19 15:53:05,468 runserver 21036 21848 [mHTTP GET /api/categories/ 200 [2.22, 127.0.0.1:57270][0m
+INFO 2026-04-19 15:53:06,019 middleware 21036 23280 GET /api/favorites/ 200 - 2.768s
+INFO 2026-04-19 15:53:06,021 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.78, 127.0.0.1:61366][0m
+INFO 2026-04-19 15:53:06,729 middleware 21036 612 GET /api/listings/ 200 - 3.478s
+INFO 2026-04-19 15:53:06,731 runserver 21036 21848 [mHTTP GET /api/listings/?page_size=20 200 [3.49, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:53:06,753 middleware 21036 15880 GET /api/regions/ 200 - 3.402s
+INFO 2026-04-19 15:53:06,755 runserver 21036 21848 [mHTTP GET /api/regions/ 200 [3.41, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:53:26,524 middleware 21036 23512 GET /api/favorites/ 200 - 2.802s
+INFO 2026-04-19 15:53:26,525 runserver 21036 21848 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.81, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:53:29,950 middleware 21036 22628 GET /api/listings/8/ 200 - 3.404s
+INFO 2026-04-19 15:53:29,952 runserver 21036 21848 [mHTTP GET /api/listings/8/ 200 [3.41, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:53:30,024 middleware 21036 11660 GET /api/listings/14/ 200 - 3.478s
+INFO 2026-04-19 15:53:30,026 runserver 21036 21848 [mHTTP GET /api/listings/14/ 200 [3.48, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:53:39,003 middleware 21036 15968 GET /api/listings/ 200 - 3.526s
+INFO 2026-04-19 15:53:39,006 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [3.53, 127.0.0.1:53512][0m
+INFO 2026-04-19 15:53:42,471 middleware 21036 5360 GET /api/listings/ 200 - 3.450s
+INFO 2026-04-19 15:53:42,473 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [3.45, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:53:46,447 middleware 21036 22892 GET /api/listings/14/ 200 - 3.456s
+INFO 2026-04-19 15:53:46,449 runserver 21036 21848 [mHTTP GET /api/listings/14/ 200 [3.46, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:53:48,656 middleware 21036 21140 GET /api/favorites/14/check/ 200 - 2.181s
+INFO 2026-04-19 15:53:48,658 runserver 21036 21848 [mHTTP GET /api/favorites/14/check/ 200 [2.19, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:53:50,417 middleware 21036 22120 GET /api/mongolia/utility-estimate/ 200 - 1.738s
+INFO 2026-04-19 15:53:50,419 runserver 21036 21848 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.74, 127.0.0.1:49932][0m
+INFO 2026-04-19 15:55:01,001 middleware 21036 21428 GET /api/listings/ 200 - 3.411s
+INFO 2026-04-19 15:55:01,003 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [3.42, 127.0.0.1:52634][0m
+INFO 2026-04-19 15:55:08,221 middleware 21036 3188 GET /api/listings/ 200 - 3.457s
+INFO 2026-04-19 15:55:08,223 runserver 21036 21848 [mHTTP GET /api/listings/ 200 [3.46, 127.0.0.1:52634][0m
+INFO 2026-04-19 15:55:16,721 middleware 21036 22192 GET /api/listings/14/ 200 - 3.518s
+INFO 2026-04-19 15:55:16,723 runserver 21036 21848 [mHTTP GET /api/listings/14/ 200 [3.52, 127.0.0.1:52634][0m
+INFO 2026-04-19 15:55:18,914 middleware 21036 20952 GET /api/favorites/14/check/ 200 - 2.163s
+INFO 2026-04-19 15:55:18,916 runserver 21036 21848 [mHTTP GET /api/favorites/14/check/ 200 [2.17, 127.0.0.1:52634][0m
+INFO 2026-04-19 15:55:20,693 middleware 21036 13644 GET /api/mongolia/utility-estimate/ 200 - 1.764s
+INFO 2026-04-19 15:55:20,695 runserver 21036 21848 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.77, 127.0.0.1:52634][0m
