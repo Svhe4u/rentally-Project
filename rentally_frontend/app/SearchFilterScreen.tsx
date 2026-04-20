@@ -45,7 +45,16 @@ export default function SearchFilterScreen({ onNavigate }: Props) {
   };
 
   const applyFilters = () => {
-    onNavigate('map', { search: keyword, category, region, min_price: minPrice, max_price: maxPrice, price_type: priceType });
+    onNavigate('map', { 
+      search: keyword, 
+      category, 
+      region, 
+      min_price: minPrice, 
+      max_price: maxPrice, 
+      price_type: priceType,
+      min_area: minArea,
+      max_area: maxArea
+    });
   };
 
   return (

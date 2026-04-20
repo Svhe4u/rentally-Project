@@ -42,9 +42,11 @@ def _to_decimal(value, field_name="value"):
 class ListingService:
 
     @staticmethod
-    def get_listings_queryset(filters=None):
+    def get_listings_queryset(filters=None, ordering=None):
         """Get filtered listings queryset with optimized related data."""
-        queryset = Listing.objects.filter(status='active').select_related(
+        queryset = Listing.objects.filter(status='active').annotate(
+            favorite_count=Count('favorited_by')
+        ).select_related(
             'owner', 'category', 'region'
         ).prefetch_related('images', 'reviews')
 
@@ -54,14 +56,29 @@ class ListingService:
         if filters.get('search'):
             s = filters['search']
             queryset = queryset.filter(
-                Q(title__icontains=s) | Q(description__icontains=s) | Q(address__icontains=s)
+                Q(title__icontains=s) |
+                Q(description__icontains=s) |
+                Q(address__icontains=s) |
+                Q(owner__username__icontains=s) |
+                Q(owner__broker_profile__company_name__icontains=s) |
+                Q(region__name__icontains=s) |
+                Q(region__slug__icontains=s)
             )
 
         if filters.get('category_id'):
-            queryset = queryset.filter(category_id=filters['category_id'])
+            c_id = filters['category_id']
+            if str(c_id).isdigit():
+                queryset = queryset.filter(category_id=c_id)
+            else:
+                queryset = queryset.filter(Q(category__name__icontains=c_id) | Q(category__slug__icontains=c_id))
 
         if filters.get('region_id'):
-            queryset = queryset.filter(region_id=filters['region_id'])
+            r_id = filters['region_id']
+            if str(r_id).isdigit():
+                queryset = queryset.filter(region_id=r_id)
+            else:
+                # Support text IDs like 'songino' by matching against name or slug
+                queryset = queryset.filter(Q(region__name__icontains=r_id) | Q(region__slug__icontains=r_id))
 
         if filters.get('min_price') is not None:
             try:
@@ -77,6 +94,30 @@ class ListingService:
 
         if filters.get('is_featured'):
             queryset = queryset.filter(is_featured=True)
+
+        if filters.get('owner_id'):
+            queryset = queryset.filter(owner_id=filters['owner_id'])
+
+        if filters.get('price_type'):
+            queryset = queryset.filter(price_type=filters['price_type'])
+
+        if filters.get('bedrooms'):
+            queryset = queryset.filter(detail__bedrooms=filters['bedrooms'])
+
+        if filters.get('min_area'):
+            queryset = queryset.filter(detail__area_sqm__gte=filters['min_area'])
+        
+        if filters.get('max_area'):
+            queryset = queryset.filter(detail__area_sqm__lte=filters['max_area'])
+
+        if filters.get('created_after'):
+            queryset = queryset.filter(created_at__gte=filters['created_after'])
+
+        if ordering:
+            if isinstance(ordering, str):
+                queryset = queryset.order_by(ordering)
+            elif isinstance(ordering, (list, tuple)):
+                queryset = queryset.order_by(*ordering)
 
         return queryset
 
@@ -303,10 +344,7 @@ class ReviewService:
 
     @staticmethod
     def create_review(user, listing, data):
-        """Create a review if user hasn't reviewed this listing yet."""
-        if Review.objects.filter(user=user, listing=listing).exists():
-            raise ValueError("You have already reviewed this listing")
-
+        """Create or update a review."""
         rating = data.get('rating')
         try:
             rating = int(rating)
@@ -315,13 +353,16 @@ class ReviewService:
         except (TypeError, ValueError):
             raise ValueError("Rating must be a number between 1 and 5")
 
-        return Review.objects.create(
+        review, created = Review.objects.update_or_create(
             user=user,
             listing=listing,
-            rating=rating,
-            comment=data.get('comment'),
-            is_verified_booking=ReviewService.can_review(user, listing),
+            defaults={
+                'rating': rating,
+                'comment': data.get('comment'),
+                'is_verified_booking': ReviewService.can_review(user, listing),
+            }
         )
+        return review
 
     @staticmethod
     def get_listing_reviews(listing):
@@ -506,9 +547,9 @@ class PaymentService:
 class SearchService:
 
     @staticmethod
-    def search(filters, page=1, page_size=20):
+    def search(filters, page=1, page_size=20, ordering=None):
         """Search listings with pagination. Returns paginated results."""
-        queryset = ListingService.get_listings_queryset(filters)
+        queryset = ListingService.get_listings_queryset(filters, ordering)
         total_count = queryset.count()
         offset = (page - 1) * page_size
         # Use list() to evaluate queryset for serialization

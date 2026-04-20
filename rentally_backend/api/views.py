@@ -135,17 +135,25 @@ class ListingListAPIView(APIView):
     def get(self, request):
         filters = {
             'search':      request.query_params.get('search'),
-            'category_id': request.query_params.get('category_id'),
-            'region_id':   request.query_params.get('region_id'),
+            'category_id': request.query_params.get('category_id') or request.query_params.get('category'),
+            'region_id':   request.query_params.get('region_id') or request.query_params.get('region') or request.query_params.get('district'),
             'min_price':   request.query_params.get('min_price'),
             'max_price':   request.query_params.get('max_price'),
             'is_featured': request.query_params.get('is_featured') == 'true',
+            'owner_id':    request.query_params.get('owner_id'),
+            'created_after': request.query_params.get('created_after'),
+            'price_type': request.query_params.get('price_type'),
+            'min_area': request.query_params.get('min_area'),
+            'max_area': request.query_params.get('max_area'),
+            'bedrooms': request.query_params.get('bedrooms'),
         }
-        # Remove None/empty values
-        filters = {k: v for k, v in filters.items() if v}
+        ordering = request.query_params.get('ordering')
+        
+        # Remove None, empty, 'null', or 'undefined' values
+        filters = {k: v for k, v in filters.items() if v and str(v).lower() not in ['null', 'undefined', '']}
 
         page, page_size = get_pagination_params(request)
-        result = SearchService.search(filters, page, page_size)
+        result = SearchService.search(filters, page, page_size, ordering)
 
         serializer = ListingSerializer(result['results'], many=True)
         return Response({

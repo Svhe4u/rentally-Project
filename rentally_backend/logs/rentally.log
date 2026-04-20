@@ -9393,3 +9393,1734 @@ INFO 2026-04-19 15:55:18,914 middleware 21036 20952 GET /api/favorites/14/check/
 INFO 2026-04-19 15:55:18,916 runserver 21036 21848 [mHTTP GET /api/favorites/14/check/ 200 [2.17, 127.0.0.1:52634][0m
 INFO 2026-04-19 15:55:20,693 middleware 21036 13644 GET /api/mongolia/utility-estimate/ 200 - 1.764s
 INFO 2026-04-19 15:55:20,695 runserver 21036 21848 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.77, 127.0.0.1:52634][0m
+INFO 2026-04-20 11:11:47,477 autoreload 24156 20680 Watching for file changes with StatReloader
+INFO 2026-04-20 11:13:55,762 runserver 24156 23360 [mHTTP OPTIONS /api/regions/ 200 [0.01, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:13:55,763 runserver 24156 23360 [mHTTP OPTIONS /api/listings/?page_size=20 200 [0.01, 127.0.0.1:53886][0m
+INFO 2026-04-20 11:13:55,763 runserver 24156 23360 [mHTTP OPTIONS /api/favorites/?page=1&page_size=100 200 [0.01, 127.0.0.1:63923][0m
+INFO 2026-04-20 11:13:55,764 runserver 24156 23360 [mHTTP OPTIONS /api/categories/ 200 [0.01, 127.0.0.1:56105][0m
+INFO 2026-04-20 11:13:55,805 middleware 24156 19596 GET /api/listings/ 401 - 0.025s
+INFO 2026-04-20 11:13:55,805 middleware 24156 10564 GET /api/categories/ 401 - 0.025s
+INFO 2026-04-20 11:13:55,805 middleware 24156 21132 GET /api/favorites/ 401 - 0.026s
+INFO 2026-04-20 11:13:55,805 middleware 24156 21704 GET /api/regions/ 401 - 0.024s
+WARNING 2026-04-20 11:13:55,811 runserver 24156 23360 [31;1mHTTP GET /api/listings/?page_size=20 401 [0.04, 127.0.0.1:56105][0m
+WARNING 2026-04-20 11:13:55,812 runserver 24156 23360 [31;1mHTTP GET /api/categories/ 401 [0.04, 127.0.0.1:60727][0m
+WARNING 2026-04-20 11:13:55,812 runserver 24156 23360 [31;1mHTTP GET /api/favorites/?page=1&page_size=100 401 [0.04, 127.0.0.1:53886][0m
+WARNING 2026-04-20 11:13:55,814 runserver 24156 23360 [31;1mHTTP GET /api/regions/ 401 [0.05, 127.0.0.1:63923][0m
+INFO 2026-04-20 11:13:55,822 runserver 24156 23360 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.00, 127.0.0.1:63923][0m
+INFO 2026-04-20 11:13:55,823 runserver 24156 23360 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.00, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:13:55,824 runserver 24156 23360 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.01, 127.0.0.1:53886][0m
+INFO 2026-04-20 11:13:55,824 runserver 24156 23360 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.01, 127.0.0.1:56105][0m
+INFO 2026-04-20 11:13:57,589 middleware 24156 7800 POST /api/auth/token/refresh/ 200 - 1.753s
+INFO 2026-04-20 11:13:57,589 middleware 24156 20168 POST /api/auth/token/refresh/ 200 - 1.754s
+INFO 2026-04-20 11:13:57,589 middleware 24156 10612 POST /api/auth/token/refresh/ 200 - 1.754s
+INFO 2026-04-20 11:13:57,593 runserver 24156 23360 [mHTTP POST /api/auth/token/refresh/ 200 [1.76, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:13:57,593 runserver 24156 23360 [mHTTP POST /api/auth/token/refresh/ 200 [1.77, 127.0.0.1:56105][0m
+INFO 2026-04-20 11:13:57,594 runserver 24156 23360 [mHTTP POST /api/auth/token/refresh/ 200 [1.77, 127.0.0.1:63923][0m
+INFO 2026-04-20 11:13:57,610 middleware 24156 13648 POST /api/auth/token/refresh/ 200 - 1.775s
+INFO 2026-04-20 11:13:57,613 runserver 24156 23360 [mHTTP POST /api/auth/token/refresh/ 200 [1.78, 127.0.0.1:53886][0m
+INFO 2026-04-20 11:13:59,980 middleware 24156 17256 GET /api/categories/ 200 - 2.195s
+INFO 2026-04-20 11:13:59,983 runserver 24156 23360 [mHTTP GET /api/categories/ 200 [2.21, 127.0.0.1:63923][0m
+INFO 2026-04-20 11:14:00,659 middleware 24156 15740 GET /api/favorites/ 200 - 2.875s
+INFO 2026-04-20 11:14:00,662 runserver 24156 23360 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.89, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:14:01,260 middleware 24156 4820 GET /api/regions/ 200 - 3.475s
+INFO 2026-04-20 11:14:01,261 runserver 24156 23360 [mHTTP GET /api/regions/ 200 [3.49, 127.0.0.1:56105][0m
+INFO 2026-04-20 11:14:01,288 middleware 24156 15224 GET /api/listings/ 200 - 3.504s
+INFO 2026-04-20 11:14:01,290 runserver 24156 23360 [mHTTP GET /api/listings/?page_size=20 200 [3.52, 127.0.0.1:53886][0m
+INFO 2026-04-20 11:14:04,855 middleware 24156 18804 GET /api/favorites/ 200 - 2.808s
+INFO 2026-04-20 11:14:04,858 runserver 24156 23360 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.81, 127.0.0.1:53886][0m
+INFO 2026-04-20 11:14:04,886 runserver 24156 23360 [mHTTP OPTIONS /api/listings/8/ 200 [0.00, 127.0.0.1:56105][0m
+INFO 2026-04-20 11:14:04,887 runserver 24156 23360 [mHTTP OPTIONS /api/listings/14/ 200 [0.01, 127.0.0.1:53886][0m
+INFO 2026-04-20 11:14:06,343 runserver 24156 23360 [mHTTP OPTIONS /api/listings/ 200 [0.00, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:14:08,339 middleware 24156 16564 GET /api/listings/14/ 200 - 3.440s
+INFO 2026-04-20 11:14:08,340 middleware 24156 12844 GET /api/listings/8/ 200 - 3.441s
+INFO 2026-04-20 11:14:08,343 runserver 24156 23360 [mHTTP GET /api/listings/14/ 200 [3.45, 127.0.0.1:56105][0m
+INFO 2026-04-20 11:14:08,344 runserver 24156 23360 [mHTTP GET /api/listings/8/ 200 [3.45, 127.0.0.1:53886][0m
+INFO 2026-04-20 11:14:09,819 middleware 24156 7760 GET /api/listings/ 200 - 3.468s
+INFO 2026-04-20 11:14:09,821 runserver 24156 23360 [mHTTP GET /api/listings/ 200 [3.47, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:14:18,547 middleware 24156 4192 GET /api/listings/14/ 200 - 3.517s
+INFO 2026-04-20 11:14:18,549 runserver 24156 23360 [mHTTP GET /api/listings/14/ 200 [3.52, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:14:18,583 runserver 24156 23360 [mHTTP OPTIONS /api/favorites/14/check/ 200 [0.00, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:14:20,728 middleware 24156 3116 GET /api/favorites/14/check/ 200 - 2.140s
+INFO 2026-04-20 11:14:20,731 runserver 24156 23360 [mHTTP GET /api/favorites/14/check/ 200 [2.15, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:14:20,744 runserver 24156 23360 [mHTTP OPTIONS /api/mongolia/utility-estimate/?area_sqm=45 200 [0.00, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:14:22,523 middleware 24156 7816 GET /api/mongolia/utility-estimate/ 200 - 1.775s
+INFO 2026-04-20 11:14:22,525 runserver 24156 23360 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.78, 127.0.0.1:60727][0m
+INFO 2026-04-20 11:38:14,544 autoreload 24156 20680 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 11:38:16,199 autoreload 24560 22496 Watching for file changes with StatReloader
+INFO 2026-04-20 11:38:20,980 autoreload 24560 22496 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-20 11:38:22,059 autoreload 3848 23368 Watching for file changes with StatReloader
+INFO 2026-04-20 11:38:27,870 autoreload 3848 23368 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-20 11:38:29,095 autoreload 16972 21444 Watching for file changes with StatReloader
+INFO 2026-04-20 11:41:39,199 autoreload 16972 21444 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-20 11:41:40,343 autoreload 11140 20652 Watching for file changes with StatReloader
+INFO 2026-04-20 11:42:21,958 middleware 11140 22068 GET /api/listings/ 200 - 3.592s
+INFO 2026-04-20 11:42:21,961 runserver 11140 19700 [mHTTP GET /api/listings/ 200 [3.60, 127.0.0.1:58278][0m
+INFO 2026-04-20 11:42:28,511 middleware 11140 4732 GET /api/listings/14/ 200 - 3.895s
+INFO 2026-04-20 11:42:28,514 runserver 11140 19700 [mHTTP GET /api/listings/14/ 200 [3.90, 127.0.0.1:58278][0m
+INFO 2026-04-20 11:42:30,725 middleware 11140 21956 GET /api/favorites/14/check/ 200 - 2.189s
+INFO 2026-04-20 11:42:30,727 runserver 11140 19700 [mHTTP GET /api/favorites/14/check/ 200 [2.19, 127.0.0.1:58278][0m
+INFO 2026-04-20 11:42:32,495 middleware 11140 1256 GET /api/mongolia/utility-estimate/ 200 - 1.731s
+INFO 2026-04-20 11:42:32,497 runserver 11140 19700 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.74, 127.0.0.1:58278][0m
+INFO 2026-04-20 11:42:32,513 runserver 11140 19700 [mHTTP OPTIONS /api/listings/?owner_id=18&page_size=6 200 [0.00, 127.0.0.1:58278][0m
+INFO 2026-04-20 11:42:35,520 middleware 11140 13936 GET /api/listings/ 200 - 3.002s
+INFO 2026-04-20 11:42:35,522 runserver 11140 19700 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.01, 127.0.0.1:58278][0m
+INFO 2026-04-20 11:43:01,401 middleware 11140 22088 GET / 404 - 0.033s
+WARNING 2026-04-20 11:43:01,405 runserver 11140 19700 [33mHTTP GET / 404 [0.05, 127.0.0.1:58307][0m
+INFO 2026-04-20 11:43:03,824 middleware 11140 19460 GET /admin/ 302 - 0.018s
+INFO 2026-04-20 11:43:03,825 runserver 11140 19700 [32mHTTP GET /admin/ 302 [0.02, 127.0.0.1:58307][0m
+INFO 2026-04-20 11:43:03,943 middleware 11140 5036 GET /admin/login/ 200 - 0.112s
+INFO 2026-04-20 11:43:03,945 runserver 11140 19700 [mHTTP GET /admin/login/?next=/admin/ 200 [0.12, 127.0.0.1:58307][0m
+INFO 2026-04-20 11:43:04,083 runserver 11140 19700 [mHTTP GET /static/admin/css/dark_mode.css 200 [0.13, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:04,085 runserver 11140 19700 [mHTTP GET /static/admin/css/base.css 200 [0.13, 127.0.0.1:58307][0m
+INFO 2026-04-20 11:43:04,088 runserver 11140 19700 [mHTTP GET /static/admin/js/theme.js 200 [0.13, 127.0.0.1:53725][0m
+INFO 2026-04-20 11:43:04,097 runserver 11140 19700 [mHTTP GET /static/admin/css/nav_sidebar.css 200 [0.01, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:04,098 runserver 11140 19700 [mHTTP GET /static/admin/css/login.css 200 [0.01, 127.0.0.1:58307][0m
+INFO 2026-04-20 11:43:04,102 runserver 11140 19700 [mHTTP GET /static/admin/css/responsive.css 200 [0.01, 127.0.0.1:53725][0m
+INFO 2026-04-20 11:43:04,118 runserver 11140 19700 [mHTTP GET /static/admin/js/nav_sidebar.js 200 [0.02, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:11,424 middleware 11140 16876 POST /admin/login/ 302 - 2.926s
+INFO 2026-04-20 11:43:11,426 runserver 11140 19700 [32mHTTP POST /admin/login/?next=/admin/ 302 [2.93, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:13,686 middleware 11140 11888 GET /admin/ 200 - 2.254s
+INFO 2026-04-20 11:43:13,688 runserver 11140 19700 [mHTTP GET /admin/ 200 [2.26, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:13,734 runserver 11140 19700 [mHTTP GET /static/admin/css/dashboard.css 200 [0.01, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:13,772 runserver 11140 19700 [mHTTP GET /static/admin/img/icon-addlink.svg 200 [0.02, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:13,778 runserver 11140 19700 [mHTTP GET /static/admin/img/icon-changelink.svg 200 [0.01, 127.0.0.1:53725][0m
+INFO 2026-04-20 11:43:13,801 runserver 11140 19700 [mHTTP GET /static/admin/img/icon-deletelink.svg 200 [0.02, 127.0.0.1:58307][0m
+INFO 2026-04-20 11:43:24,043 middleware 11140 18628 GET /admin/api/brokerprofile/ 200 - 2.639s
+INFO 2026-04-20 11:43:24,045 runserver 11140 19700 [mHTTP GET /admin/api/brokerprofile/ 200 [2.64, 127.0.0.1:58307][0m
+INFO 2026-04-20 11:43:24,136 runserver 11140 19700 [mHTTP GET /static/admin/css/changelists.css 200 [0.05, 127.0.0.1:58307][0m
+INFO 2026-04-20 11:43:24,156 runserver 11140 19700 [mHTTP GET /static/admin/js/jquery.init.js 200 [0.05, 127.0.0.1:50289][0m
+INFO 2026-04-20 11:43:24,169 runserver 11140 19700 [mHTTP GET /static/admin/js/core.js 200 [0.06, 127.0.0.1:64507][0m
+INFO 2026-04-20 11:43:24,177 runserver 11140 19700 [mHTTP GET /static/admin/js/admin/RelatedObjectLookups.js 200 [0.06, 127.0.0.1:64208][0m
+INFO 2026-04-20 11:43:24,197 runserver 11140 19700 [mHTTP GET /static/admin/js/urlify.js 200 [0.04, 127.0.0.1:50289][0m
+INFO 2026-04-20 11:43:24,203 runserver 11140 19700 [mHTTP GET /static/admin/js/actions.js 200 [0.05, 127.0.0.1:58307][0m
+INFO 2026-04-20 11:43:24,203 runserver 11140 19700 [mHTTP GET /static/admin/js/vendor/jquery/jquery.js 200 [0.11, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:24,204 runserver 11140 19700 [mHTTP GET /static/admin/js/prepopulate.js 200 [0.03, 127.0.0.1:64507][0m
+INFO 2026-04-20 11:43:24,216 runserver 11140 19700 [mHTTP GET /static/admin/img/search.svg 200 [0.02, 127.0.0.1:50289][0m
+INFO 2026-04-20 11:43:24,280 runserver 11140 19700 [mHTTP GET /static/admin/js/vendor/xregexp/xregexp.js 200 [0.09, 127.0.0.1:64208][0m
+INFO 2026-04-20 11:43:24,318 runserver 11140 19700 [mHTTP GET /static/admin/js/filters.js 200 [0.03, 127.0.0.1:64208][0m
+INFO 2026-04-20 11:43:25,903 middleware 11140 15820 GET /admin/jsi18n/ 200 - 1.764s
+INFO 2026-04-20 11:43:25,905 runserver 11140 19700 [mHTTP GET /admin/jsi18n/ 200 [1.82, 127.0.0.1:53725][0m
+INFO 2026-04-20 11:43:25,943 runserver 11140 19700 [mHTTP GET /static/admin/img/tooltag-add.svg 200 [0.01, 127.0.0.1:53725][0m
+INFO 2026-04-20 11:43:25,943 runserver 11140 19700 [mHTTP GET /static/admin/img/icon-viewlink.svg 200 [0.01, 127.0.0.1:64208][0m
+INFO 2026-04-20 11:43:42,115 middleware 11140 18800 GET /admin/api/brokerprofile/18/change/ 200 - 3.382s
+INFO 2026-04-20 11:43:42,117 runserver 11140 19700 [mHTTP GET /admin/api/brokerprofile/18/change/ 200 [3.39, 127.0.0.1:64208][0m
+INFO 2026-04-20 11:43:42,155 runserver 11140 19700 [mHTTP GET /static/admin/css/forms.css 200 [0.02, 127.0.0.1:64208][0m
+INFO 2026-04-20 11:43:42,160 runserver 11140 19700 [mHTTP GET /static/admin/js/prepopulate_init.js 200 [0.02, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:42,168 runserver 11140 19700 [mHTTP GET /static/admin/js/admin/DateTimeShortcuts.js 200 [0.03, 127.0.0.1:50289][0m
+INFO 2026-04-20 11:43:42,168 runserver 11140 19700 [mHTTP GET /static/admin/js/calendar.js 200 [0.03, 127.0.0.1:53725][0m
+INFO 2026-04-20 11:43:42,185 runserver 11140 19700 [mHTTP GET /static/admin/css/widgets.css 200 [0.01, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:42,206 runserver 11140 19700 [mHTTP GET /static/admin/js/change_form.js 200 [0.01, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:43,856 middleware 11140 22088 GET /admin/jsi18n/ 200 - 1.712s
+INFO 2026-04-20 11:43:43,858 runserver 11140 19700 [mHTTP GET /admin/jsi18n/ 200 [1.72, 127.0.0.1:64507][0m
+INFO 2026-04-20 11:43:43,919 runserver 11140 19700 [mHTTP GET /static/admin/img/icon-clock.svg 200 [0.02, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:43:43,920 runserver 11140 19700 [mHTTP GET /static/admin/img/icon-calendar.svg 200 [0.02, 127.0.0.1:64507][0m
+INFO 2026-04-20 11:44:05,566 middleware 11140 23368 POST /admin/api/brokerprofile/18/change/ 302 - 3.762s
+INFO 2026-04-20 11:44:05,570 runserver 11140 19700 [32mHTTP POST /admin/api/brokerprofile/18/change/ 302 [3.77, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:44:07,989 middleware 11140 21484 GET /admin/api/brokerprofile/ 200 - 2.414s
+INFO 2026-04-20 11:44:07,991 runserver 11140 19700 [mHTTP GET /admin/api/brokerprofile/ 200 [2.42, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:44:09,759 middleware 11140 2724 GET /admin/jsi18n/ 200 - 1.743s
+INFO 2026-04-20 11:44:09,762 runserver 11140 19700 [mHTTP GET /admin/jsi18n/ 200 [1.75, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:44:09,785 runserver 11140 19700 [mHTTP GET /static/admin/img/icon-yes-dark.svg 200 [0.01, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:44:18,163 middleware 11140 23096 GET /api/listings/14/ 200 - 3.833s
+INFO 2026-04-20 11:44:18,166 runserver 11140 19700 [mHTTP GET /api/listings/14/ 200 [3.84, 127.0.0.1:64254][0m
+INFO 2026-04-20 11:44:20,362 middleware 11140 8024 GET /api/favorites/14/check/ 200 - 2.170s
+INFO 2026-04-20 11:44:20,364 runserver 11140 19700 [mHTTP GET /api/favorites/14/check/ 200 [2.17, 127.0.0.1:64254][0m
+INFO 2026-04-20 11:44:22,119 middleware 11140 2560 GET /api/mongolia/utility-estimate/ 200 - 1.738s
+INFO 2026-04-20 11:44:22,121 runserver 11140 19700 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.74, 127.0.0.1:64254][0m
+INFO 2026-04-20 11:44:25,134 middleware 11140 20848 GET /api/listings/ 200 - 2.996s
+INFO 2026-04-20 11:44:25,136 runserver 11140 19700 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.00, 127.0.0.1:64254][0m
+INFO 2026-04-20 11:44:48,196 middleware 11140 21724 GET /admin/api/listing/ 200 - 4.952s
+INFO 2026-04-20 11:44:48,199 runserver 11140 19700 [mHTTP GET /admin/api/listing/ 200 [4.96, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:44:49,969 middleware 11140 23168 GET /admin/jsi18n/ 200 - 1.745s
+INFO 2026-04-20 11:44:49,971 runserver 11140 19700 [mHTTP GET /admin/jsi18n/ 200 [1.75, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:44:49,998 runserver 11140 19700 [mHTTP GET /static/admin/img/sorting-icons.svg 200 [0.02, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:45:10,333 middleware 11140 23916 GET /admin/api/listing/add/ 200 - 4.706s
+INFO 2026-04-20 11:45:10,335 runserver 11140 19700 [mHTTP GET /admin/api/listing/add/ 200 [4.71, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:45:10,387 runserver 11140 19700 [mHTTP GET /static/admin/js/inlines.js 200 [0.03, 127.0.0.1:52117][0m
+INFO 2026-04-20 11:45:12,079 middleware 11140 13360 GET /admin/jsi18n/ 200 - 1.718s
+INFO 2026-04-20 11:45:12,081 runserver 11140 19700 [mHTTP GET /admin/jsi18n/ 200 [1.72, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:45:12,131 runserver 11140 19700 [mHTTP GET /static/admin/img/inline-delete.svg 200 [0.02, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:46:00,801 middleware 11140 7516 POST /admin/api/listing/add/ 200 - 6.277s
+INFO 2026-04-20 11:46:00,803 runserver 11140 19700 [mHTTP POST /admin/api/listing/add/ 200 [6.28, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:46:02,605 middleware 11140 7808 GET /admin/jsi18n/ 200 - 1.768s
+INFO 2026-04-20 11:46:02,607 runserver 11140 19700 [mHTTP GET /admin/jsi18n/ 200 [1.78, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:46:12,416 middleware 11140 9128 POST /admin/api/listing/add/ 302 - 4.075s
+INFO 2026-04-20 11:46:12,418 runserver 11140 19700 [32mHTTP POST /admin/api/listing/add/ 302 [4.08, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:46:17,821 middleware 11140 8660 GET /admin/api/listing/ 200 - 5.397s
+INFO 2026-04-20 11:46:17,824 runserver 11140 19700 [mHTTP GET /admin/api/listing/ 200 [5.40, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:46:19,557 middleware 11140 3028 GET /admin/jsi18n/ 200 - 1.709s
+INFO 2026-04-20 11:46:19,559 runserver 11140 19700 [mHTTP GET /admin/jsi18n/ 200 [1.71, 127.0.0.1:58031][0m
+INFO 2026-04-20 11:46:31,225 middleware 11140 11008 GET /api/categories/ 200 - 2.137s
+INFO 2026-04-20 11:46:31,227 runserver 11140 19700 [mHTTP GET /api/categories/ 200 [2.15, 127.0.0.1:53100][0m
+INFO 2026-04-20 11:46:31,854 middleware 11140 15608 GET /api/favorites/ 200 - 2.766s
+INFO 2026-04-20 11:46:31,856 runserver 11140 19700 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.78, 127.0.0.1:50440][0m
+INFO 2026-04-20 11:46:32,513 middleware 11140 2004 GET /api/regions/ 200 - 3.426s
+INFO 2026-04-20 11:46:32,515 runserver 11140 19700 [mHTTP GET /api/regions/ 200 [3.44, 127.0.0.1:50382][0m
+INFO 2026-04-20 11:46:32,923 middleware 11140 23820 GET /api/listings/ 200 - 3.836s
+INFO 2026-04-20 11:46:32,925 runserver 11140 19700 [mHTTP GET /api/listings/?page_size=20 200 [3.85, 127.0.0.1:63506][0m
+INFO 2026-04-20 11:46:41,785 middleware 11140 6984 GET /api/listings/ 200 - 3.947s
+INFO 2026-04-20 11:46:41,787 runserver 11140 19700 [mHTTP GET /api/listings/ 200 [3.95, 127.0.0.1:63506][0m
+INFO 2026-04-20 11:46:47,893 middleware 11140 23724 GET /api/listings/14/ 200 - 3.892s
+INFO 2026-04-20 11:46:47,896 runserver 11140 19700 [mHTTP GET /api/listings/14/ 200 [3.90, 127.0.0.1:63506][0m
+INFO 2026-04-20 11:46:50,105 middleware 11140 4192 GET /api/favorites/14/check/ 200 - 2.150s
+INFO 2026-04-20 11:46:50,107 runserver 11140 19700 [mHTTP GET /api/favorites/14/check/ 200 [2.17, 127.0.0.1:63506][0m
+INFO 2026-04-20 11:46:51,882 middleware 11140 13756 GET /api/mongolia/utility-estimate/ 200 - 1.762s
+INFO 2026-04-20 11:46:51,884 runserver 11140 19700 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.77, 127.0.0.1:63506][0m
+INFO 2026-04-20 11:46:51,916 middleware 11140 6656 GET /api/listings/14/ 200 - 3.993s
+INFO 2026-04-20 11:46:51,918 runserver 11140 19700 [mHTTP GET /api/listings/14/ 200 [4.01, 127.0.0.1:50382][0m
+INFO 2026-04-20 11:46:54,110 middleware 11140 10356 GET /api/favorites/14/check/ 200 - 2.166s
+INFO 2026-04-20 11:46:54,112 runserver 11140 19700 [mHTTP GET /api/favorites/14/check/ 200 [2.17, 127.0.0.1:50382][0m
+INFO 2026-04-20 11:46:55,301 middleware 11140 19744 GET /api/listings/ 200 - 3.401s
+INFO 2026-04-20 11:46:55,303 runserver 11140 19700 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.41, 127.0.0.1:63506][0m
+INFO 2026-04-20 11:46:55,852 middleware 11140 4860 GET /api/mongolia/utility-estimate/ 200 - 1.721s
+INFO 2026-04-20 11:46:55,854 runserver 11140 19700 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.73, 127.0.0.1:50382][0m
+INFO 2026-04-20 11:46:59,324 middleware 11140 22036 GET /api/listings/ 200 - 3.442s
+INFO 2026-04-20 11:46:59,326 runserver 11140 19700 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.45, 127.0.0.1:50382][0m
+INFO 2026-04-20 11:48:19,356 middleware 11140 6884 GET /api/listings/14/ 200 - 3.830s
+INFO 2026-04-20 11:48:19,358 runserver 11140 19700 [mHTTP GET /api/listings/14/ 200 [3.85, 127.0.0.1:62920][0m
+INFO 2026-04-20 11:48:21,558 middleware 11140 22692 GET /api/favorites/14/check/ 200 - 2.175s
+INFO 2026-04-20 11:48:21,561 runserver 11140 19700 [mHTTP GET /api/favorites/14/check/ 200 [2.18, 127.0.0.1:62920][0m
+INFO 2026-04-20 11:48:23,515 middleware 11140 17592 GET /api/mongolia/utility-estimate/ 200 - 1.944s
+INFO 2026-04-20 11:48:23,517 runserver 11140 19700 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.95, 127.0.0.1:62920][0m
+INFO 2026-04-20 11:48:26,994 middleware 11140 22020 GET /api/listings/ 200 - 3.457s
+INFO 2026-04-20 11:48:26,996 runserver 11140 19700 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.46, 127.0.0.1:62920][0m
+INFO 2026-04-20 11:49:00,403 autoreload 11140 20652 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-20 11:49:01,661 autoreload 22824 4732 Watching for file changes with StatReloader
+INFO 2026-04-20 11:50:17,835 autoreload 22824 4732 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-20 11:50:18,878 autoreload 21752 22028 Watching for file changes with StatReloader
+INFO 2026-04-20 11:50:31,671 middleware 21752 24564 GET /api/listings/14/ 200 - 3.920s
+INFO 2026-04-20 11:50:31,673 runserver 21752 19832 [mHTTP GET /api/listings/14/ 200 [3.93, 127.0.0.1:56046][0m
+INFO 2026-04-20 11:50:33,822 middleware 21752 17692 GET /api/favorites/14/check/ 200 - 2.130s
+INFO 2026-04-20 11:50:33,824 runserver 21752 19832 [mHTTP GET /api/favorites/14/check/ 200 [2.13, 127.0.0.1:56046][0m
+INFO 2026-04-20 11:50:35,581 middleware 21752 11552 GET /api/mongolia/utility-estimate/ 200 - 1.748s
+INFO 2026-04-20 11:50:35,583 runserver 21752 19832 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.75, 127.0.0.1:56046][0m
+INFO 2026-04-20 11:50:39,009 middleware 21752 13612 GET /api/listings/ 200 - 3.406s
+INFO 2026-04-20 11:50:39,011 runserver 21752 19832 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.41, 127.0.0.1:56046][0m
+INFO 2026-04-20 11:51:50,111 middleware 21752 23244 GET /api/categories/ 200 - 2.168s
+INFO 2026-04-20 11:51:50,116 runserver 21752 19832 [mHTTP GET /api/categories/ 200 [2.18, 127.0.0.1:56422][0m
+INFO 2026-04-20 11:51:50,763 middleware 21752 23956 GET /api/favorites/ 200 - 2.820s
+INFO 2026-04-20 11:51:50,765 runserver 21752 19832 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.83, 127.0.0.1:53976][0m
+INFO 2026-04-20 11:51:51,394 middleware 21752 8660 GET /api/regions/ 200 - 3.450s
+INFO 2026-04-20 11:51:51,395 runserver 21752 19832 [mHTTP GET /api/regions/ 200 [3.46, 127.0.0.1:61236][0m
+INFO 2026-04-20 11:51:51,847 middleware 21752 13784 GET /api/listings/ 200 - 3.904s
+INFO 2026-04-20 11:51:51,849 runserver 21752 19832 [mHTTP GET /api/listings/?page_size=20 200 [3.92, 127.0.0.1:55720][0m
+INFO 2026-04-20 11:51:53,545 middleware 21752 8104 GET /api/listings/ 200 - 3.894s
+INFO 2026-04-20 11:51:53,547 runserver 21752 19832 [mHTTP GET /api/listings/ 200 [3.90, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:51:59,393 middleware 21752 19700 GET /api/listings/14/ 200 - 3.872s
+INFO 2026-04-20 11:51:59,395 runserver 21752 19832 [mHTTP GET /api/listings/14/ 200 [3.88, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:01,588 middleware 21752 3932 GET /api/favorites/14/check/ 200 - 2.170s
+INFO 2026-04-20 11:52:01,590 runserver 21752 19832 [mHTTP GET /api/favorites/14/check/ 200 [2.17, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:03,368 middleware 21752 6984 GET /api/mongolia/utility-estimate/ 200 - 1.761s
+INFO 2026-04-20 11:52:03,370 runserver 21752 19832 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.77, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:06,842 middleware 21752 3764 GET /api/listings/ 200 - 3.463s
+INFO 2026-04-20 11:52:06,844 runserver 21752 19832 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.47, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:12,978 runserver 21752 19832 [mHTTP OPTIONS /api/reviews/ 200 [0.00, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:15,590 middleware 21752 14060 POST /api/reviews/ 201 - 2.600s
+INFO 2026-04-20 11:52:15,592 runserver 21752 19832 [mHTTP POST /api/reviews/ 201 [2.61, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:19,703 middleware 21752 7760 GET /api/listings/14/ 200 - 4.091s
+INFO 2026-04-20 11:52:19,705 runserver 21752 19832 [mHTTP GET /api/listings/14/ 200 [4.10, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:21,933 middleware 21752 10512 GET /api/favorites/14/check/ 200 - 2.207s
+INFO 2026-04-20 11:52:21,935 runserver 21752 19832 [mHTTP GET /api/favorites/14/check/ 200 [2.21, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:23,677 middleware 21752 3172 GET /api/mongolia/utility-estimate/ 200 - 1.735s
+INFO 2026-04-20 11:52:23,679 runserver 21752 19832 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.74, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:27,104 middleware 21752 4908 GET /api/listings/ 200 - 3.410s
+INFO 2026-04-20 11:52:27,106 runserver 21752 19832 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.42, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:57,489 middleware 21752 20800 GET /api/listings/14/ 200 - 4.075s
+INFO 2026-04-20 11:52:57,490 runserver 21752 19832 [mHTTP GET /api/listings/14/ 200 [4.08, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:52:59,990 middleware 21752 10588 GET /api/favorites/14/check/ 200 - 2.169s
+INFO 2026-04-20 11:52:59,992 runserver 21752 19832 [mHTTP GET /api/favorites/14/check/ 200 [2.17, 127.0.0.1:63531][0m
+INFO 2026-04-20 11:53:01,635 middleware 21752 20792 GET /api/listings/14/ 200 - 4.121s
+INFO 2026-04-20 11:53:01,637 runserver 21752 19832 [mHTTP GET /api/listings/14/ 200 [4.13, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:53:01,707 middleware 21752 23940 GET /api/mongolia/utility-estimate/ 200 - 1.689s
+INFO 2026-04-20 11:53:01,709 runserver 21752 19832 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.69, 127.0.0.1:63531][0m
+INFO 2026-04-20 11:53:03,771 middleware 21752 18196 GET /api/favorites/14/check/ 200 - 2.110s
+INFO 2026-04-20 11:53:03,773 runserver 21752 19832 [mHTTP GET /api/favorites/14/check/ 200 [2.11, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:53:05,187 middleware 21752 24044 GET /api/listings/ 200 - 3.465s
+INFO 2026-04-20 11:53:05,189 runserver 21752 19832 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.47, 127.0.0.1:63531][0m
+INFO 2026-04-20 11:53:05,497 middleware 21752 15540 GET /api/mongolia/utility-estimate/ 200 - 1.703s
+INFO 2026-04-20 11:53:05,499 runserver 21752 19832 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.71, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:53:08,986 middleware 21752 5140 GET /api/listings/ 200 - 3.466s
+INFO 2026-04-20 11:53:08,987 runserver 21752 19832 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.47, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:54:13,415 middleware 21752 11704 GET /api/listings/14/ 200 - 4.536s
+INFO 2026-04-20 11:54:13,419 runserver 21752 19832 [mHTTP GET /api/listings/14/ 200 [4.54, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:54:15,649 middleware 21752 2980 GET /api/favorites/14/check/ 200 - 2.201s
+INFO 2026-04-20 11:54:15,651 runserver 21752 19832 [mHTTP GET /api/favorites/14/check/ 200 [2.21, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:54:17,450 middleware 21752 6840 GET /api/mongolia/utility-estimate/ 200 - 1.772s
+INFO 2026-04-20 11:54:17,453 runserver 21752 19832 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.78, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:54:20,957 middleware 21752 5492 GET /api/listings/ 200 - 3.484s
+INFO 2026-04-20 11:54:20,959 runserver 21752 19832 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.49, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:54:28,549 middleware 21752 17708 POST /api/reviews/ 409 - 2.152s
+WARNING 2026-04-20 11:54:28,553 runserver 21752 19832 [31;1mHTTP POST /api/reviews/ 409 [2.16, 127.0.0.1:64586][0m
+INFO 2026-04-20 11:58:31,837 middleware 21752 21672 POST /api/reviews/ 409 - 2.804s
+WARNING 2026-04-20 11:58:31,839 runserver 21752 19832 [31;1mHTTP POST /api/reviews/ 409 [2.81, 127.0.0.1:49347][0m
+INFO 2026-04-20 11:58:57,418 autoreload 21752 22028 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 11:58:58,605 autoreload 19604 10696 Watching for file changes with StatReloader
+INFO 2026-04-20 11:59:50,977 autoreload 19604 10696 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-20 11:59:52,074 autoreload 11084 24180 Watching for file changes with StatReloader
+INFO 2026-04-20 12:00:02,001 autoreload 11084 24180 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py changed, reloading.
+INFO 2026-04-20 12:00:03,144 autoreload 20800 20792 Watching for file changes with StatReloader
+INFO 2026-04-20 12:00:20,558 middleware 20800 7324 POST /api/reviews/ 201 - 3.512s
+INFO 2026-04-20 12:00:20,560 runserver 20800 24144 [mHTTP POST /api/reviews/ 201 [3.52, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:00:24,681 middleware 20800 11140 GET /api/listings/14/ 200 - 4.100s
+INFO 2026-04-20 12:00:24,684 runserver 20800 24144 [mHTTP GET /api/listings/14/ 200 [4.11, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:00:26,846 middleware 20800 22380 GET /api/favorites/14/check/ 200 - 2.125s
+INFO 2026-04-20 12:00:26,848 runserver 20800 24144 [mHTTP GET /api/favorites/14/check/ 200 [2.13, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:00:28,626 middleware 20800 4244 GET /api/mongolia/utility-estimate/ 200 - 1.766s
+INFO 2026-04-20 12:00:28,629 runserver 20800 24144 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.77, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:00:32,108 middleware 20800 22432 GET /api/listings/ 200 - 3.460s
+INFO 2026-04-20 12:00:32,110 runserver 20800 24144 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.46, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:01:33,990 middleware 20800 2724 GET /api/categories/ 200 - 2.154s
+INFO 2026-04-20 12:01:33,992 runserver 20800 24144 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:49950][0m
+INFO 2026-04-20 12:01:34,632 middleware 20800 400 GET /api/favorites/ 200 - 2.792s
+INFO 2026-04-20 12:01:34,635 runserver 20800 24144 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.80, 127.0.0.1:60834][0m
+INFO 2026-04-20 12:01:35,251 middleware 20800 23464 GET /api/regions/ 200 - 3.415s
+INFO 2026-04-20 12:01:35,253 runserver 20800 24144 [mHTTP GET /api/regions/ 200 [3.42, 127.0.0.1:56286][0m
+INFO 2026-04-20 12:01:35,348 middleware 20800 19552 GET /api/listings/ 200 - 3.821s
+INFO 2026-04-20 12:01:35,350 runserver 20800 24144 [mHTTP GET /api/listings/?page_size=20 200 [3.83, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:01:47,998 middleware 20800 624 GET /api/listings/ 200 - 3.843s
+INFO 2026-04-20 12:01:48,000 runserver 20800 24144 [mHTTP GET /api/listings/ 200 [3.85, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:01:53,971 middleware 20800 15548 GET /api/listings/14/ 200 - 4.037s
+INFO 2026-04-20 12:01:53,973 runserver 20800 24144 [mHTTP GET /api/listings/14/ 200 [4.04, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:01:56,164 middleware 20800 9152 GET /api/favorites/14/check/ 200 - 2.157s
+INFO 2026-04-20 12:01:56,166 runserver 20800 24144 [mHTTP GET /api/favorites/14/check/ 200 [2.16, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:01:57,880 middleware 20800 1756 GET /api/mongolia/utility-estimate/ 200 - 1.690s
+INFO 2026-04-20 12:01:57,882 runserver 20800 24144 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.69, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:02:01,334 middleware 20800 20680 GET /api/listings/ 200 - 3.427s
+INFO 2026-04-20 12:02:01,336 runserver 20800 24144 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.43, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:02:58,956 middleware 20800 23624 GET /api/categories/ 200 - 2.112s
+INFO 2026-04-20 12:02:58,959 runserver 20800 24144 [mHTTP GET /api/categories/ 200 [2.12, 127.0.0.1:61565][0m
+INFO 2026-04-20 12:02:59,598 middleware 20800 7748 GET /api/favorites/ 200 - 2.754s
+INFO 2026-04-20 12:02:59,600 runserver 20800 24144 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.76, 127.0.0.1:49502][0m
+INFO 2026-04-20 12:03:00,222 middleware 20800 10720 GET /api/regions/ 200 - 3.378s
+INFO 2026-04-20 12:03:00,224 runserver 20800 24144 [mHTTP GET /api/regions/ 200 [3.39, 127.0.0.1:57488][0m
+INFO 2026-04-20 12:03:00,421 middleware 20800 5468 GET /api/listings/ 200 - 3.887s
+INFO 2026-04-20 12:03:00,423 runserver 20800 24144 [mHTTP GET /api/listings/?page_size=20 200 [3.89, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:03:44,138 middleware 20800 14824 GET /api/listings/ 200 - 3.850s
+INFO 2026-04-20 12:03:44,140 runserver 20800 24144 [mHTTP GET /api/listings/ 200 [3.86, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:03:54,792 runserver 20800 24144 [mHTTP OPTIONS /api/profile/ 200 [0.00, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:03:56,895 middleware 20800 23444 GET /api/profile/ 200 - 2.098s
+INFO 2026-04-20 12:03:56,897 runserver 20800 24144 [mHTTP GET /api/profile/ 200 [2.10, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:04:00,867 middleware 20800 17216 GET /api/listings/14/ 200 - 3.959s
+INFO 2026-04-20 12:04:00,870 runserver 20800 24144 [mHTTP GET /api/listings/14/ 200 [3.96, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:04:04,190 middleware 20800 7516 GET /api/favorites/14/check/ 200 - 3.294s
+INFO 2026-04-20 12:04:04,192 runserver 20800 24144 [mHTTP GET /api/favorites/14/check/ 200 [3.30, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:04:06,913 middleware 20800 2984 GET /api/mongolia/utility-estimate/ 200 - 2.702s
+INFO 2026-04-20 12:04:06,915 runserver 20800 24144 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [2.71, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:04:12,185 middleware 20800 23656 GET /api/listings/ 200 - 5.255s
+INFO 2026-04-20 12:04:12,187 runserver 20800 24144 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [5.26, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:04:23,633 middleware 20800 23648 GET /api/profile/ 200 - 2.173s
+INFO 2026-04-20 12:04:23,635 runserver 20800 24144 [mHTTP GET /api/profile/ 200 [2.18, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:04:27,761 middleware 20800 22384 GET /api/listings/14/ 200 - 4.107s
+INFO 2026-04-20 12:04:27,763 runserver 20800 24144 [mHTTP GET /api/listings/14/ 200 [4.11, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:04:29,973 middleware 20800 9732 GET /api/favorites/14/check/ 200 - 2.187s
+INFO 2026-04-20 12:04:29,975 runserver 20800 24144 [mHTTP GET /api/favorites/14/check/ 200 [2.19, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:04:32,045 middleware 20800 4640 GET /api/mongolia/utility-estimate/ 200 - 2.054s
+INFO 2026-04-20 12:04:32,048 runserver 20800 24144 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [2.06, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:04:36,567 middleware 20800 19068 GET /api/listings/ 200 - 4.503s
+INFO 2026-04-20 12:04:36,569 runserver 20800 24144 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [4.51, 127.0.0.1:53208][0m
+INFO 2026-04-20 12:30:04,157 middleware 20800 19576 GET /api/profile/ 401 - 0.007s
+WARNING 2026-04-20 12:30:04,162 runserver 20800 24144 [31;1mHTTP GET /api/profile/ 401 [0.02, 127.0.0.1:51423][0m
+INFO 2026-04-20 12:30:07,566 middleware 20800 13196 POST /api/auth/token/refresh/ 200 - 2.816s
+INFO 2026-04-20 12:30:07,568 runserver 20800 24144 [mHTTP POST /api/auth/token/refresh/ 200 [2.82, 127.0.0.1:51423][0m
+INFO 2026-04-20 12:30:09,823 middleware 20800 23284 GET /api/profile/ 200 - 2.210s
+INFO 2026-04-20 12:30:09,825 runserver 20800 24144 [mHTTP GET /api/profile/ 200 [2.22, 127.0.0.1:51423][0m
+INFO 2026-04-20 12:30:14,087 middleware 20800 21600 GET /api/listings/14/ 200 - 4.249s
+INFO 2026-04-20 12:30:14,089 runserver 20800 24144 [mHTTP GET /api/listings/14/ 200 [4.25, 127.0.0.1:51423][0m
+INFO 2026-04-20 12:30:16,319 middleware 20800 3732 GET /api/favorites/14/check/ 200 - 2.187s
+INFO 2026-04-20 12:30:16,322 runserver 20800 24144 [mHTTP GET /api/favorites/14/check/ 200 [2.19, 127.0.0.1:51423][0m
+INFO 2026-04-20 12:30:18,058 middleware 20800 2004 GET /api/mongolia/utility-estimate/ 200 - 1.718s
+INFO 2026-04-20 12:30:18,060 runserver 20800 24144 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.72, 127.0.0.1:51423][0m
+INFO 2026-04-20 12:30:21,543 middleware 20800 24436 GET /api/listings/ 200 - 3.473s
+INFO 2026-04-20 12:30:21,545 runserver 20800 24144 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.48, 127.0.0.1:51423][0m
+INFO 2026-04-20 12:31:35,760 middleware 20800 14916 GET /api/profile/ 200 - 2.692s
+INFO 2026-04-20 12:31:35,762 runserver 20800 24144 [mHTTP GET /api/profile/ 200 [2.70, 127.0.0.1:64526][0m
+INFO 2026-04-20 12:31:36,202 middleware 20800 3408 GET /api/categories/ 200 - 2.449s
+INFO 2026-04-20 12:31:36,204 runserver 20800 24144 [mHTTP GET /api/categories/ 200 [2.46, 127.0.0.1:60871][0m
+INFO 2026-04-20 12:31:36,820 middleware 20800 3840 GET /api/favorites/ 200 - 3.067s
+INFO 2026-04-20 12:31:36,822 runserver 20800 24144 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.08, 127.0.0.1:57833][0m
+INFO 2026-04-20 12:31:37,506 middleware 20800 7112 GET /api/regions/ 200 - 3.754s
+INFO 2026-04-20 12:31:37,508 runserver 20800 24144 [mHTTP GET /api/regions/ 200 [3.76, 127.0.0.1:52397][0m
+INFO 2026-04-20 12:31:37,718 middleware 20800 232 GET /api/listings/ 200 - 4.277s
+INFO 2026-04-20 12:31:37,720 runserver 20800 24144 [mHTTP GET /api/listings/?page_size=20 200 [4.28, 127.0.0.1:53533][0m
+INFO 2026-04-20 12:31:40,008 middleware 20800 4804 GET /api/listings/14/ 200 - 4.230s
+INFO 2026-04-20 12:31:40,010 runserver 20800 24144 [mHTTP GET /api/listings/14/ 200 [4.23, 127.0.0.1:64526][0m
+INFO 2026-04-20 12:31:42,176 middleware 20800 2560 GET /api/favorites/14/check/ 200 - 2.137s
+INFO 2026-04-20 12:31:42,178 runserver 20800 24144 [mHTTP GET /api/favorites/14/check/ 200 [2.14, 127.0.0.1:64526][0m
+INFO 2026-04-20 12:31:43,924 middleware 20800 7860 GET /api/mongolia/utility-estimate/ 200 - 1.726s
+INFO 2026-04-20 12:31:43,926 runserver 20800 24144 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.73, 127.0.0.1:64526][0m
+INFO 2026-04-20 12:31:47,412 middleware 20800 10632 GET /api/listings/ 200 - 3.464s
+INFO 2026-04-20 12:31:47,414 runserver 20800 24144 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.47, 127.0.0.1:64526][0m
+INFO 2026-04-20 12:33:36,366 middleware 20800 13692 GET /api/listings/ 200 - 5.241s
+INFO 2026-04-20 12:33:36,367 runserver 20800 24144 [mHTTP GET /api/listings/ 200 [5.25, 127.0.0.1:60461][0m
+INFO 2026-04-20 12:33:52,058 middleware 20800 3848 GET /api/profile/ 200 - 2.117s
+INFO 2026-04-20 12:33:52,060 runserver 20800 24144 [mHTTP GET /api/profile/ 200 [2.12, 127.0.0.1:60461][0m
+INFO 2026-04-20 12:33:56,233 middleware 20800 21924 GET /api/listings/14/ 200 - 4.158s
+INFO 2026-04-20 12:33:56,235 runserver 20800 24144 [mHTTP GET /api/listings/14/ 200 [4.16, 127.0.0.1:60461][0m
+INFO 2026-04-20 12:33:59,191 middleware 20800 21704 GET /api/favorites/14/check/ 200 - 2.925s
+INFO 2026-04-20 12:33:59,193 runserver 20800 24144 [mHTTP GET /api/favorites/14/check/ 200 [2.93, 127.0.0.1:60461][0m
+INFO 2026-04-20 12:34:01,663 middleware 20800 9220 GET /api/mongolia/utility-estimate/ 200 - 2.450s
+INFO 2026-04-20 12:34:01,665 runserver 20800 24144 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [2.45, 127.0.0.1:60461][0m
+INFO 2026-04-20 12:34:07,932 middleware 20800 1256 GET /api/listings/ 200 - 6.243s
+INFO 2026-04-20 12:34:07,934 runserver 20800 24144 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [6.25, 127.0.0.1:60461][0m
+INFO 2026-04-20 13:29:09,169 runserver 20800 24144 [mHTTP OPTIONS /api/listings/?page_size=20 200 [0.08, 127.0.0.1:61481][0m
+INFO 2026-04-20 13:29:09,175 runserver 20800 24144 [mHTTP OPTIONS /api/favorites/?page=1&page_size=100 200 [0.06, 127.0.0.1:51208][0m
+INFO 2026-04-20 13:29:09,176 runserver 20800 24144 [mHTTP OPTIONS /api/categories/ 200 [0.04, 127.0.0.1:65100][0m
+INFO 2026-04-20 13:29:09,177 runserver 20800 24144 [mHTTP OPTIONS /api/regions/ 200 [0.04, 127.0.0.1:50551][0m
+INFO 2026-04-20 13:29:12,171 middleware 20800 25640 GET /api/categories/ 200 - 2.956s
+INFO 2026-04-20 13:29:12,174 runserver 20800 24144 [mHTTP GET /api/categories/ 200 [2.99, 127.0.0.1:61481][0m
+INFO 2026-04-20 13:29:13,131 middleware 20800 21232 GET /api/favorites/ 200 - 3.916s
+INFO 2026-04-20 13:29:13,134 runserver 20800 24144 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.95, 127.0.0.1:50551][0m
+INFO 2026-04-20 13:29:13,950 middleware 20800 26124 GET /api/regions/ 200 - 4.735s
+INFO 2026-04-20 13:29:13,952 runserver 20800 24144 [mHTTP GET /api/regions/ 200 [4.77, 127.0.0.1:51208][0m
+INFO 2026-04-20 13:29:13,985 middleware 20800 26384 GET /api/listings/ 200 - 4.776s
+INFO 2026-04-20 13:29:13,987 runserver 20800 24144 [mHTTP GET /api/listings/?page_size=20 200 [4.81, 127.0.0.1:65100][0m
+INFO 2026-04-20 13:32:39,817 autoreload 20800 20792 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 13:32:42,604 autoreload 18800 9688 Watching for file changes with StatReloader
+INFO 2026-04-20 13:32:49,440 autoreload 18800 9688 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-20 13:32:50,472 autoreload 22408 25676 Watching for file changes with StatReloader
+INFO 2026-04-20 13:33:14,899 autoreload 22408 25676 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 13:33:16,228 autoreload 16304 23960 Watching for file changes with StatReloader
+INFO 2026-04-20 13:33:21,005 autoreload 16304 23960 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-20 13:33:22,175 autoreload 1176 25364 Watching for file changes with StatReloader
+INFO 2026-04-20 13:33:30,579 middleware 1176 19776 GET /api/categories/ 401 - 0.019s
+INFO 2026-04-20 13:33:30,579 middleware 1176 25720 GET /api/listings/ 401 - 0.019s
+INFO 2026-04-20 13:33:30,579 middleware 1176 25928 GET /api/favorites/ 401 - 0.019s
+INFO 2026-04-20 13:33:30,579 middleware 1176 4112 GET /api/regions/ 401 - 0.020s
+WARNING 2026-04-20 13:33:30,585 runserver 1176 24880 [31;1mHTTP GET /api/listings/?page_size=20 401 [0.04, 127.0.0.1:53087][0m
+WARNING 2026-04-20 13:33:30,585 runserver 1176 24880 [31;1mHTTP GET /api/favorites/?page=1&page_size=100 401 [0.04, 127.0.0.1:58192][0m
+WARNING 2026-04-20 13:33:30,585 runserver 1176 24880 [31;1mHTTP GET /api/categories/ 401 [0.04, 127.0.0.1:56366][0m
+WARNING 2026-04-20 13:33:30,586 runserver 1176 24880 [31;1mHTTP GET /api/regions/ 401 [0.04, 127.0.0.1:62511][0m
+INFO 2026-04-20 13:33:31,207 runserver 1176 24880 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.00, 127.0.0.1:62511][0m
+INFO 2026-04-20 13:33:31,208 runserver 1176 24880 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.00, 127.0.0.1:56366][0m
+INFO 2026-04-20 13:33:33,648 middleware 1176 24564 POST /api/auth/token/refresh/ 200 - 2.436s
+INFO 2026-04-20 13:33:33,650 runserver 1176 24880 [mHTTP POST /api/auth/token/refresh/ 200 [2.44, 127.0.0.1:62511][0m
+INFO 2026-04-20 13:33:33,654 middleware 1176 13100 POST /api/auth/token/refresh/ 200 - 2.382s
+INFO 2026-04-20 13:33:33,656 runserver 1176 24880 [mHTTP POST /api/auth/token/refresh/ 200 [2.39, 127.0.0.1:58192][0m
+INFO 2026-04-20 13:33:33,678 middleware 1176 25704 POST /api/auth/token/refresh/ 200 - 2.440s
+INFO 2026-04-20 13:33:33,678 middleware 1176 7860 POST /api/auth/token/refresh/ 200 - 2.420s
+INFO 2026-04-20 13:33:33,681 runserver 1176 24880 [mHTTP POST /api/auth/token/refresh/ 200 [2.43, 127.0.0.1:53087][0m
+INFO 2026-04-20 13:33:33,681 runserver 1176 24880 [mHTTP POST /api/auth/token/refresh/ 200 [2.45, 127.0.0.1:56366][0m
+INFO 2026-04-20 13:33:36,401 middleware 1176 23620 GET /api/categories/ 200 - 2.709s
+INFO 2026-04-20 13:33:36,403 runserver 1176 24880 [mHTTP GET /api/categories/ 200 [2.71, 127.0.0.1:53087][0m
+INFO 2026-04-20 13:33:37,158 middleware 1176 19380 GET /api/favorites/ 200 - 3.498s
+INFO 2026-04-20 13:33:37,160 runserver 1176 24880 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.50, 127.0.0.1:62511][0m
+INFO 2026-04-20 13:33:38,038 middleware 1176 25472 GET /api/regions/ 200 - 4.367s
+INFO 2026-04-20 13:33:38,040 runserver 1176 24880 [mHTTP GET /api/regions/ 200 [4.37, 127.0.0.1:58192][0m
+INFO 2026-04-20 13:33:38,225 runserver 1176 24880 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-views_count 200 [0.01, 127.0.0.1:58192][0m
+INFO 2026-04-20 13:33:38,227 runserver 1176 24880 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at 200 [0.01, 127.0.0.1:62511][0m
+INFO 2026-04-20 13:33:38,227 runserver 1176 24880 [mHTTP OPTIONS /api/listings/?page_size=6 200 [0.01, 127.0.0.1:53087][0m
+INFO 2026-04-20 13:33:38,643 middleware 1176 25912 GET /api/listings/ 200 - 4.938s
+INFO 2026-04-20 13:33:38,646 runserver 1176 24880 [mHTTP GET /api/listings/?page_size=20 200 [4.94, 127.0.0.1:56366][0m
+INFO 2026-04-20 13:33:40,784 middleware 1176 25692 GET /api/categories/ 200 - 2.546s
+INFO 2026-04-20 13:33:40,787 runserver 1176 24880 [mHTTP GET /api/categories/ 200 [2.56, 127.0.0.1:58192][0m
+INFO 2026-04-20 13:33:41,558 middleware 1176 26224 GET /api/favorites/ 200 - 3.324s
+INFO 2026-04-20 13:33:41,560 runserver 1176 24880 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.34, 127.0.0.1:65533][0m
+INFO 2026-04-20 13:33:42,324 middleware 1176 26368 GET /api/regions/ 200 - 4.087s
+INFO 2026-04-20 13:33:42,327 runserver 1176 24880 [mHTTP GET /api/regions/ 200 [4.10, 127.0.0.1:62511][0m
+INFO 2026-04-20 13:33:42,989 middleware 1176 25268 GET /api/listings/ 200 - 4.752s
+INFO 2026-04-20 13:33:42,991 runserver 1176 24880 [mHTTP GET /api/listings/?page_size=6&ordering=-views_count 200 [4.76, 127.0.0.1:53087][0m
+INFO 2026-04-20 13:33:43,318 middleware 1176 26068 GET /api/listings/ 200 - 4.778s
+INFO 2026-04-20 13:33:43,320 runserver 1176 24880 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at 200 [4.78, 127.0.0.1:61828][0m
+INFO 2026-04-20 13:33:43,448 middleware 1176 13732 GET /api/listings/ 200 - 4.770s
+INFO 2026-04-20 13:33:43,451 runserver 1176 24880 [mHTTP GET /api/listings/?page_size=6 200 [4.78, 127.0.0.1:56366][0m
+INFO 2026-04-20 13:35:17,416 autoreload 1176 25364 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 13:35:19,106 autoreload 19744 25064 Watching for file changes with StatReloader
+INFO 2026-04-20 13:35:24,920 autoreload 19744 25064 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-20 13:35:25,975 autoreload 404 11392 Watching for file changes with StatReloader
+INFO 2026-04-20 13:35:35,268 middleware 404 15608 GET /api/categories/ 200 - 2.670s
+INFO 2026-04-20 13:35:35,269 runserver 404 7988 [mHTTP GET /api/categories/ 200 [2.70, 127.0.0.1:57514][0m
+INFO 2026-04-20 13:35:36,030 middleware 404 20148 GET /api/favorites/ 200 - 3.425s
+INFO 2026-04-20 13:35:36,032 runserver 404 7988 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.46, 127.0.0.1:58732][0m
+INFO 2026-04-20 13:35:36,728 middleware 404 4488 GET /api/regions/ 200 - 4.127s
+INFO 2026-04-20 13:35:36,731 runserver 404 7988 [mHTTP GET /api/regions/ 200 [4.16, 127.0.0.1:58224][0m
+INFO 2026-04-20 13:35:37,242 middleware 404 19328 GET /api/listings/ 200 - 4.652s
+INFO 2026-04-20 13:35:37,245 runserver 404 7988 [mHTTP GET /api/listings/?page_size=6&ordering=-views_count 200 [4.67, 127.0.0.1:58284][0m
+INFO 2026-04-20 13:35:37,278 middleware 404 23368 GET /api/listings/ 200 - 4.669s
+INFO 2026-04-20 13:35:37,280 runserver 404 7988 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at 200 [4.71, 127.0.0.1:50575][0m
+INFO 2026-04-20 13:35:37,284 middleware 404 6552 GET /api/listings/ 200 - 4.694s
+INFO 2026-04-20 13:35:37,286 runserver 404 7988 [mHTTP GET /api/listings/?page_size=6 200 [4.71, 127.0.0.1:63111][0m
+INFO 2026-04-20 13:37:59,972 runserver 404 7988 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-favorite_count 200 [0.01, 127.0.0.1:51120][0m
+INFO 2026-04-20 13:37:59,974 runserver 404 7988 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A37%3A59.653Z 200 [0.01, 127.0.0.1:58757][0m
+INFO 2026-04-20 13:38:02,099 middleware 404 26260 GET /api/categories/ 200 - 2.115s
+INFO 2026-04-20 13:38:02,102 runserver 404 7988 [mHTTP GET /api/categories/ 200 [2.14, 127.0.0.1:64483][0m
+INFO 2026-04-20 13:38:02,743 middleware 404 232 GET /api/favorites/ 200 - 2.758s
+INFO 2026-04-20 13:38:02,746 runserver 404 7988 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.78, 127.0.0.1:49757][0m
+INFO 2026-04-20 13:38:03,024 middleware 404 25796 GET /api/listings/ 200 - 3.029s
+INFO 2026-04-20 13:38:03,026 runserver 404 7988 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A37%3A59.653Z 200 [3.04, 127.0.0.1:51120][0m
+INFO 2026-04-20 13:38:03,396 middleware 404 26136 GET /api/regions/ 200 - 3.411s
+INFO 2026-04-20 13:38:03,398 runserver 404 7988 [mHTTP GET /api/regions/ 200 [3.43, 127.0.0.1:56094][0m
+INFO 2026-04-20 13:38:03,818 middleware 404 26268 GET /api/listings/ 200 - 3.834s
+INFO 2026-04-20 13:38:03,820 runserver 404 7988 [mHTTP GET /api/listings/?page_size=6 200 [3.86, 127.0.0.1:60841][0m
+INFO 2026-04-20 13:38:03,887 middleware 404 24972 GET /api/listings/ 200 - 3.892s
+INFO 2026-04-20 13:38:03,888 runserver 404 7988 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.91, 127.0.0.1:58757][0m
+INFO 2026-04-20 13:39:19,532 runserver 404 7988 [mHTTP OPTIONS /api/listings/ 200 [0.00, 127.0.0.1:52867][0m
+INFO 2026-04-20 13:39:23,387 middleware 404 4496 GET /api/listings/ 200 - 3.849s
+INFO 2026-04-20 13:39:23,389 runserver 404 7988 [mHTTP GET /api/listings/ 200 [3.85, 127.0.0.1:52867][0m
+INFO 2026-04-20 13:39:24,831 runserver 404 7988 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A39%3A24.824Z 200 [0.00, 127.0.0.1:56585][0m
+INFO 2026-04-20 13:39:27,309 middleware 404 24944 GET /api/categories/ 200 - 2.172s
+INFO 2026-04-20 13:39:27,311 runserver 404 7988 [mHTTP GET /api/categories/ 200 [2.18, 127.0.0.1:52677][0m
+INFO 2026-04-20 13:39:27,981 middleware 404 25800 GET /api/favorites/ 200 - 2.844s
+INFO 2026-04-20 13:39:27,982 runserver 404 7988 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.85, 127.0.0.1:51088][0m
+INFO 2026-04-20 13:39:28,175 middleware 404 23672 GET /api/listings/ 200 - 3.037s
+INFO 2026-04-20 13:39:28,177 runserver 404 7988 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A39%3A24.824Z 200 [3.05, 127.0.0.1:55327][0m
+INFO 2026-04-20 13:39:28,532 middleware 404 25888 GET /api/regions/ 200 - 3.395s
+INFO 2026-04-20 13:39:28,534 runserver 404 7988 [mHTTP GET /api/regions/ 200 [3.40, 127.0.0.1:64471][0m
+INFO 2026-04-20 13:39:28,650 middleware 404 25716 GET /api/listings/ 200 - 3.814s
+INFO 2026-04-20 13:39:28,652 runserver 404 7988 [mHTTP GET /api/listings/?page_size=6 200 [3.82, 127.0.0.1:56585][0m
+INFO 2026-04-20 13:39:28,716 middleware 404 20152 GET /api/listings/ 200 - 3.883s
+INFO 2026-04-20 13:39:28,717 runserver 404 7988 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.89, 127.0.0.1:52867][0m
+INFO 2026-04-20 13:44:23,785 autoreload 404 11392 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 13:44:25,479 autoreload 1896 20580 Watching for file changes with StatReloader
+INFO 2026-04-20 13:44:31,248 autoreload 1896 20580 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-20 13:44:32,339 autoreload 22824 26344 Watching for file changes with StatReloader
+INFO 2026-04-20 13:44:37,605 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A44%3A37.280Z 200 [0.01, 127.0.0.1:54578][0m
+INFO 2026-04-20 13:44:39,748 middleware 22824 23132 GET /api/categories/ 200 - 2.134s
+INFO 2026-04-20 13:44:39,751 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.15, 127.0.0.1:56014][0m
+INFO 2026-04-20 13:44:40,421 middleware 22824 22672 GET /api/favorites/ 200 - 2.806s
+INFO 2026-04-20 13:44:40,424 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.82, 127.0.0.1:50503][0m
+INFO 2026-04-20 13:44:40,629 middleware 22824 17980 GET /api/listings/ 200 - 3.014s
+INFO 2026-04-20 13:44:40,631 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A44%3A37.280Z 200 [3.02, 127.0.0.1:54578][0m
+INFO 2026-04-20 13:44:41,094 middleware 22824 25048 GET /api/regions/ 200 - 3.480s
+INFO 2026-04-20 13:44:41,097 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.50, 127.0.0.1:56382][0m
+INFO 2026-04-20 13:44:41,431 middleware 22824 25828 GET /api/listings/ 200 - 3.817s
+INFO 2026-04-20 13:44:41,433 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [3.83, 127.0.0.1:55479][0m
+INFO 2026-04-20 13:44:41,574 middleware 22824 20848 GET /api/listings/ 200 - 3.960s
+INFO 2026-04-20 13:44:41,577 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.98, 127.0.0.1:64433][0m
+INFO 2026-04-20 13:44:46,278 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A44%3A46.260Z 200 [0.01, 127.0.0.1:55479][0m
+INFO 2026-04-20 13:44:48,409 middleware 22824 22212 GET /api/categories/ 200 - 2.124s
+INFO 2026-04-20 13:44:48,410 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.14, 127.0.0.1:50503][0m
+INFO 2026-04-20 13:44:49,078 middleware 22824 25648 GET /api/favorites/ 200 - 2.793s
+INFO 2026-04-20 13:44:49,080 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.81, 127.0.0.1:54578][0m
+INFO 2026-04-20 13:44:49,246 middleware 22824 25972 GET /api/listings/ 200 - 2.955s
+INFO 2026-04-20 13:44:49,248 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A44%3A46.260Z 200 [2.97, 127.0.0.1:55479][0m
+INFO 2026-04-20 13:44:49,613 middleware 22824 26144 GET /api/regions/ 200 - 3.328s
+INFO 2026-04-20 13:44:49,615 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.34, 127.0.0.1:56014][0m
+INFO 2026-04-20 13:44:50,171 middleware 22824 21668 GET /api/listings/ 200 - 3.886s
+INFO 2026-04-20 13:44:50,173 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [3.90, 127.0.0.1:56382][0m
+INFO 2026-04-20 13:44:50,242 middleware 22824 26484 GET /api/listings/ 200 - 3.958s
+INFO 2026-04-20 13:44:50,244 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.98, 127.0.0.1:64433][0m
+INFO 2026-04-20 13:46:48,509 middleware 22824 26420 GET /api/favorites/ 200 - 3.481s
+INFO 2026-04-20 13:46:48,511 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.49, 127.0.0.1:54975][0m
+INFO 2026-04-20 13:46:48,525 runserver 22824 3732 [mHTTP OPTIONS /api/listings/8/ 200 [0.00, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:46:48,526 runserver 22824 3732 [mHTTP OPTIONS /api/listings/14/ 200 [0.00, 127.0.0.1:54975][0m
+INFO 2026-04-20 13:46:49,851 middleware 22824 20976 GET /api/listings/ 200 - 4.561s
+INFO 2026-04-20 13:46:49,854 runserver 22824 3732 [mHTTP GET /api/listings/ 200 [4.56, 127.0.0.1:60809][0m
+INFO 2026-04-20 13:46:52,694 middleware 22824 12964 GET /api/listings/8/ 200 - 4.162s
+INFO 2026-04-20 13:46:52,696 runserver 22824 3732 [mHTTP GET /api/listings/8/ 200 [4.17, 127.0.0.1:54975][0m
+INFO 2026-04-20 13:46:52,922 middleware 22824 25780 GET /api/listings/14/ 200 - 4.389s
+INFO 2026-04-20 13:46:52,924 runserver 22824 3732 [mHTTP GET /api/listings/14/ 200 [4.39, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:47:00,166 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?search=sddasdasdasdasd 200 [0.00, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:47:02,368 middleware 22824 26424 GET /api/listings/ 200 - 2.197s
+INFO 2026-04-20 13:47:02,370 runserver 22824 3732 [mHTTP GET /api/listings/?search=sddasdasdasdasd 200 [2.20, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:47:09,239 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?search=%D0%B1%D0%B0%D0%B9%D1%80 200 [0.00, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:47:12,276 middleware 22824 7808 GET /api/listings/ 200 - 3.030s
+INFO 2026-04-20 13:47:12,278 runserver 22824 3732 [mHTTP GET /api/listings/?search=%D0%B1%D0%B0%D0%B9%D1%80 200 [3.04, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:47:19,322 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?search=2 200 [0.00, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:47:27,000 middleware 22824 16880 GET /api/listings/ 200 - 7.672s
+INFO 2026-04-20 13:47:27,002 runserver 22824 3732 [mHTTP GET /api/listings/?search=2 200 [7.68, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:48:19,705 middleware 22824 21756 GET /api/listings/ 200 - 3.921s
+INFO 2026-04-20 13:48:19,707 runserver 22824 3732 [mHTTP GET /api/listings/ 200 [3.93, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:49:15,173 middleware 22824 19552 GET /api/listings/ 200 - 3.944s
+INFO 2026-04-20 13:49:15,175 runserver 22824 3732 [mHTTP GET /api/listings/ 200 [3.95, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:49:19,492 middleware 22824 25940 GET /api/listings/ 200 - 3.810s
+INFO 2026-04-20 13:49:19,494 runserver 22824 3732 [mHTTP GET /api/listings/ 200 [3.81, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:49:25,503 middleware 22824 22096 GET /api/listings/ 200 - 3.969s
+INFO 2026-04-20 13:49:25,505 runserver 22824 3732 [mHTTP GET /api/listings/ 200 [3.97, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:49:30,089 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A49%3A30.081Z 200 [0.00, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:49:32,558 middleware 22824 24664 GET /api/categories/ 200 - 2.160s
+INFO 2026-04-20 13:49:32,560 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:53783][0m
+INFO 2026-04-20 13:49:33,143 middleware 22824 13784 GET /api/favorites/ 200 - 2.746s
+INFO 2026-04-20 13:49:33,145 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.76, 127.0.0.1:58771][0m
+INFO 2026-04-20 13:49:33,465 middleware 22824 26008 GET /api/listings/ 200 - 3.067s
+INFO 2026-04-20 13:49:33,467 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A49%3A30.081Z 200 [3.08, 127.0.0.1:52181][0m
+INFO 2026-04-20 13:49:33,846 middleware 22824 24252 GET /api/regions/ 200 - 3.448s
+INFO 2026-04-20 13:49:33,848 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.46, 127.0.0.1:53982][0m
+INFO 2026-04-20 13:49:34,221 middleware 22824 24788 GET /api/listings/ 200 - 4.127s
+INFO 2026-04-20 13:49:34,223 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.13, 127.0.0.1:54830][0m
+INFO 2026-04-20 13:49:34,271 middleware 22824 21932 GET /api/listings/ 200 - 3.874s
+INFO 2026-04-20 13:49:34,273 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [3.88, 127.0.0.1:52376][0m
+INFO 2026-04-20 13:51:20,476 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A51%3A20.167Z 200 [0.00, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:51:22,653 middleware 22824 23080 GET /api/categories/ 200 - 2.162s
+INFO 2026-04-20 13:51:22,655 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.18, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:51:23,285 middleware 22824 384 GET /api/favorites/ 200 - 2.796s
+INFO 2026-04-20 13:51:23,287 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.81, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:51:23,494 middleware 22824 20608 GET /api/listings/ 200 - 3.004s
+INFO 2026-04-20 13:51:23,496 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A51%3A20.167Z 200 [3.01, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:51:23,955 middleware 22824 23496 GET /api/regions/ 200 - 3.466s
+INFO 2026-04-20 13:51:23,957 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.48, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:51:24,355 middleware 22824 15312 GET /api/listings/ 200 - 3.875s
+INFO 2026-04-20 13:51:24,357 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.88, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:51:24,429 middleware 22824 8140 GET /api/listings/ 200 - 3.939s
+INFO 2026-04-20 13:51:24,432 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [3.95, 127.0.0.1:55008][0m
+INFO 2026-04-20 13:51:24,867 middleware 22824 19700 GET /api/categories/ 200 - 2.184s
+INFO 2026-04-20 13:51:24,869 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.19, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:51:27,420 middleware 22824 3536 GET /api/regions/ 200 - 3.451s
+INFO 2026-04-20 13:51:27,422 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.46, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:51:39,818 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?category=null&price_type=null&min_price=null&max_price=null&min_area=null&max_area=null&bedrooms=null 200 [0.00, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:51:39,845 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?min_price=5000&max_price=999999999999999&min_area=null&max_area=null&bedrooms=null 200 [0.00, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:51:44,414 middleware 22824 21804 GET /api/listings/ 500 - 4.591s
+ERROR 2026-04-20 13:51:44,417 runserver 22824 3732 [35;1mHTTP GET /api/listings/?category=null&price_type=null&min_price=null&max_price=null&min_area=null&max_area=null&bedrooms=null 500 [4.60, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:51:46,472 middleware 22824 22552 GET /api/listings/ 500 - 6.620s
+ERROR 2026-04-20 13:51:46,475 runserver 22824 3732 [35;1mHTTP GET /api/listings/?min_price=5000&max_price=999999999999999&min_area=null&max_area=null&bedrooms=null 500 [6.63, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:51:50,393 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A51%3A50.381Z 200 [0.01, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:51:52,560 middleware 22824 26256 GET /api/categories/ 200 - 2.160s
+INFO 2026-04-20 13:51:52,562 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:51:53,153 middleware 22824 19328 GET /api/favorites/ 200 - 2.752s
+INFO 2026-04-20 13:51:53,155 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.77, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:51:53,459 middleware 22824 25812 GET /api/listings/ 200 - 3.044s
+INFO 2026-04-20 13:51:53,461 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A51%3A50.381Z 200 [3.06, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:51:53,789 middleware 22824 25700 GET /api/regions/ 200 - 3.389s
+INFO 2026-04-20 13:51:53,792 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.40, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:51:54,229 middleware 22824 20888 GET /api/listings/ 200 - 3.830s
+INFO 2026-04-20 13:51:54,231 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.85, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:51:54,292 middleware 22824 15248 GET /api/listings/ 200 - 3.891s
+INFO 2026-04-20 13:51:54,294 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [3.91, 127.0.0.1:55008][0m
+INFO 2026-04-20 13:51:55,402 middleware 22824 20056 GET /api/listings/ 500 - 2.825s
+ERROR 2026-04-20 13:51:55,405 runserver 22824 3732 [35;1mHTTP GET /api/listings/?category=null&price_type=null&min_price=null&max_price=null&min_area=null&max_area=null&bedrooms=null 500 [2.83, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:52:03,009 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A52%3A02.998Z 200 [0.01, 127.0.0.1:55008][0m
+INFO 2026-04-20 13:52:05,382 middleware 22824 19472 GET /api/categories/ 200 - 2.366s
+INFO 2026-04-20 13:52:05,385 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.38, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:52:06,045 middleware 22824 4128 GET /api/favorites/ 200 - 3.028s
+INFO 2026-04-20 13:52:06,047 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.04, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:52:06,201 middleware 22824 396 GET /api/listings/ 200 - 3.173s
+INFO 2026-04-20 13:52:06,203 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A52%3A02.998Z 200 [3.19, 127.0.0.1:55008][0m
+INFO 2026-04-20 13:52:06,615 middleware 22824 14116 GET /api/regions/ 200 - 3.599s
+INFO 2026-04-20 13:52:06,617 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.61, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:52:07,004 middleware 22824 20680 GET /api/listings/ 200 - 3.987s
+INFO 2026-04-20 13:52:07,006 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [4.00, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:52:07,020 middleware 22824 25200 GET /api/listings/ 200 - 4.005s
+INFO 2026-04-20 13:52:07,022 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.02, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:52:21,232 middleware 22824 23628 GET /api/categories/ 200 - 3.165s
+INFO 2026-04-20 13:52:21,234 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [3.17, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:52:21,549 middleware 22824 25964 GET /api/regions/ 200 - 3.482s
+INFO 2026-04-20 13:52:21,552 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.49, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:52:21,787 middleware 22824 25956 GET /api/listings/ 500 - 2.856s
+ERROR 2026-04-20 13:52:21,790 runserver 22824 3732 [35;1mHTTP GET /api/listings/?category=null&price_type=null&min_price=null&max_price=null&min_area=null&max_area=null&bedrooms=null 500 [2.86, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:52:31,185 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A52%3A31.173Z 200 [0.01, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:52:33,341 middleware 22824 23368 GET /api/categories/ 200 - 2.150s
+INFO 2026-04-20 13:52:33,343 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:52:34,053 middleware 22824 22588 GET /api/favorites/ 200 - 2.862s
+INFO 2026-04-20 13:52:34,055 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.88, 127.0.0.1:55008][0m
+INFO 2026-04-20 13:52:34,164 middleware 22824 19756 GET /api/listings/ 200 - 2.965s
+INFO 2026-04-20 13:52:34,165 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A52%3A31.173Z 200 [2.98, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:52:34,594 middleware 22824 22752 GET /api/regions/ 200 - 3.403s
+INFO 2026-04-20 13:52:34,596 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.42, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:52:35,045 middleware 22824 9016 GET /api/listings/ 200 - 3.854s
+INFO 2026-04-20 13:52:35,047 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.87, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:52:35,095 middleware 22824 22336 GET /api/listings/ 200 - 3.904s
+INFO 2026-04-20 13:52:35,097 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [3.92, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:52:36,313 middleware 22824 11008 GET /api/listings/ 500 - 2.806s
+ERROR 2026-04-20 13:52:36,315 runserver 22824 3732 [35;1mHTTP GET /api/listings/?category=null&price_type=null&min_price=null&max_price=null&min_area=null&max_area=null&bedrooms=null 500 [2.81, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:52:40,414 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A52%3A40.402Z 200 [0.01, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:52:42,540 middleware 22824 1920 GET /api/categories/ 200 - 2.119s
+INFO 2026-04-20 13:52:42,541 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.13, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:52:43,228 middleware 22824 21732 GET /api/favorites/ 200 - 2.807s
+INFO 2026-04-20 13:52:43,230 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.82, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:52:43,448 middleware 22824 2668 GET /api/listings/ 200 - 3.015s
+INFO 2026-04-20 13:52:43,450 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A52%3A40.402Z 200 [3.03, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:52:43,817 middleware 22824 22656 GET /api/regions/ 200 - 3.396s
+INFO 2026-04-20 13:52:43,819 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.41, 127.0.0.1:55008][0m
+INFO 2026-04-20 13:52:44,228 middleware 22824 26240 GET /api/listings/ 200 - 3.809s
+INFO 2026-04-20 13:52:44,230 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.83, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:52:44,323 middleware 22824 25884 GET /api/listings/ 200 - 3.902s
+INFO 2026-04-20 13:52:44,326 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [3.92, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:52:48,478 middleware 22824 26468 GET /api/listings/ 500 - 2.813s
+ERROR 2026-04-20 13:52:48,480 runserver 22824 3732 [35;1mHTTP GET /api/listings/?category=null&price_type=null&min_price=null&max_price=null&min_area=null&max_area=null&bedrooms=null 500 [2.82, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:52:49,938 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A52%3A49.926Z 200 [0.01, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:52:52,087 middleware 22824 14368 GET /api/categories/ 200 - 2.142s
+INFO 2026-04-20 13:52:52,089 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:52:52,711 middleware 22824 17000 GET /api/favorites/ 200 - 2.765s
+INFO 2026-04-20 13:52:52,713 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.78, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:52:52,972 middleware 22824 25408 GET /api/listings/ 200 - 3.019s
+INFO 2026-04-20 13:52:52,973 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A52%3A49.926Z 200 [3.03, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:52:53,402 middleware 22824 10520 GET /api/regions/ 200 - 3.457s
+INFO 2026-04-20 13:52:53,403 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.47, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:52:53,753 middleware 22824 20616 GET /api/listings/ 200 - 3.808s
+INFO 2026-04-20 13:52:53,755 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [3.82, 127.0.0.1:55008][0m
+INFO 2026-04-20 13:52:53,766 middleware 22824 17876 GET /api/listings/ 200 - 3.822s
+INFO 2026-04-20 13:52:53,768 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.84, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:52:54,237 middleware 22824 13220 GET /api/categories/ 200 - 2.133s
+INFO 2026-04-20 13:52:54,239 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.14, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:52:56,870 middleware 22824 15012 GET /api/regions/ 200 - 3.454s
+INFO 2026-04-20 13:52:56,873 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.46, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:53:03,676 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?min_area=null&max_area=null&bedrooms=null 200 [0.00, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:53:06,462 middleware 22824 23780 GET /api/listings/ 500 - 2.807s
+ERROR 2026-04-20 13:53:06,465 runserver 22824 3732 [35;1mHTTP GET /api/listings/?category=null&price_type=null&min_price=null&max_price=null&min_area=null&max_area=null&bedrooms=null 500 [2.81, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:53:08,990 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A53%3A08.981Z 200 [0.01, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:53:11,087 middleware 22824 16972 GET /api/listings/ 500 - 7.407s
+ERROR 2026-04-20 13:53:11,089 runserver 22824 3732 [35;1mHTTP GET /api/listings/?min_area=null&max_area=null&bedrooms=null 500 [7.41, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:53:11,837 middleware 22824 1956 GET /api/categories/ 200 - 2.823s
+INFO 2026-04-20 13:53:11,838 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.85, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:53:12,437 middleware 22824 23120 GET /api/favorites/ 200 - 3.424s
+INFO 2026-04-20 13:53:12,439 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.45, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:53:13,154 middleware 22824 25412 GET /api/regions/ 200 - 4.132s
+INFO 2026-04-20 13:53:13,156 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [4.16, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:53:13,591 middleware 22824 3932 GET /api/listings/ 200 - 4.579s
+INFO 2026-04-20 13:53:13,594 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.61, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:53:13,619 middleware 22824 25164 GET /api/listings/ 200 - 4.606s
+INFO 2026-04-20 13:53:13,621 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [4.64, 127.0.0.1:55008][0m
+INFO 2026-04-20 13:53:14,855 middleware 22824 24944 GET /api/categories/ 200 - 2.185s
+INFO 2026-04-20 13:53:14,858 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.19, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:53:14,915 middleware 22824 26332 GET /api/listings/ 200 - 3.050s
+INFO 2026-04-20 13:53:14,917 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A53%3A08.981Z 200 [3.05, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:53:16,632 middleware 22824 22480 GET /api/regions/ 200 - 3.454s
+INFO 2026-04-20 13:53:16,634 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.46, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:53:30,585 middleware 22824 3520 GET /api/listings/ 500 - 2.868s
+ERROR 2026-04-20 13:53:30,588 runserver 22824 3732 [35;1mHTTP GET /api/listings/?category=null&price_type=null&min_price=null&max_price=null&min_area=null&max_area=null&bedrooms=null 500 [2.87, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:53:32,722 middleware 22824 21652 GET /api/listings/ 500 - 4.978s
+ERROR 2026-04-20 13:53:32,724 runserver 22824 3732 [35;1mHTTP GET /api/listings/?min_area=null&max_area=null&bedrooms=null 500 [4.98, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:53:38,507 runserver 22824 3732 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A53%3A38.493Z 200 [0.01, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:53:40,691 middleware 22824 16876 GET /api/categories/ 200 - 2.179s
+INFO 2026-04-20 13:53:40,694 runserver 22824 3732 [mHTTP GET /api/categories/ 200 [2.19, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:53:41,392 middleware 22824 24564 GET /api/favorites/ 200 - 2.880s
+INFO 2026-04-20 13:53:41,394 runserver 22824 3732 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.90, 127.0.0.1:55008][0m
+INFO 2026-04-20 13:53:42,027 middleware 22824 23448 GET /api/listings/ 200 - 3.500s
+INFO 2026-04-20 13:53:42,029 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A53%3A38.493Z 200 [3.52, 127.0.0.1:49813][0m
+INFO 2026-04-20 13:53:42,034 middleware 22824 22848 GET /api/regions/ 200 - 3.521s
+INFO 2026-04-20 13:53:42,036 runserver 22824 3732 [mHTTP GET /api/regions/ 200 [3.54, 127.0.0.1:58232][0m
+INFO 2026-04-20 13:53:42,467 middleware 22824 19856 GET /api/listings/ 200 - 3.954s
+INFO 2026-04-20 13:53:42,470 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.97, 127.0.0.1:50478][0m
+INFO 2026-04-20 13:53:42,697 middleware 22824 23188 GET /api/listings/ 200 - 4.184s
+INFO 2026-04-20 13:53:42,699 runserver 22824 3732 [mHTTP GET /api/listings/?page_size=6 200 [4.20, 127.0.0.1:52317][0m
+INFO 2026-04-20 13:53:44,702 middleware 22824 26388 GET /api/listings/ 500 - 3.991s
+ERROR 2026-04-20 13:53:44,704 runserver 22824 3732 [35;1mHTTP GET /api/listings/?category=null&price_type=null&min_price=null&max_price=null&min_area=null&max_area=null&bedrooms=null 500 [4.00, 127.0.0.1:49477][0m
+INFO 2026-04-20 13:54:39,119 autoreload 22824 26344 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-20 13:54:41,291 autoreload 10992 20580 Watching for file changes with StatReloader
+INFO 2026-04-20 13:54:55,711 runserver 10992 2604 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A54%3A55.371Z 200 [0.02, 127.0.0.1:52779][0m
+INFO 2026-04-20 13:55:01,159 middleware 10992 17000 GET /api/categories/ 200 - 5.419s
+INFO 2026-04-20 13:55:01,161 runserver 10992 2604 [mHTTP GET /api/categories/ 200 [5.47, 127.0.0.1:65197][0m
+INFO 2026-04-20 13:55:01,684 middleware 10992 26468 GET /api/favorites/ 200 - 5.943s
+INFO 2026-04-20 13:55:01,686 runserver 10992 2604 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [6.00, 127.0.0.1:55777][0m
+INFO 2026-04-20 13:55:01,978 middleware 10992 25884 GET /api/listings/ 200 - 6.238s
+INFO 2026-04-20 13:55:01,982 runserver 10992 2604 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [6.29, 127.0.0.1:56663][0m
+INFO 2026-04-20 13:55:02,044 middleware 10992 20616 GET /api/listings/ 200 - 6.304s
+INFO 2026-04-20 13:55:02,047 runserver 10992 2604 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A54%3A55.371Z 200 [6.32, 127.0.0.1:52779][0m
+INFO 2026-04-20 13:55:02,528 middleware 10992 25408 GET /api/regions/ 200 - 6.788s
+INFO 2026-04-20 13:55:02,532 runserver 10992 2604 [mHTTP GET /api/regions/ 200 [6.84, 127.0.0.1:60866][0m
+INFO 2026-04-20 13:55:03,115 middleware 10992 22656 GET /api/listings/ 200 - 7.376s
+INFO 2026-04-20 13:55:03,117 runserver 10992 2604 [mHTTP GET /api/listings/?page_size=6 200 [7.43, 127.0.0.1:61839][0m
+INFO 2026-04-20 13:55:07,509 middleware 10992 13676 GET /api/listings/ 200 - 4.437s
+INFO 2026-04-20 13:55:07,511 runserver 10992 2604 [mHTTP GET /api/listings/ 200 [4.44, 127.0.0.1:60866][0m
+INFO 2026-04-20 13:55:08,834 middleware 10992 10116 GET /api/listings/ 500 - 7.661s
+ERROR 2026-04-20 13:55:08,837 runserver 10992 2604 [35;1mHTTP GET /api/listings/?category=null&price_type=null&min_price=null&max_price=null&min_area=null&max_area=null&bedrooms=null 500 [7.67, 127.0.0.1:65197][0m
+INFO 2026-04-20 13:55:10,681 runserver 10992 2604 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A55%3A10.671Z 200 [0.01, 127.0.0.1:65197][0m
+INFO 2026-04-20 13:55:12,980 middleware 10992 25972 GET /api/categories/ 200 - 2.292s
+INFO 2026-04-20 13:55:12,982 runserver 10992 2604 [mHTTP GET /api/categories/ 200 [2.31, 127.0.0.1:56663][0m
+INFO 2026-04-20 13:55:13,554 middleware 10992 22072 GET /api/favorites/ 200 - 2.868s
+INFO 2026-04-20 13:55:13,557 runserver 10992 2604 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.88, 127.0.0.1:52779][0m
+INFO 2026-04-20 13:55:13,774 middleware 10992 23656 GET /api/listings/ 200 - 3.079s
+INFO 2026-04-20 13:55:13,776 runserver 10992 2604 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A55%3A10.671Z 200 [3.09, 127.0.0.1:65197][0m
+INFO 2026-04-20 13:55:14,194 middleware 10992 18268 GET /api/regions/ 200 - 3.507s
+INFO 2026-04-20 13:55:14,196 runserver 10992 2604 [mHTTP GET /api/regions/ 200 [3.52, 127.0.0.1:55777][0m
+INFO 2026-04-20 13:55:14,639 middleware 10992 25176 GET /api/listings/ 200 - 3.953s
+INFO 2026-04-20 13:55:14,642 runserver 10992 2604 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.97, 127.0.0.1:60866][0m
+INFO 2026-04-20 13:55:14,649 middleware 10992 26144 GET /api/listings/ 200 - 3.962s
+INFO 2026-04-20 13:55:14,651 runserver 10992 2604 [mHTTP GET /api/listings/?page_size=6 200 [3.98, 127.0.0.1:61839][0m
+INFO 2026-04-20 13:55:15,171 middleware 10992 6656 GET /api/categories/ 200 - 2.177s
+INFO 2026-04-20 13:55:15,173 runserver 10992 2604 [mHTTP GET /api/categories/ 200 [2.18, 127.0.0.1:56663][0m
+INFO 2026-04-20 13:55:17,763 middleware 10992 3148 GET /api/regions/ 200 - 3.556s
+INFO 2026-04-20 13:55:17,765 runserver 10992 2604 [mHTTP GET /api/regions/ 200 [3.56, 127.0.0.1:65197][0m
+INFO 2026-04-20 13:55:28,758 middleware 10992 25944 GET /api/listings/ 200 - 4.033s
+INFO 2026-04-20 13:55:28,760 runserver 10992 2604 [mHTTP GET /api/listings/ 200 [4.04, 127.0.0.1:65197][0m
+INFO 2026-04-20 13:55:32,716 middleware 10992 25288 GET /api/listings/ 200 - 3.943s
+INFO 2026-04-20 13:55:32,718 runserver 10992 2604 [mHTTP GET /api/listings/ 200 [3.95, 127.0.0.1:56663][0m
+INFO 2026-04-20 13:57:13,070 autoreload 10992 20580 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 13:57:14,095 autoreload 25684 13732 Watching for file changes with StatReloader
+INFO 2026-04-20 13:57:18,810 autoreload 25684 13732 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 13:57:19,899 autoreload 17136 20976 Watching for file changes with StatReloader
+INFO 2026-04-20 13:57:25,482 autoreload 17136 20976 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-20 13:57:26,553 autoreload 23132 8652 Watching for file changes with StatReloader
+INFO 2026-04-20 13:57:33,562 runserver 23132 4804 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A57%3A33.246Z 200 [0.01, 127.0.0.1:62694][0m
+INFO 2026-04-20 13:57:35,801 middleware 23132 12752 GET /api/categories/ 200 - 2.232s
+INFO 2026-04-20 13:57:35,803 runserver 23132 4804 [mHTTP GET /api/categories/ 200 [2.25, 127.0.0.1:61407][0m
+INFO 2026-04-20 13:57:36,440 middleware 23132 24656 GET /api/favorites/ 200 - 2.871s
+INFO 2026-04-20 13:57:36,442 runserver 23132 4804 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.89, 127.0.0.1:59666][0m
+INFO 2026-04-20 13:57:37,302 middleware 23132 22832 GET /api/listings/ 200 - 3.733s
+INFO 2026-04-20 13:57:37,304 runserver 23132 4804 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A57%3A33.246Z 200 [3.74, 127.0.0.1:62694][0m
+INFO 2026-04-20 13:57:37,428 middleware 23132 21276 GET /api/regions/ 200 - 3.859s
+INFO 2026-04-20 13:57:37,430 runserver 23132 4804 [mHTTP GET /api/regions/ 200 [3.88, 127.0.0.1:61574][0m
+INFO 2026-04-20 13:57:38,194 middleware 23132 21684 GET /api/listings/ 200 - 4.625s
+INFO 2026-04-20 13:57:38,196 runserver 23132 4804 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.64, 127.0.0.1:59763][0m
+INFO 2026-04-20 13:57:40,535 middleware 23132 20268 GET /api/listings/ 200 - 6.965s
+INFO 2026-04-20 13:57:40,536 runserver 23132 4804 [mHTTP GET /api/listings/?page_size=6 200 [6.98, 127.0.0.1:54693][0m
+INFO 2026-04-20 13:58:54,225 middleware 23132 9044 GET /api/listings/ 200 - 3.933s
+INFO 2026-04-20 13:58:54,227 runserver 23132 4804 [mHTTP GET /api/listings/ 200 [3.94, 127.0.0.1:60839][0m
+INFO 2026-04-20 13:59:21,819 middleware 23132 22480 GET /api/listings/ 200 - 5.352s
+INFO 2026-04-20 13:59:21,822 runserver 23132 4804 [mHTTP GET /api/listings/ 200 [5.36, 127.0.0.1:60839][0m
+INFO 2026-04-20 13:59:23,450 runserver 23132 4804 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A59%3A23.442Z 200 [0.00, 127.0.0.1:60518][0m
+INFO 2026-04-20 13:59:25,974 middleware 23132 26176 GET /api/categories/ 200 - 2.218s
+INFO 2026-04-20 13:59:25,977 runserver 23132 4804 [mHTTP GET /api/categories/ 200 [2.23, 127.0.0.1:57754][0m
+INFO 2026-04-20 13:59:26,656 middleware 23132 25628 GET /api/favorites/ 200 - 2.900s
+INFO 2026-04-20 13:59:26,658 runserver 23132 4804 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.91, 127.0.0.1:62368][0m
+INFO 2026-04-20 13:59:26,853 middleware 23132 24896 GET /api/listings/ 200 - 3.097s
+INFO 2026-04-20 13:59:26,856 runserver 23132 4804 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T05%3A59%3A23.442Z 200 [3.11, 127.0.0.1:52539][0m
+INFO 2026-04-20 13:59:27,272 middleware 23132 26188 GET /api/regions/ 200 - 3.515s
+INFO 2026-04-20 13:59:27,274 runserver 23132 4804 [mHTTP GET /api/regions/ 200 [3.52, 127.0.0.1:60870][0m
+INFO 2026-04-20 13:59:27,388 middleware 23132 18784 GET /api/listings/ 200 - 3.932s
+INFO 2026-04-20 13:59:27,391 runserver 23132 4804 [mHTTP GET /api/listings/?page_size=6 200 [3.94, 127.0.0.1:60518][0m
+INFO 2026-04-20 13:59:27,463 middleware 23132 18108 GET /api/listings/ 200 - 4.010s
+INFO 2026-04-20 13:59:27,465 runserver 23132 4804 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.02, 127.0.0.1:60839][0m
+INFO 2026-04-20 13:59:31,977 middleware 23132 8552 GET /api/categories/ 200 - 3.189s
+INFO 2026-04-20 13:59:31,979 runserver 23132 4804 [mHTTP GET /api/categories/ 200 [3.19, 127.0.0.1:60839][0m
+INFO 2026-04-20 13:59:33,218 middleware 23132 3052 GET /api/regions/ 200 - 4.430s
+INFO 2026-04-20 13:59:33,220 runserver 23132 4804 [mHTTP GET /api/regions/ 200 [4.44, 127.0.0.1:60518][0m
+INFO 2026-04-20 13:59:44,416 middleware 23132 24972 GET /api/listings/ 200 - 4.585s
+INFO 2026-04-20 13:59:44,418 runserver 23132 4804 [mHTTP GET /api/listings/ 200 [4.59, 127.0.0.1:60518][0m
+INFO 2026-04-20 13:59:50,880 middleware 23132 23888 GET /api/listings/ 200 - 6.449s
+INFO 2026-04-20 13:59:50,882 runserver 23132 4804 [mHTTP GET /api/listings/ 200 [6.45, 127.0.0.1:60839][0m
+INFO 2026-04-20 14:01:45,697 autoreload 23132 8652 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 14:01:47,041 autoreload 15012 25728 Watching for file changes with StatReloader
+INFO 2026-04-20 14:03:02,442 autoreload 15012 25728 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-20 14:03:03,573 autoreload 20712 24980 Watching for file changes with StatReloader
+INFO 2026-04-20 14:03:09,369 autoreload 20712 24980 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 14:03:10,584 autoreload 20652 23132 Watching for file changes with StatReloader
+INFO 2026-04-20 14:05:20,550 runserver 20652 26112 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A05%3A20.224Z 200 [0.01, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:05:22,925 middleware 20652 20204 GET /api/categories/ 200 - 2.358s
+INFO 2026-04-20 14:05:22,930 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.39, 127.0.0.1:52952][0m
+INFO 2026-04-20 14:05:23,592 middleware 20652 23740 GET /api/favorites/ 200 - 3.026s
+INFO 2026-04-20 14:05:23,594 runserver 20652 26112 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.05, 127.0.0.1:54837][0m
+INFO 2026-04-20 14:05:23,826 middleware 20652 18704 GET /api/listings/ 200 - 3.259s
+INFO 2026-04-20 14:05:23,829 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A05%3A20.224Z 200 [3.27, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:05:24,638 middleware 20652 13608 GET /api/regions/ 200 - 4.072s
+INFO 2026-04-20 14:05:24,640 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [4.10, 127.0.0.1:64517][0m
+INFO 2026-04-20 14:05:25,515 middleware 20652 3536 GET /api/listings/ 200 - 4.949s
+INFO 2026-04-20 14:05:25,517 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6 200 [4.98, 127.0.0.1:59447][0m
+INFO 2026-04-20 14:05:25,581 middleware 20652 26596 GET /api/listings/ 200 - 5.015s
+INFO 2026-04-20 14:05:25,584 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [5.04, 127.0.0.1:49709][0m
+INFO 2026-04-20 14:05:28,315 middleware 20652 22072 GET /api/listings/ 200 - 5.373s
+INFO 2026-04-20 14:05:28,317 runserver 20652 26112 [mHTTP GET /api/listings/ 200 [5.38, 127.0.0.1:52952][0m
+INFO 2026-04-20 14:05:30,525 runserver 20652 26112 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A05%3A30.515Z 200 [0.01, 127.0.0.1:49709][0m
+INFO 2026-04-20 14:05:32,699 middleware 20652 14412 GET /api/categories/ 200 - 2.168s
+INFO 2026-04-20 14:05:32,701 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.18, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:05:33,339 middleware 20652 25080 GET /api/favorites/ 200 - 2.807s
+INFO 2026-04-20 14:05:33,341 runserver 20652 26112 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.82, 127.0.0.1:64517][0m
+INFO 2026-04-20 14:05:33,613 middleware 20652 8604 GET /api/listings/ 200 - 3.072s
+INFO 2026-04-20 14:05:33,615 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A05%3A30.515Z 200 [3.09, 127.0.0.1:49709][0m
+INFO 2026-04-20 14:05:33,925 middleware 20652 7856 GET /api/regions/ 200 - 3.394s
+INFO 2026-04-20 14:05:33,928 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.41, 127.0.0.1:54837][0m
+INFO 2026-04-20 14:05:34,403 middleware 20652 26520 GET /api/listings/ 200 - 3.874s
+INFO 2026-04-20 14:05:34,405 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6 200 [3.89, 127.0.0.1:59447][0m
+INFO 2026-04-20 14:05:34,485 middleware 20652 20872 GET /api/listings/ 200 - 3.956s
+INFO 2026-04-20 14:05:34,487 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.97, 127.0.0.1:52952][0m
+INFO 2026-04-20 14:05:34,863 middleware 20652 8188 GET /api/categories/ 200 - 2.148s
+INFO 2026-04-20 14:05:34,865 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.15, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:05:37,403 middleware 20652 25940 GET /api/regions/ 200 - 3.460s
+INFO 2026-04-20 14:05:37,404 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.46, 127.0.0.1:49709][0m
+INFO 2026-04-20 14:05:44,796 middleware 20652 6628 GET /api/listings/ 200 - 3.868s
+INFO 2026-04-20 14:05:44,799 runserver 20652 26112 [mHTTP GET /api/listings/ 200 [3.87, 127.0.0.1:49709][0m
+INFO 2026-04-20 14:05:48,676 middleware 20652 23448 GET /api/listings/ 200 - 3.868s
+INFO 2026-04-20 14:05:48,678 runserver 20652 26112 [mHTTP GET /api/listings/ 200 [3.87, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:06:06,004 runserver 20652 26112 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A06%3A05.994Z 200 [0.01, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:06:08,115 middleware 20652 8680 GET /api/categories/ 200 - 2.103s
+INFO 2026-04-20 14:06:08,117 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.12, 127.0.0.1:54837][0m
+INFO 2026-04-20 14:06:08,823 middleware 20652 26260 GET /api/favorites/ 200 - 2.812s
+INFO 2026-04-20 14:06:08,825 runserver 20652 26112 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.83, 127.0.0.1:59447][0m
+INFO 2026-04-20 14:06:09,058 middleware 20652 5960 GET /api/listings/ 200 - 3.035s
+INFO 2026-04-20 14:06:09,060 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A06%3A05.994Z 200 [3.05, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:06:09,411 middleware 20652 11968 GET /api/regions/ 200 - 3.400s
+INFO 2026-04-20 14:06:09,413 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.41, 127.0.0.1:64517][0m
+INFO 2026-04-20 14:06:09,873 middleware 20652 20528 GET /api/listings/ 200 - 3.863s
+INFO 2026-04-20 14:06:09,873 middleware 20652 10192 GET /api/listings/ 200 - 3.862s
+INFO 2026-04-20 14:06:09,876 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6 200 [3.88, 127.0.0.1:52952][0m
+INFO 2026-04-20 14:06:09,877 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.88, 127.0.0.1:49709][0m
+INFO 2026-04-20 14:06:10,266 middleware 20652 23708 GET /api/categories/ 200 - 2.131s
+INFO 2026-04-20 14:06:10,268 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.14, 127.0.0.1:54837][0m
+INFO 2026-04-20 14:06:12,825 middleware 20652 25852 GET /api/regions/ 200 - 3.402s
+INFO 2026-04-20 14:06:12,827 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.41, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:06:26,880 runserver 20652 26112 [mHTTP OPTIONS /api/listings/?category_id=1&price_type=monthly 200 [0.00, 127.0.0.1:54837][0m
+INFO 2026-04-20 14:06:30,782 middleware 20652 19700 GET /api/listings/ 200 - 3.929s
+INFO 2026-04-20 14:06:30,784 runserver 20652 26112 [mHTTP GET /api/listings/ 200 [3.93, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:06:30,814 middleware 20652 17708 GET /api/listings/ 200 - 3.903s
+INFO 2026-04-20 14:06:30,816 runserver 20652 26112 [mHTTP GET /api/listings/?category_id=1&price_type=monthly 200 [3.92, 127.0.0.1:54837][0m
+INFO 2026-04-20 14:07:00,798 runserver 20652 26112 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A07%3A00.785Z 200 [0.01, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:07:02,964 middleware 20652 25016 GET /api/categories/ 200 - 2.161s
+INFO 2026-04-20 14:07:02,966 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:64517][0m
+INFO 2026-04-20 14:07:03,653 middleware 20652 23188 GET /api/favorites/ 200 - 2.850s
+INFO 2026-04-20 14:07:03,655 runserver 20652 26112 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.86, 127.0.0.1:52952][0m
+INFO 2026-04-20 14:07:03,821 middleware 20652 20656 GET /api/listings/ 200 - 3.005s
+INFO 2026-04-20 14:07:03,822 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A07%3A00.785Z 200 [3.02, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:07:04,238 middleware 20652 11664 GET /api/regions/ 200 - 3.436s
+INFO 2026-04-20 14:07:04,240 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.45, 127.0.0.1:59447][0m
+INFO 2026-04-20 14:07:04,627 middleware 20652 25088 GET /api/listings/ 200 - 3.825s
+INFO 2026-04-20 14:07:04,628 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.84, 127.0.0.1:54837][0m
+INFO 2026-04-20 14:07:04,673 middleware 20652 17136 GET /api/listings/ 200 - 3.871s
+INFO 2026-04-20 14:07:04,675 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6 200 [3.88, 127.0.0.1:49709][0m
+INFO 2026-04-20 14:07:05,138 middleware 20652 21688 GET /api/categories/ 200 - 2.157s
+INFO 2026-04-20 14:07:05,140 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:64517][0m
+INFO 2026-04-20 14:07:07,641 middleware 20652 17000 GET /api/regions/ 200 - 3.381s
+INFO 2026-04-20 14:07:07,643 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.39, 127.0.0.1:53364][0m
+INFO 2026-04-20 14:11:36,020 middleware 20652 26380 GET /api/listings/ 200 - 5.093s
+INFO 2026-04-20 14:11:36,023 runserver 20652 26112 [mHTTP GET /api/listings/ 200 [5.10, 127.0.0.1:65018][0m
+INFO 2026-04-20 14:11:53,272 runserver 20652 26112 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A11%3A53.264Z 200 [0.00, 127.0.0.1:58236][0m
+INFO 2026-04-20 14:11:55,715 middleware 20652 21808 GET /api/categories/ 200 - 2.132s
+INFO 2026-04-20 14:11:55,717 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.14, 127.0.0.1:51445][0m
+INFO 2026-04-20 14:11:56,351 middleware 20652 25992 GET /api/favorites/ 200 - 2.768s
+INFO 2026-04-20 14:11:56,354 runserver 20652 26112 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.78, 127.0.0.1:62714][0m
+INFO 2026-04-20 14:11:56,551 middleware 20652 1864 GET /api/listings/ 200 - 2.968s
+INFO 2026-04-20 14:11:56,553 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A11%3A53.264Z 200 [2.98, 127.0.0.1:59107][0m
+INFO 2026-04-20 14:11:57,027 middleware 20652 10768 GET /api/regions/ 200 - 3.444s
+INFO 2026-04-20 14:11:57,029 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.45, 127.0.0.1:61585][0m
+INFO 2026-04-20 14:11:57,101 middleware 20652 25336 GET /api/listings/ 200 - 3.825s
+INFO 2026-04-20 14:11:57,103 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.84, 127.0.0.1:65018][0m
+INFO 2026-04-20 14:11:57,126 middleware 20652 22484 GET /api/listings/ 200 - 3.846s
+INFO 2026-04-20 14:11:57,127 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6 200 [3.85, 127.0.0.1:58236][0m
+INFO 2026-04-20 14:11:57,822 middleware 20652 3520 GET /api/categories/ 200 - 2.098s
+INFO 2026-04-20 14:11:57,824 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.10, 127.0.0.1:51445][0m
+INFO 2026-04-20 14:12:00,440 middleware 20652 19856 GET /api/regions/ 200 - 3.401s
+INFO 2026-04-20 14:12:00,442 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.41, 127.0.0.1:59107][0m
+INFO 2026-04-20 14:12:14,126 middleware 20652 1808 GET /api/listings/ 200 - 3.872s
+INFO 2026-04-20 14:12:14,128 runserver 20652 26112 [mHTTP GET /api/listings/ 200 [3.88, 127.0.0.1:59107][0m
+INFO 2026-04-20 14:12:17,896 runserver 20652 26112 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A12%3A17.885Z 200 [0.01, 127.0.0.1:58236][0m
+INFO 2026-04-20 14:12:17,964 middleware 20652 25980 GET /api/listings/ 200 - 3.815s
+INFO 2026-04-20 14:12:17,965 runserver 20652 26112 [mHTTP GET /api/listings/ 200 [3.82, 127.0.0.1:51445][0m
+INFO 2026-04-20 14:12:20,044 middleware 20652 26540 GET /api/categories/ 200 - 2.144s
+INFO 2026-04-20 14:12:20,046 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.15, 127.0.0.1:62714][0m
+INFO 2026-04-20 14:12:20,661 middleware 20652 20800 GET /api/favorites/ 200 - 2.761s
+INFO 2026-04-20 14:12:20,664 runserver 20652 26112 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.77, 127.0.0.1:61585][0m
+INFO 2026-04-20 14:12:21,012 middleware 20652 25436 GET /api/listings/ 200 - 3.019s
+INFO 2026-04-20 14:12:21,014 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A12%3A17.885Z 200 [3.02, 127.0.0.1:51445][0m
+INFO 2026-04-20 14:12:21,412 middleware 20652 23972 GET /api/regions/ 200 - 3.502s
+INFO 2026-04-20 14:12:21,415 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.52, 127.0.0.1:58236][0m
+INFO 2026-04-20 14:12:21,718 middleware 20652 24944 GET /api/listings/ 200 - 3.818s
+INFO 2026-04-20 14:12:21,720 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.83, 127.0.0.1:59107][0m
+INFO 2026-04-20 14:12:21,843 middleware 20652 22244 GET /api/listings/ 200 - 3.942s
+INFO 2026-04-20 14:12:21,845 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6 200 [3.95, 127.0.0.1:65018][0m
+INFO 2026-04-20 14:12:22,199 middleware 20652 15396 GET /api/categories/ 200 - 2.129s
+INFO 2026-04-20 14:12:22,201 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.14, 127.0.0.1:62714][0m
+INFO 2026-04-20 14:12:24,817 middleware 20652 21456 GET /api/regions/ 200 - 3.383s
+INFO 2026-04-20 14:12:24,819 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.39, 127.0.0.1:51445][0m
+INFO 2026-04-20 14:12:36,863 runserver 20652 26112 [mHTTP OPTIONS /api/listings/?price_type=daily 200 [0.00, 127.0.0.1:62714][0m
+INFO 2026-04-20 14:12:39,027 middleware 20652 25692 GET /api/listings/ 200 - 2.159s
+INFO 2026-04-20 14:12:39,029 runserver 20652 26112 [mHTTP GET /api/listings/?price_type=daily 200 [2.16, 127.0.0.1:62714][0m
+INFO 2026-04-20 14:12:40,598 middleware 20652 16620 GET /api/listings/ 200 - 3.762s
+INFO 2026-04-20 14:12:40,599 runserver 20652 26112 [mHTTP GET /api/listings/ 200 [3.77, 127.0.0.1:51445][0m
+INFO 2026-04-20 14:14:25,306 runserver 20652 26112 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A14%3A24.963Z 200 [0.03, 127.0.0.1:62144][0m
+INFO 2026-04-20 14:14:27,440 middleware 20652 25076 GET /api/categories/ 200 - 2.131s
+INFO 2026-04-20 14:14:27,442 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:60066][0m
+INFO 2026-04-20 14:14:28,119 middleware 20652 19088 GET /api/favorites/ 200 - 2.809s
+INFO 2026-04-20 14:14:28,121 runserver 20652 26112 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.85, 127.0.0.1:50695][0m
+INFO 2026-04-20 14:14:28,333 middleware 20652 16972 GET /api/listings/ 200 - 3.014s
+INFO 2026-04-20 14:14:28,335 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A14%3A24.963Z 200 [3.03, 127.0.0.1:62144][0m
+INFO 2026-04-20 14:14:28,694 middleware 20652 22048 GET /api/regions/ 200 - 3.384s
+INFO 2026-04-20 14:14:28,697 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.42, 127.0.0.1:58747][0m
+INFO 2026-04-20 14:14:29,142 middleware 20652 16928 GET /api/listings/ 200 - 3.832s
+INFO 2026-04-20 14:14:29,143 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.87, 127.0.0.1:58975][0m
+INFO 2026-04-20 14:14:29,169 middleware 20652 26216 GET /api/listings/ 200 - 3.859s
+INFO 2026-04-20 14:14:29,171 runserver 20652 26112 [mHTTP GET /api/listings/?page_size=6 200 [3.90, 127.0.0.1:59577][0m
+INFO 2026-04-20 14:14:29,573 middleware 20652 25804 GET /api/categories/ 200 - 2.120s
+INFO 2026-04-20 14:14:29,574 runserver 20652 26112 [mHTTP GET /api/categories/ 200 [2.13, 127.0.0.1:60066][0m
+INFO 2026-04-20 14:14:32,107 middleware 20652 26000 GET /api/regions/ 200 - 3.395s
+INFO 2026-04-20 14:14:32,109 runserver 20652 26112 [mHTTP GET /api/regions/ 200 [3.40, 127.0.0.1:62144][0m
+INFO 2026-04-20 14:15:28,767 autoreload 20652 23132 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py changed, reloading.
+INFO 2026-04-20 14:15:30,656 autoreload 26232 22660 Watching for file changes with StatReloader
+INFO 2026-04-20 14:16:26,087 runserver 26232 13696 [mHTTP OPTIONS /api/listings/?price_type=monthly 200 [0.00, 127.0.0.1:59987][0m
+INFO 2026-04-20 14:16:29,974 middleware 26232 26260 GET /api/listings/ 200 - 3.918s
+INFO 2026-04-20 14:16:29,976 runserver 26232 13696 [mHTTP GET /api/listings/ 200 [3.93, 127.0.0.1:59153][0m
+INFO 2026-04-20 14:16:29,983 middleware 26232 25852 GET /api/listings/ 200 - 3.892s
+INFO 2026-04-20 14:16:29,984 runserver 26232 13696 [mHTTP GET /api/listings/?price_type=monthly 200 [3.90, 127.0.0.1:59987][0m
+INFO 2026-04-20 14:16:42,952 runserver 26232 13696 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A16%3A42.944Z 200 [0.00, 127.0.0.1:59987][0m
+INFO 2026-04-20 14:16:45,425 middleware 26232 23888 GET /api/categories/ 200 - 2.153s
+INFO 2026-04-20 14:16:45,427 runserver 26232 13696 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:60938][0m
+INFO 2026-04-20 14:16:46,069 middleware 26232 18532 GET /api/favorites/ 200 - 3.104s
+INFO 2026-04-20 14:16:46,070 runserver 26232 13696 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.11, 127.0.0.1:59987][0m
+INFO 2026-04-20 14:16:46,358 middleware 26232 12744 GET /api/listings/ 200 - 3.085s
+INFO 2026-04-20 14:16:46,361 runserver 26232 13696 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A16%3A42.944Z 200 [3.10, 127.0.0.1:64439][0m
+INFO 2026-04-20 14:16:46,700 middleware 26232 15756 GET /api/regions/ 200 - 3.428s
+INFO 2026-04-20 14:16:46,702 runserver 26232 13696 [mHTTP GET /api/regions/ 200 [3.45, 127.0.0.1:52225][0m
+INFO 2026-04-20 14:16:47,075 middleware 26232 25352 GET /api/listings/ 200 - 4.118s
+INFO 2026-04-20 14:16:47,076 runserver 26232 13696 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.13, 127.0.0.1:59153][0m
+INFO 2026-04-20 14:16:47,109 middleware 26232 26172 GET /api/listings/ 200 - 4.152s
+INFO 2026-04-20 14:16:47,111 runserver 26232 13696 [mHTTP GET /api/listings/?page_size=6 200 [4.16, 127.0.0.1:49829][0m
+INFO 2026-04-20 14:16:47,646 middleware 26232 13360 GET /api/categories/ 200 - 2.197s
+INFO 2026-04-20 14:16:47,648 runserver 26232 13696 [mHTTP GET /api/categories/ 200 [2.20, 127.0.0.1:60938][0m
+INFO 2026-04-20 14:16:50,155 middleware 26232 20156 GET /api/regions/ 200 - 3.440s
+INFO 2026-04-20 14:16:50,157 runserver 26232 13696 [mHTTP GET /api/regions/ 200 [3.45, 127.0.0.1:64439][0m
+INFO 2026-04-20 14:17:03,155 middleware 26232 388 GET /api/listings/ 200 - 3.848s
+INFO 2026-04-20 14:17:03,157 runserver 26232 13696 [mHTTP GET /api/listings/ 200 [3.85, 127.0.0.1:64439][0m
+INFO 2026-04-20 14:17:07,102 runserver 26232 13696 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A17%3A07.092Z 200 [0.01, 127.0.0.1:49829][0m
+INFO 2026-04-20 14:17:07,137 middleware 26232 26396 GET /api/listings/ 200 - 3.959s
+INFO 2026-04-20 14:17:07,140 runserver 26232 13696 [mHTTP GET /api/listings/ 200 [3.96, 127.0.0.1:60938][0m
+INFO 2026-04-20 14:17:09,304 middleware 26232 9688 GET /api/categories/ 200 - 2.195s
+INFO 2026-04-20 14:17:09,307 runserver 26232 13696 [mHTTP GET /api/categories/ 200 [2.21, 127.0.0.1:59987][0m
+INFO 2026-04-20 14:17:09,963 middleware 26232 16620 GET /api/favorites/ 200 - 2.853s
+INFO 2026-04-20 14:17:09,965 runserver 26232 13696 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.87, 127.0.0.1:52225][0m
+INFO 2026-04-20 14:17:10,260 middleware 26232 25400 GET /api/listings/ 200 - 3.087s
+INFO 2026-04-20 14:17:10,262 runserver 26232 13696 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A17%3A07.092Z 200 [3.09, 127.0.0.1:60938][0m
+INFO 2026-04-20 14:17:10,740 middleware 26232 25176 GET /api/regions/ 200 - 3.623s
+INFO 2026-04-20 14:17:10,742 runserver 26232 13696 [mHTTP GET /api/regions/ 200 [3.64, 127.0.0.1:49829][0m
+INFO 2026-04-20 14:17:11,050 middleware 26232 19716 GET /api/listings/ 200 - 3.943s
+INFO 2026-04-20 14:17:11,052 runserver 26232 13696 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.96, 127.0.0.1:64439][0m
+INFO 2026-04-20 14:17:11,110 middleware 26232 19856 GET /api/listings/ 200 - 4.002s
+INFO 2026-04-20 14:17:11,112 runserver 26232 13696 [mHTTP GET /api/listings/?page_size=6 200 [4.01, 127.0.0.1:59153][0m
+INFO 2026-04-20 14:17:11,586 middleware 26232 11836 GET /api/categories/ 200 - 2.262s
+INFO 2026-04-20 14:17:11,588 runserver 26232 13696 [mHTTP GET /api/categories/ 200 [2.27, 127.0.0.1:59987][0m
+INFO 2026-04-20 14:17:14,263 middleware 26232 8140 GET /api/regions/ 200 - 3.511s
+INFO 2026-04-20 14:17:14,265 runserver 26232 13696 [mHTTP GET /api/regions/ 200 [3.52, 127.0.0.1:60938][0m
+INFO 2026-04-20 14:17:44,735 middleware 26232 10560 GET /api/listings/ 200 - 3.883s
+INFO 2026-04-20 14:17:44,737 runserver 26232 13696 [mHTTP GET /api/listings/ 200 [3.89, 127.0.0.1:60938][0m
+INFO 2026-04-20 14:17:48,560 middleware 26232 25200 GET /api/listings/ 200 - 3.819s
+INFO 2026-04-20 14:17:48,562 runserver 26232 13696 [mHTTP GET /api/listings/ 200 [3.82, 127.0.0.1:59987][0m
+INFO 2026-04-20 14:18:27,018 autoreload 26232 22660 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 14:18:28,372 autoreload 25804 26252 Watching for file changes with StatReloader
+INFO 2026-04-20 14:18:45,038 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A18%3A44.720Z 200 [0.01, 127.0.0.1:63171][0m
+INFO 2026-04-20 14:18:47,197 middleware 25804 26172 GET /api/categories/ 200 - 2.150s
+INFO 2026-04-20 14:18:47,199 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:55531][0m
+INFO 2026-04-20 14:18:47,885 middleware 25804 25352 GET /api/favorites/ 200 - 2.838s
+INFO 2026-04-20 14:18:47,888 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.86, 127.0.0.1:58952][0m
+INFO 2026-04-20 14:18:48,139 middleware 25804 12744 GET /api/listings/ 200 - 3.092s
+INFO 2026-04-20 14:18:48,141 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A18%3A44.720Z 200 [3.10, 127.0.0.1:63171][0m
+INFO 2026-04-20 14:18:48,549 middleware 25804 15756 GET /api/regions/ 200 - 3.502s
+INFO 2026-04-20 14:18:48,551 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.52, 127.0.0.1:57224][0m
+INFO 2026-04-20 14:18:48,887 middleware 25804 26260 GET /api/listings/ 200 - 3.840s
+INFO 2026-04-20 14:18:48,889 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.86, 127.0.0.1:52883][0m
+INFO 2026-04-20 14:18:48,952 middleware 25804 23888 GET /api/listings/ 200 - 3.905s
+INFO 2026-04-20 14:18:48,954 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [3.92, 127.0.0.1:51590][0m
+INFO 2026-04-20 14:18:49,367 middleware 25804 20156 GET /api/categories/ 200 - 2.156s
+INFO 2026-04-20 14:18:49,369 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:55531][0m
+INFO 2026-04-20 14:18:52,112 middleware 25804 25176 GET /api/regions/ 200 - 3.546s
+INFO 2026-04-20 14:18:52,114 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.55, 127.0.0.1:63171][0m
+INFO 2026-04-20 14:18:57,940 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?search=songino 200 [0.01, 127.0.0.1:55531][0m
+INFO 2026-04-20 14:19:00,128 middleware 25804 4948 GET /api/listings/ 200 - 2.178s
+INFO 2026-04-20 14:19:00,130 runserver 25804 20268 [mHTTP GET /api/listings/?search=songino 200 [2.18, 127.0.0.1:55531][0m
+INFO 2026-04-20 14:19:01,780 middleware 25804 24984 GET /api/listings/ 200 - 3.899s
+INFO 2026-04-20 14:19:01,782 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [3.90, 127.0.0.1:63171][0m
+INFO 2026-04-20 14:19:11,440 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A19%3A11.427Z 200 [0.01, 127.0.0.1:55531][0m
+INFO 2026-04-20 14:19:14,342 middleware 25804 23120 GET /api/categories/ 200 - 2.898s
+INFO 2026-04-20 14:19:14,344 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.91, 127.0.0.1:57224][0m
+INFO 2026-04-20 14:19:14,514 middleware 25804 25844 GET /api/favorites/ 200 - 3.071s
+INFO 2026-04-20 14:19:14,516 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.08, 127.0.0.1:52883][0m
+INFO 2026-04-20 14:19:14,721 middleware 25804 24788 GET /api/listings/ 200 - 3.263s
+INFO 2026-04-20 14:19:14,723 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A19%3A11.427Z 200 [3.28, 127.0.0.1:55531][0m
+INFO 2026-04-20 14:19:15,828 middleware 25804 19400 GET /api/listings/ 200 - 4.384s
+INFO 2026-04-20 14:19:15,829 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [4.40, 127.0.0.1:51590][0m
+INFO 2026-04-20 14:19:15,876 middleware 25804 3896 GET /api/listings/ 200 - 4.433s
+INFO 2026-04-20 14:19:15,878 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.45, 127.0.0.1:63171][0m
+INFO 2026-04-20 14:19:16,372 middleware 25804 16880 GET /api/regions/ 200 - 4.928s
+INFO 2026-04-20 14:19:16,374 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [4.94, 127.0.0.1:58952][0m
+INFO 2026-04-20 14:19:16,797 middleware 25804 22208 GET /api/categories/ 200 - 2.439s
+INFO 2026-04-20 14:19:16,799 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.45, 127.0.0.1:57224][0m
+INFO 2026-04-20 14:19:20,183 middleware 25804 592 GET /api/regions/ 200 - 3.805s
+INFO 2026-04-20 14:19:20,185 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.81, 127.0.0.1:63171][0m
+INFO 2026-04-20 14:19:47,249 middleware 25804 15608 GET /api/listings/ 200 - 3.841s
+INFO 2026-04-20 14:19:47,251 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [3.85, 127.0.0.1:63171][0m
+INFO 2026-04-20 14:19:51,201 middleware 25804 25676 GET /api/listings/ 200 - 3.934s
+INFO 2026-04-20 14:19:51,203 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [3.94, 127.0.0.1:57224][0m
+INFO 2026-04-20 14:19:52,155 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A19%3A52.146Z 200 [0.01, 127.0.0.1:63171][0m
+INFO 2026-04-20 14:19:54,304 middleware 25804 26116 GET /api/categories/ 200 - 2.145s
+INFO 2026-04-20 14:19:54,306 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.16, 127.0.0.1:55531][0m
+INFO 2026-04-20 14:19:54,937 middleware 25804 26424 GET /api/favorites/ 200 - 2.776s
+INFO 2026-04-20 14:19:54,940 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.79, 127.0.0.1:51590][0m
+INFO 2026-04-20 14:19:55,149 middleware 25804 18252 GET /api/listings/ 200 - 2.977s
+INFO 2026-04-20 14:19:55,151 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A19%3A52.146Z 200 [2.99, 127.0.0.1:63171][0m
+INFO 2026-04-20 14:19:55,576 middleware 25804 9888 GET /api/regions/ 200 - 3.415s
+INFO 2026-04-20 14:19:55,578 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.43, 127.0.0.1:52883][0m
+INFO 2026-04-20 14:19:56,015 middleware 25804 25836 GET /api/listings/ 200 - 3.856s
+INFO 2026-04-20 14:19:56,017 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [3.87, 127.0.0.1:58952][0m
+INFO 2026-04-20 14:19:56,026 middleware 25804 17136 GET /api/listings/ 200 - 3.868s
+INFO 2026-04-20 14:19:56,029 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.88, 127.0.0.1:57224][0m
+INFO 2026-04-20 14:19:56,439 middleware 25804 20608 GET /api/categories/ 200 - 2.121s
+INFO 2026-04-20 14:19:56,441 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.13, 127.0.0.1:55531][0m
+INFO 2026-04-20 14:19:59,088 middleware 25804 23168 GET /api/regions/ 200 - 3.487s
+INFO 2026-04-20 14:19:59,090 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.49, 127.0.0.1:63171][0m
+INFO 2026-04-20 14:21:58,857 middleware 25804 25728 GET /api/listings/ 200 - 3.924s
+INFO 2026-04-20 14:21:58,860 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [3.93, 127.0.0.1:52362][0m
+INFO 2026-04-20 14:22:02,725 middleware 25804 9840 GET /api/listings/ 200 - 3.850s
+INFO 2026-04-20 14:22:02,727 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [3.86, 127.0.0.1:61891][0m
+INFO 2026-04-20 14:22:26,248 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A22%3A26.242Z 200 [0.00, 127.0.0.1:52362][0m
+INFO 2026-04-20 14:22:29,384 middleware 25804 23780 GET /api/categories/ 200 - 2.832s
+INFO 2026-04-20 14:22:29,387 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.84, 127.0.0.1:51953][0m
+INFO 2026-04-20 14:22:29,609 middleware 25804 22656 GET /api/favorites/ 200 - 3.056s
+INFO 2026-04-20 14:22:29,611 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.06, 127.0.0.1:54038][0m
+INFO 2026-04-20 14:22:29,829 middleware 25804 20496 GET /api/listings/ 200 - 3.276s
+INFO 2026-04-20 14:22:29,831 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A22%3A26.242Z 200 [3.28, 127.0.0.1:55816][0m
+INFO 2026-04-20 14:22:30,244 middleware 25804 15824 GET /api/regions/ 200 - 3.691s
+INFO 2026-04-20 14:22:30,246 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.70, 127.0.0.1:51148][0m
+INFO 2026-04-20 14:22:30,484 middleware 25804 19580 GET /api/listings/ 200 - 4.229s
+INFO 2026-04-20 14:22:30,487 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [4.24, 127.0.0.1:52362][0m
+INFO 2026-04-20 14:22:31,700 middleware 25804 22336 GET /api/listings/ 200 - 5.448s
+INFO 2026-04-20 14:22:31,702 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [5.46, 127.0.0.1:61891][0m
+INFO 2026-04-20 14:32:11,523 middleware 25804 17960 GET /api/categories/ 200 - 2.199s
+INFO 2026-04-20 14:32:11,526 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.22, 127.0.0.1:63730][0m
+INFO 2026-04-20 14:32:12,813 middleware 25804 388 GET /api/regions/ 200 - 3.490s
+INFO 2026-04-20 14:32:12,815 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.51, 127.0.0.1:60964][0m
+INFO 2026-04-20 14:32:42,118 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?region_id=13 200 [0.00, 127.0.0.1:63730][0m
+INFO 2026-04-20 14:32:45,204 middleware 25804 2560 GET /api/listings/ 200 - 3.077s
+INFO 2026-04-20 14:32:45,206 runserver 25804 20268 [mHTTP GET /api/listings/?region_id=13 200 [3.08, 127.0.0.1:63730][0m
+INFO 2026-04-20 14:32:45,988 middleware 25804 23700 GET /api/listings/ 200 - 3.899s
+INFO 2026-04-20 14:32:45,991 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [3.91, 127.0.0.1:60964][0m
+INFO 2026-04-20 14:32:53,356 middleware 25804 2436 GET /api/listings/ 200 - 3.874s
+INFO 2026-04-20 14:32:53,358 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [3.88, 127.0.0.1:60964][0m
+INFO 2026-04-20 14:32:57,546 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A32%3A57.536Z 200 [0.01, 127.0.0.1:60964][0m
+INFO 2026-04-20 14:33:00,534 middleware 25804 25948 GET /api/categories/ 200 - 2.684s
+INFO 2026-04-20 14:33:00,536 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.69, 127.0.0.1:51157][0m
+INFO 2026-04-20 14:33:00,867 middleware 25804 25828 GET /api/favorites/ 200 - 3.310s
+INFO 2026-04-20 14:33:00,869 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.32, 127.0.0.1:60964][0m
+INFO 2026-04-20 14:33:01,412 middleware 25804 25324 GET /api/listings/ 200 - 3.562s
+INFO 2026-04-20 14:33:01,414 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A32%3A57.536Z 200 [3.57, 127.0.0.1:53054][0m
+INFO 2026-04-20 14:33:01,821 middleware 25804 25200 GET /api/regions/ 200 - 3.970s
+INFO 2026-04-20 14:33:01,824 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.98, 127.0.0.1:52942][0m
+INFO 2026-04-20 14:33:02,010 middleware 25804 24560 GET /api/listings/ 200 - 4.461s
+INFO 2026-04-20 14:33:02,011 middleware 25804 23264 GET /api/listings/ 200 - 4.462s
+INFO 2026-04-20 14:33:02,014 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [4.47, 127.0.0.1:54712][0m
+INFO 2026-04-20 14:33:02,014 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.47, 127.0.0.1:63730][0m
+INFO 2026-04-20 14:33:02,769 middleware 25804 21376 GET /api/categories/ 200 - 2.210s
+INFO 2026-04-20 14:33:02,771 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.22, 127.0.0.1:51157][0m
+INFO 2026-04-20 14:33:05,227 middleware 25804 3732 GET /api/regions/ 200 - 3.392s
+INFO 2026-04-20 14:33:05,229 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.40, 127.0.0.1:53054][0m
+INFO 2026-04-20 14:33:17,719 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?region_id=8&price_type=monthly 200 [0.00, 127.0.0.1:51157][0m
+INFO 2026-04-20 14:33:21,442 middleware 25804 23720 GET /api/listings/ 200 - 3.717s
+INFO 2026-04-20 14:33:21,444 runserver 25804 20268 [mHTTP GET /api/listings/?region_id=8&price_type=monthly 200 [3.72, 127.0.0.1:51157][0m
+INFO 2026-04-20 14:33:21,885 middleware 25804 22580 GET /api/listings/ 200 - 4.196s
+INFO 2026-04-20 14:33:21,887 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [4.20, 127.0.0.1:53054][0m
+INFO 2026-04-20 14:33:48,266 middleware 25804 11140 GET /api/listings/ 401 - 0.047s
+WARNING 2026-04-20 14:33:48,301 runserver 25804 20268 [31;1mHTTP GET /api/listings/?price_type=monthly 401 [0.08, 127.0.0.1:53054][0m
+INFO 2026-04-20 14:33:50,578 middleware 25804 11276 POST /api/auth/token/refresh/ 200 - 1.741s
+INFO 2026-04-20 14:33:50,580 runserver 25804 20268 [mHTTP POST /api/auth/token/refresh/ 200 [1.75, 127.0.0.1:53054][0m
+INFO 2026-04-20 14:33:54,449 middleware 25804 14320 GET /api/listings/ 200 - 3.857s
+INFO 2026-04-20 14:33:54,451 runserver 25804 20268 [mHTTP GET /api/listings/?price_type=monthly 200 [3.86, 127.0.0.1:53054][0m
+INFO 2026-04-20 14:37:20,506 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?price_type=monthly&region_id=8 200 [0.00, 127.0.0.1:63797][0m
+INFO 2026-04-20 14:37:23,987 middleware 25804 20272 GET /api/listings/ 200 - 3.437s
+INFO 2026-04-20 14:37:23,989 runserver 25804 20268 [mHTTP GET /api/listings/?price_type=monthly&region_id=8 200 [3.44, 127.0.0.1:51413][0m
+INFO 2026-04-20 14:37:24,006 middleware 25804 8104 GET /api/listings/ 200 - 3.494s
+INFO 2026-04-20 14:37:24,008 runserver 25804 20268 [mHTTP GET /api/listings/?region_id=8&price_type=monthly 200 [3.50, 127.0.0.1:63797][0m
+INFO 2026-04-20 14:37:24,381 middleware 25804 23248 GET /api/listings/ 200 - 3.872s
+INFO 2026-04-20 14:37:24,383 runserver 25804 20268 [mHTTP GET /api/listings/?price_type=monthly 200 [3.88, 127.0.0.1:63454][0m
+INFO 2026-04-20 14:40:06,478 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A40%3A06.159Z 200 [0.01, 127.0.0.1:64595][0m
+INFO 2026-04-20 14:40:08,757 middleware 25804 19328 GET /api/categories/ 200 - 2.273s
+INFO 2026-04-20 14:40:08,760 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.29, 127.0.0.1:60762][0m
+INFO 2026-04-20 14:40:09,463 middleware 25804 25036 GET /api/favorites/ 200 - 2.980s
+INFO 2026-04-20 14:40:09,465 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.99, 127.0.0.1:50010][0m
+INFO 2026-04-20 14:40:09,615 middleware 25804 25372 GET /api/listings/ 200 - 3.118s
+INFO 2026-04-20 14:40:09,617 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A40%3A06.159Z 200 [3.14, 127.0.0.1:64595][0m
+INFO 2026-04-20 14:40:10,036 middleware 25804 16988 GET /api/regions/ 200 - 3.553s
+INFO 2026-04-20 14:40:10,038 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.57, 127.0.0.1:51060][0m
+INFO 2026-04-20 14:40:10,448 middleware 25804 25016 GET /api/listings/ 200 - 3.965s
+INFO 2026-04-20 14:40:10,450 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.98, 127.0.0.1:50212][0m
+INFO 2026-04-20 14:40:10,533 middleware 25804 7856 GET /api/listings/ 200 - 4.049s
+INFO 2026-04-20 14:40:10,534 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [4.06, 127.0.0.1:58950][0m
+INFO 2026-04-20 14:40:10,938 middleware 25804 25568 GET /api/categories/ 200 - 2.162s
+INFO 2026-04-20 14:40:10,940 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.17, 127.0.0.1:60762][0m
+INFO 2026-04-20 14:40:13,492 middleware 25804 9728 GET /api/regions/ 200 - 3.438s
+INFO 2026-04-20 14:40:13,494 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.44, 127.0.0.1:64595][0m
+INFO 2026-04-20 14:40:21,111 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?region_id=8 200 [0.00, 127.0.0.1:64595][0m
+INFO 2026-04-20 14:40:24,656 middleware 25804 20664 GET /api/listings/ 200 - 3.538s
+INFO 2026-04-20 14:40:24,659 runserver 25804 20268 [mHTTP GET /api/listings/?region_id=8 200 [3.54, 127.0.0.1:64595][0m
+INFO 2026-04-20 14:40:25,111 middleware 25804 23804 GET /api/listings/ 200 - 3.997s
+INFO 2026-04-20 14:40:25,113 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [4.00, 127.0.0.1:60762][0m
+INFO 2026-04-20 14:40:28,322 middleware 25804 7760 GET /api/listings/ 200 - 3.649s
+INFO 2026-04-20 14:40:28,324 runserver 25804 20268 [mHTTP GET /api/listings/?region_id=8 200 [3.65, 127.0.0.1:58950][0m
+INFO 2026-04-20 14:40:34,926 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A40%3A34.912Z 200 [0.01, 127.0.0.1:60762][0m
+INFO 2026-04-20 14:40:37,218 middleware 25804 23808 GET /api/categories/ 200 - 2.286s
+INFO 2026-04-20 14:40:37,220 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.30, 127.0.0.1:51060][0m
+INFO 2026-04-20 14:40:38,076 middleware 25804 24672 GET /api/favorites/ 200 - 3.144s
+INFO 2026-04-20 14:40:38,078 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.16, 127.0.0.1:50212][0m
+INFO 2026-04-20 14:40:38,319 middleware 25804 10948 GET /api/listings/ 200 - 3.366s
+INFO 2026-04-20 14:40:38,323 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A40%3A34.912Z 200 [3.39, 127.0.0.1:60762][0m
+INFO 2026-04-20 14:40:38,866 middleware 25804 21492 GET /api/regions/ 200 - 3.934s
+INFO 2026-04-20 14:40:38,868 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.95, 127.0.0.1:50010][0m
+INFO 2026-04-20 14:40:39,409 middleware 25804 25696 GET /api/listings/ 200 - 4.478s
+INFO 2026-04-20 14:40:39,409 middleware 25804 11304 GET /api/listings/ 200 - 4.476s
+INFO 2026-04-20 14:40:39,412 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.50, 127.0.0.1:58950][0m
+INFO 2026-04-20 14:40:39,413 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [4.49, 127.0.0.1:64595][0m
+INFO 2026-04-20 14:43:18,488 middleware 25804 24972 GET /api/listings/ 200 - 5.322s
+INFO 2026-04-20 14:43:18,490 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [5.33, 127.0.0.1:63369][0m
+INFO 2026-04-20 14:45:45,669 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A45%3A45.356Z 200 [0.01, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:45:48,069 middleware 25804 25664 GET /api/categories/ 200 - 2.395s
+INFO 2026-04-20 14:45:48,071 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.41, 127.0.0.1:56844][0m
+INFO 2026-04-20 14:45:48,658 middleware 25804 20176 GET /api/favorites/ 200 - 2.985s
+INFO 2026-04-20 14:45:48,660 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.00, 127.0.0.1:57712][0m
+INFO 2026-04-20 14:45:48,901 middleware 25804 26460 GET /api/listings/ 200 - 3.217s
+INFO 2026-04-20 14:45:48,903 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A45%3A45.356Z 200 [3.23, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:45:49,348 middleware 25804 21136 GET /api/regions/ 200 - 3.674s
+INFO 2026-04-20 14:45:49,350 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.69, 127.0.0.1:51750][0m
+INFO 2026-04-20 14:45:49,708 middleware 25804 25012 GET /api/listings/ 200 - 4.034s
+INFO 2026-04-20 14:45:49,710 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [4.05, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:45:49,860 middleware 25804 26028 GET /api/listings/ 200 - 4.187s
+INFO 2026-04-20 14:45:49,861 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.20, 127.0.0.1:65352][0m
+INFO 2026-04-20 14:45:56,673 middleware 25804 20736 GET /api/favorites/ 200 - 2.838s
+INFO 2026-04-20 14:45:56,675 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.84, 127.0.0.1:65352][0m
+INFO 2026-04-20 14:46:00,695 middleware 25804 26452 GET /api/listings/8/ 200 - 3.999s
+INFO 2026-04-20 14:46:00,697 runserver 25804 20268 [mHTTP GET /api/listings/8/ 200 [4.00, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:46:00,908 middleware 25804 11036 GET /api/listings/14/ 200 - 4.213s
+INFO 2026-04-20 14:46:00,910 runserver 25804 20268 [mHTTP GET /api/listings/14/ 200 [4.22, 127.0.0.1:65352][0m
+INFO 2026-04-20 14:46:09,208 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A46%3A09.184Z 200 [0.02, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:46:11,632 middleware 25804 25836 GET /api/categories/ 200 - 2.418s
+INFO 2026-04-20 14:46:11,635 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.44, 127.0.0.1:57712][0m
+INFO 2026-04-20 14:46:12,274 middleware 25804 25344 GET /api/favorites/ 200 - 3.060s
+INFO 2026-04-20 14:46:12,277 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.08, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:46:12,550 middleware 25804 22204 GET /api/listings/ 200 - 3.325s
+INFO 2026-04-20 14:46:12,552 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A46%3A09.184Z 200 [3.34, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:46:12,931 middleware 25804 25648 GET /api/regions/ 200 - 3.716s
+INFO 2026-04-20 14:46:12,934 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.74, 127.0.0.1:56844][0m
+INFO 2026-04-20 14:46:13,367 middleware 25804 24752 GET /api/listings/ 200 - 4.154s
+INFO 2026-04-20 14:46:13,369 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [4.18, 127.0.0.1:51750][0m
+INFO 2026-04-20 14:46:13,439 middleware 25804 22244 GET /api/listings/ 200 - 4.227s
+INFO 2026-04-20 14:46:13,441 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.25, 127.0.0.1:65352][0m
+INFO 2026-04-20 14:46:13,865 middleware 25804 23532 GET /api/categories/ 200 - 2.216s
+INFO 2026-04-20 14:46:13,868 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.22, 127.0.0.1:57712][0m
+INFO 2026-04-20 14:46:16,456 middleware 25804 14840 GET /api/regions/ 200 - 3.515s
+INFO 2026-04-20 14:46:16,458 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.52, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:46:23,670 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?min_area=0&max_area=45 200 [0.00, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:46:27,184 middleware 25804 25560 GET /api/listings/ 200 - 3.507s
+INFO 2026-04-20 14:46:27,185 runserver 25804 20268 [mHTTP GET /api/listings/?min_area=0&max_area=45 200 [3.51, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:46:27,567 middleware 25804 1496 GET /api/listings/ 200 - 3.895s
+INFO 2026-04-20 14:46:27,569 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [3.90, 127.0.0.1:57712][0m
+INFO 2026-04-20 14:46:30,258 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A46%3A30.248Z 200 [0.01, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:46:30,660 middleware 25804 15004 GET /api/listings/ 200 - 3.459s
+INFO 2026-04-20 14:46:30,662 runserver 25804 20268 [mHTTP GET /api/listings/?min_area=0&max_area=45 200 [3.46, 127.0.0.1:65352][0m
+INFO 2026-04-20 14:46:32,391 middleware 25804 17136 GET /api/categories/ 200 - 2.129s
+INFO 2026-04-20 14:46:32,394 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.14, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:46:33,024 middleware 25804 20656 GET /api/favorites/ 200 - 2.762s
+INFO 2026-04-20 14:46:33,028 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.77, 127.0.0.1:56844][0m
+INFO 2026-04-20 14:46:33,661 middleware 25804 23264 GET /api/regions/ 200 - 3.392s
+INFO 2026-04-20 14:46:33,663 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.40, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:46:33,714 middleware 25804 26220 GET /api/listings/ 200 - 3.028s
+INFO 2026-04-20 14:46:33,715 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A46%3A30.248Z 200 [3.03, 127.0.0.1:65352][0m
+INFO 2026-04-20 14:46:34,065 middleware 25804 20976 GET /api/listings/ 200 - 3.804s
+INFO 2026-04-20 14:46:34,068 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.82, 127.0.0.1:57712][0m
+INFO 2026-04-20 14:46:34,079 middleware 25804 620 GET /api/listings/ 200 - 3.818s
+INFO 2026-04-20 14:46:34,082 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [3.83, 127.0.0.1:51750][0m
+INFO 2026-04-20 14:46:35,799 middleware 25804 23612 GET /api/favorites/ 200 - 2.760s
+INFO 2026-04-20 14:46:35,802 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.77, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:46:39,708 middleware 25804 25936 GET /api/listings/8/ 200 - 3.888s
+INFO 2026-04-20 14:46:39,710 runserver 25804 20268 [mHTTP GET /api/listings/8/ 200 [3.89, 127.0.0.1:51750][0m
+INFO 2026-04-20 14:46:39,961 middleware 25804 21120 GET /api/listings/14/ 200 - 4.141s
+INFO 2026-04-20 14:46:39,963 runserver 25804 20268 [mHTTP GET /api/listings/14/ 200 [4.15, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:46:52,105 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A46%3A52.091Z 200 [0.01, 127.0.0.1:51750][0m
+INFO 2026-04-20 14:46:54,329 middleware 25804 25940 GET /api/categories/ 200 - 2.210s
+INFO 2026-04-20 14:46:54,330 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.23, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:46:54,948 middleware 25804 18268 GET /api/favorites/ 200 - 2.829s
+INFO 2026-04-20 14:46:54,968 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.87, 127.0.0.1:65352][0m
+INFO 2026-04-20 14:46:55,194 middleware 25804 25076 GET /api/listings/ 200 - 3.067s
+INFO 2026-04-20 14:46:55,196 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A46%3A52.091Z 200 [3.09, 127.0.0.1:51750][0m
+INFO 2026-04-20 14:46:55,640 middleware 25804 23580 GET /api/regions/ 200 - 3.521s
+INFO 2026-04-20 14:46:55,643 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.54, 127.0.0.1:56844][0m
+INFO 2026-04-20 14:46:56,025 middleware 25804 24876 GET /api/listings/ 200 - 3.906s
+INFO 2026-04-20 14:46:56,026 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [3.93, 127.0.0.1:57712][0m
+INFO 2026-04-20 14:46:56,064 middleware 25804 25860 GET /api/listings/ 200 - 3.946s
+INFO 2026-04-20 14:46:56,066 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.97, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:46:58,268 middleware 25804 416 GET /api/listings/ 200 - 3.928s
+INFO 2026-04-20 14:46:58,270 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [3.93, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:47:00,028 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A47%3A00.015Z 200 [0.01, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:47:02,207 middleware 25804 25524 GET /api/categories/ 200 - 2.174s
+INFO 2026-04-20 14:47:02,209 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.19, 127.0.0.1:51750][0m
+INFO 2026-04-20 14:47:02,884 middleware 25804 20216 GET /api/favorites/ 200 - 2.851s
+INFO 2026-04-20 14:47:02,886 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.86, 127.0.0.1:56844][0m
+INFO 2026-04-20 14:47:03,064 middleware 25804 23896 GET /api/listings/ 200 - 3.023s
+INFO 2026-04-20 14:47:03,066 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A47%3A00.015Z 200 [3.03, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:47:03,715 middleware 25804 21160 GET /api/regions/ 200 - 3.681s
+INFO 2026-04-20 14:47:03,717 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [3.70, 127.0.0.1:65352][0m
+INFO 2026-04-20 14:47:04,160 middleware 25804 11968 GET /api/listings/ 200 - 4.127s
+INFO 2026-04-20 14:47:04,162 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.14, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:47:04,167 middleware 25804 9732 GET /api/listings/ 200 - 4.134s
+INFO 2026-04-20 14:47:04,171 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [4.15, 127.0.0.1:57712][0m
+INFO 2026-04-20 14:47:04,933 middleware 25804 23560 GET /api/categories/ 200 - 2.709s
+INFO 2026-04-20 14:47:04,935 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [2.71, 127.0.0.1:51750][0m
+INFO 2026-04-20 14:47:11,237 middleware 25804 23140 GET /api/regions/ 200 - 7.500s
+INFO 2026-04-20 14:47:11,239 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [7.51, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:47:23,924 middleware 25804 10476 GET /api/listings/ 200 - 3.991s
+INFO 2026-04-20 14:47:23,926 runserver 25804 20268 [mHTTP GET /api/listings/ 200 [4.00, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:47:24,669 runserver 25804 20268 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A47%3A24.595Z 200 [0.07, 127.0.0.1:51750][0m
+INFO 2026-04-20 14:47:28,426 middleware 25804 21136 GET /api/categories/ 200 - 3.753s
+INFO 2026-04-20 14:47:28,429 runserver 25804 20268 [mHTTP GET /api/categories/ 200 [3.83, 127.0.0.1:65352][0m
+INFO 2026-04-20 14:47:29,266 middleware 25804 26460 GET /api/listings/ 200 - 4.585s
+INFO 2026-04-20 14:47:29,268 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A47%3A24.595Z 200 [4.60, 127.0.0.1:51750][0m
+INFO 2026-04-20 14:47:29,490 middleware 25804 20176 GET /api/favorites/ 200 - 4.817s
+INFO 2026-04-20 14:47:29,492 runserver 25804 20268 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [4.89, 127.0.0.1:64365][0m
+INFO 2026-04-20 14:47:29,705 middleware 25804 25012 GET /api/regions/ 200 - 5.032s
+INFO 2026-04-20 14:47:29,707 runserver 25804 20268 [mHTTP GET /api/regions/ 200 [5.11, 127.0.0.1:56844][0m
+INFO 2026-04-20 14:47:30,170 middleware 25804 25664 GET /api/listings/ 200 - 5.497s
+INFO 2026-04-20 14:47:30,172 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6 200 [5.57, 127.0.0.1:57712][0m
+INFO 2026-04-20 14:47:30,176 middleware 25804 24972 GET /api/listings/ 200 - 5.503s
+INFO 2026-04-20 14:47:30,178 runserver 25804 20268 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [5.58, 127.0.0.1:63106][0m
+INFO 2026-04-20 14:55:05,202 autoreload 25804 26252 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 14:55:06,457 autoreload 11836 23020 Watching for file changes with StatReloader
+INFO 2026-04-20 14:56:02,446 middleware 11836 26220 GET /api/listings/ 200 - 4.216s
+INFO 2026-04-20 14:56:02,448 runserver 11836 3028 [mHTTP GET /api/listings/ 200 [4.23, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:08,843 runserver 11836 3028 [mHTTP OPTIONS /api/profile/ 200 [0.00, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:11,285 middleware 11836 7760 GET /api/profile/ 200 - 2.436s
+INFO 2026-04-20 14:56:11,287 runserver 11836 3028 [mHTTP GET /api/profile/ 200 [2.44, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:13,558 middleware 11836 24504 GET /api/profile/ 200 - 2.249s
+INFO 2026-04-20 14:56:13,560 runserver 11836 3028 [mHTTP GET /api/profile/ 200 [2.25, 127.0.0.1:63211][0m
+INFO 2026-04-20 14:56:15,539 middleware 11836 25780 GET /api/listings/14/ 200 - 4.227s
+INFO 2026-04-20 14:56:15,541 runserver 11836 3028 [mHTTP GET /api/listings/14/ 200 [4.23, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:15,566 runserver 11836 3028 [mHTTP OPTIONS /api/favorites/14/check/ 200 [0.00, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:16,293 middleware 11836 11696 GET /api/profile/ 200 - 2.712s
+INFO 2026-04-20 14:56:16,297 runserver 11836 3028 [mHTTP GET /api/profile/ 200 [2.72, 127.0.0.1:63211][0m
+INFO 2026-04-20 14:56:17,811 middleware 11836 25820 GET /api/favorites/14/check/ 200 - 2.240s
+INFO 2026-04-20 14:56:17,813 runserver 11836 3028 [mHTTP GET /api/favorites/14/check/ 200 [2.24, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:17,830 runserver 11836 3028 [mHTTP OPTIONS /api/mongolia/utility-estimate/?area_sqm=45 200 [0.00, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:19,592 middleware 11836 22660 GET /api/mongolia/utility-estimate/ 200 - 1.756s
+INFO 2026-04-20 14:56:19,594 runserver 11836 3028 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.76, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:19,612 runserver 11836 3028 [mHTTP OPTIONS /api/listings/?owner_id=18&page_size=6 200 [0.00, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:19,958 middleware 11836 388 GET /api/listings/14/ 200 - 4.409s
+INFO 2026-04-20 14:56:19,960 runserver 11836 3028 [mHTTP GET /api/listings/14/ 200 [4.41, 127.0.0.1:61295][0m
+INFO 2026-04-20 14:56:23,247 middleware 11836 24692 GET /api/favorites/14/check/ 200 - 3.257s
+INFO 2026-04-20 14:56:23,249 runserver 11836 3028 [mHTTP GET /api/favorites/14/check/ 200 [3.26, 127.0.0.1:61295][0m
+INFO 2026-04-20 14:56:24,370 middleware 11836 17356 GET /api/listings/ 200 - 4.753s
+INFO 2026-04-20 14:56:24,371 runserver 11836 3028 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [4.76, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:24,984 middleware 11836 20272 GET /api/mongolia/utility-estimate/ 200 - 1.724s
+INFO 2026-04-20 14:56:24,986 runserver 11836 3028 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.73, 127.0.0.1:61295][0m
+INFO 2026-04-20 14:56:25,264 middleware 11836 23640 GET /api/listings/14/ 200 - 5.292s
+INFO 2026-04-20 14:56:25,266 runserver 11836 3028 [mHTTP GET /api/listings/14/ 200 [5.30, 127.0.0.1:63211][0m
+INFO 2026-04-20 14:56:27,465 middleware 11836 24960 GET /api/favorites/14/check/ 200 - 2.174s
+INFO 2026-04-20 14:56:27,466 runserver 11836 3028 [mHTTP GET /api/favorites/14/check/ 200 [2.18, 127.0.0.1:63211][0m
+INFO 2026-04-20 14:56:28,696 middleware 11836 25004 GET /api/listings/ 200 - 3.693s
+INFO 2026-04-20 14:56:28,698 runserver 11836 3028 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.70, 127.0.0.1:61295][0m
+INFO 2026-04-20 14:56:28,777 runserver 11836 3028 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A56%3A28.769Z 200 [0.00, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:29,324 middleware 11836 25924 GET /api/mongolia/utility-estimate/ 200 - 1.840s
+INFO 2026-04-20 14:56:29,326 runserver 11836 3028 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=45 200 [1.84, 127.0.0.1:63211][0m
+INFO 2026-04-20 14:56:31,251 middleware 11836 19380 GET /api/categories/ 200 - 2.168s
+INFO 2026-04-20 14:56:31,252 runserver 11836 3028 [mHTTP GET /api/categories/ 200 [2.18, 127.0.0.1:58761][0m
+INFO 2026-04-20 14:56:31,893 middleware 11836 11328 GET /api/favorites/ 200 - 2.811s
+INFO 2026-04-20 14:56:31,895 runserver 11836 3028 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.82, 127.0.0.1:52740][0m
+INFO 2026-04-20 14:56:32,442 middleware 11836 20124 GET /api/listings/ 200 - 3.103s
+INFO 2026-04-20 14:56:32,445 runserver 11836 3028 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T06%3A56%3A28.769Z 200 [3.11, 127.0.0.1:63211][0m
+INFO 2026-04-20 14:56:32,652 middleware 11836 18712 GET /api/listings/ 200 - 3.874s
+INFO 2026-04-20 14:56:32,654 middleware 11836 8708 GET /api/listings/ 200 - 3.872s
+INFO 2026-04-20 14:56:32,655 runserver 11836 3028 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.88, 127.0.0.1:61295][0m
+INFO 2026-04-20 14:56:32,657 runserver 11836 3028 [mHTTP GET /api/listings/?page_size=6 200 [3.88, 127.0.0.1:63492][0m
+INFO 2026-04-20 14:56:32,659 middleware 11836 18240 GET /api/regions/ 200 - 3.577s
+INFO 2026-04-20 14:56:32,661 runserver 11836 3028 [mHTTP GET /api/regions/ 200 [3.58, 127.0.0.1:49484][0m
+INFO 2026-04-20 14:56:34,163 middleware 11836 24476 GET /api/categories/ 200 - 2.252s
+INFO 2026-04-20 14:56:34,165 runserver 11836 3028 [mHTTP GET /api/categories/ 200 [2.26, 127.0.0.1:52740][0m
+INFO 2026-04-20 14:56:34,774 middleware 11836 21692 GET /api/listings/ 200 - 3.507s
+INFO 2026-04-20 14:56:34,777 runserver 11836 3028 [mHTTP GET /api/listings/?owner_id=18&page_size=6 200 [3.51, 127.0.0.1:58761][0m
+INFO 2026-04-20 14:56:36,116 middleware 11836 20664 GET /api/regions/ 200 - 3.432s
+INFO 2026-04-20 14:56:36,118 runserver 11836 3028 [mHTTP GET /api/regions/ 200 [3.44, 127.0.0.1:63211][0m
+INFO 2026-04-20 14:57:34,444 runserver 11836 3028 [mHTTP OPTIONS /api/listings/?search=test 200 [0.00, 127.0.0.1:63211][0m
+INFO 2026-04-20 14:57:39,183 middleware 11836 3220 GET /api/listings/ 200 - 4.736s
+INFO 2026-04-20 14:57:39,186 runserver 11836 3028 [mHTTP GET /api/listings/ 200 [4.74, 127.0.0.1:58761][0m
+INFO 2026-04-20 14:57:42,354 middleware 11836 25736 GET /api/listings/ 500 - 7.904s
+ERROR 2026-04-20 14:57:42,356 runserver 11836 3028 [35;1mHTTP GET /api/listings/?search=test 500 [7.91, 127.0.0.1:63211][0m
+INFO 2026-04-20 14:57:42,980 runserver 11836 3028 [mHTTP OPTIONS /api/listings/?search=test+ 200 [0.00, 127.0.0.1:60120][0m
+INFO 2026-04-20 14:57:47,385 middleware 11836 25200 GET /api/listings/ 500 - 5.016s
+ERROR 2026-04-20 14:57:47,388 runserver 11836 3028 [35;1mHTTP GET /api/listings/?search=test 500 [5.02, 127.0.0.1:58761][0m
+INFO 2026-04-20 14:57:49,578 middleware 11836 26596 GET /api/listings/ 500 - 6.594s
+ERROR 2026-04-20 14:57:49,581 runserver 11836 3028 [35;1mHTTP GET /api/listings/?search=test+ 500 [6.60, 127.0.0.1:60120][0m
+INFO 2026-04-20 15:01:31,272 middleware 11836 20216 GET /api/listings/ 200 - 4.037s
+INFO 2026-04-20 15:01:31,273 runserver 11836 3028 [mHTTP GET /api/listings/ 200 [4.04, 127.0.0.1:50936][0m
+INFO 2026-04-20 15:01:34,173 runserver 11836 3028 [mHTTP OPTIONS /api/listings/?search=t 200 [0.00, 127.0.0.1:50936][0m
+INFO 2026-04-20 15:01:34,249 runserver 11836 3028 [mHTTP OPTIONS /api/listings/?search=te 200 [0.00, 127.0.0.1:56553][0m
+INFO 2026-04-20 15:01:34,638 runserver 11836 3028 [mHTTP OPTIONS /api/listings/?search=tes 200 [0.00, 127.0.0.1:58179][0m
+INFO 2026-04-20 15:01:39,217 middleware 11836 25340 GET /api/listings/ 500 - 5.040s
+ERROR 2026-04-20 15:01:39,219 runserver 11836 3028 [35;1mHTTP GET /api/listings/?search=t 500 [5.04, 127.0.0.1:50936][0m
+INFO 2026-04-20 15:01:39,382 middleware 11836 6604 GET /api/listings/ 500 - 5.129s
+ERROR 2026-04-20 15:01:39,385 runserver 11836 3028 [35;1mHTTP GET /api/listings/?search=te 500 [5.13, 127.0.0.1:56553][0m
+INFO 2026-04-20 15:01:41,142 middleware 11836 19580 GET /api/listings/ 500 - 6.500s
+ERROR 2026-04-20 15:01:41,145 runserver 11836 3028 [35;1mHTTP GET /api/listings/?search=test 500 [6.50, 127.0.0.1:58179][0m
+INFO 2026-04-20 15:01:41,322 middleware 11836 23972 GET /api/listings/ 500 - 6.621s
+ERROR 2026-04-20 15:01:41,324 runserver 11836 3028 [35;1mHTTP GET /api/listings/?search=tes 500 [6.62, 127.0.0.1:51361][0m
+INFO 2026-04-20 15:01:49,650 middleware 11836 6280 GET /api/listings/ 500 - 5.364s
+ERROR 2026-04-20 15:01:49,652 runserver 11836 3028 [35;1mHTTP GET /api/listings/?search=test 500 [5.37, 127.0.0.1:51361][0m
+INFO 2026-04-20 15:03:36,916 autoreload 11836 23020 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 15:03:38,004 autoreload 3052 22816 Watching for file changes with StatReloader
+INFO 2026-04-20 15:05:13,332 middleware 3052 16496 GET /api/listings/ 200 - 5.048s
+INFO 2026-04-20 15:05:13,335 runserver 3052 25536 [mHTTP GET /api/listings/?search=test 200 [5.06, 127.0.0.1:51312][0m
+INFO 2026-04-20 15:07:12,398 runserver 3052 25536 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A07%3A12.079Z 200 [0.01, 127.0.0.1:61526][0m
+INFO 2026-04-20 15:07:14,679 middleware 3052 24560 GET /api/categories/ 200 - 2.272s
+INFO 2026-04-20 15:07:14,680 runserver 3052 25536 [mHTTP GET /api/categories/ 200 [2.29, 127.0.0.1:56379][0m
+INFO 2026-04-20 15:07:15,400 middleware 3052 25736 GET /api/favorites/ 200 - 2.992s
+INFO 2026-04-20 15:07:15,402 runserver 3052 25536 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.01, 127.0.0.1:55008][0m
+INFO 2026-04-20 15:07:15,563 middleware 3052 26216 GET /api/listings/ 200 - 3.145s
+INFO 2026-04-20 15:07:15,565 runserver 3052 25536 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A07%3A12.079Z 200 [3.16, 127.0.0.1:61526][0m
+INFO 2026-04-20 15:07:16,012 middleware 3052 248 GET /api/regions/ 200 - 3.605s
+INFO 2026-04-20 15:07:16,014 runserver 3052 25536 [mHTTP GET /api/regions/ 200 [3.63, 127.0.0.1:58181][0m
+INFO 2026-04-20 15:07:16,448 middleware 3052 6276 GET /api/listings/ 200 - 4.041s
+INFO 2026-04-20 15:07:16,450 runserver 3052 25536 [mHTTP GET /api/listings/?page_size=6 200 [4.06, 127.0.0.1:61250][0m
+INFO 2026-04-20 15:07:16,490 middleware 3052 20156 GET /api/listings/ 200 - 4.084s
+INFO 2026-04-20 15:07:16,492 runserver 3052 25536 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.11, 127.0.0.1:50747][0m
+INFO 2026-04-20 15:07:16,883 middleware 3052 24688 GET /api/categories/ 200 - 2.190s
+INFO 2026-04-20 15:07:16,885 runserver 3052 25536 [mHTTP GET /api/categories/ 200 [2.20, 127.0.0.1:56379][0m
+INFO 2026-04-20 15:07:19,470 middleware 3052 21516 GET /api/regions/ 200 - 3.444s
+INFO 2026-04-20 15:07:19,472 runserver 3052 25536 [mHTTP GET /api/regions/ 200 [3.45, 127.0.0.1:61526][0m
+INFO 2026-04-20 15:07:30,010 middleware 3052 2164 GET /api/listings/ 200 - 3.431s
+INFO 2026-04-20 15:07:30,013 runserver 3052 25536 [mHTTP GET /api/listings/?search=test 200 [3.44, 127.0.0.1:56379][0m
+INFO 2026-04-20 15:07:30,463 middleware 3052 14412 GET /api/listings/ 200 - 3.885s
+INFO 2026-04-20 15:07:30,465 runserver 3052 25536 [mHTTP GET /api/listings/ 200 [3.89, 127.0.0.1:61526][0m
+INFO 2026-04-20 15:07:33,520 middleware 3052 21276 GET /api/listings/ 200 - 3.490s
+INFO 2026-04-20 15:07:33,522 runserver 3052 25536 [mHTTP GET /api/listings/?search=test 200 [3.49, 127.0.0.1:50747][0m
+INFO 2026-04-20 15:09:13,367 runserver 3052 25536 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A09%3A13.051Z 200 [0.01, 127.0.0.1:54162][0m
+INFO 2026-04-20 15:09:15,509 middleware 3052 4072 GET /api/categories/ 200 - 2.136s
+INFO 2026-04-20 15:09:15,511 runserver 3052 25536 [mHTTP GET /api/categories/ 200 [2.15, 127.0.0.1:62960][0m
+INFO 2026-04-20 15:09:16,162 middleware 3052 21692 GET /api/favorites/ 200 - 2.789s
+INFO 2026-04-20 15:09:16,164 runserver 3052 25536 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.80, 127.0.0.1:65339][0m
+INFO 2026-04-20 15:09:16,359 middleware 3052 25992 GET /api/listings/ 200 - 2.973s
+INFO 2026-04-20 15:09:16,361 runserver 3052 25536 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A09%3A13.051Z 200 [2.99, 127.0.0.1:54162][0m
+INFO 2026-04-20 15:09:16,824 middleware 3052 2272 GET /api/regions/ 200 - 3.451s
+INFO 2026-04-20 15:09:16,826 runserver 3052 25536 [mHTTP GET /api/regions/ 200 [3.46, 127.0.0.1:64193][0m
+INFO 2026-04-20 15:09:17,198 middleware 3052 22664 GET /api/listings/ 200 - 3.825s
+INFO 2026-04-20 15:09:17,200 runserver 3052 25536 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.84, 127.0.0.1:55708][0m
+INFO 2026-04-20 15:09:17,300 middleware 3052 19380 GET /api/listings/ 200 - 3.927s
+INFO 2026-04-20 15:09:17,302 runserver 3052 25536 [mHTTP GET /api/listings/?page_size=6 200 [3.94, 127.0.0.1:61181][0m
+INFO 2026-04-20 15:10:10,767 middleware 3052 22848 GET /admin/api/category/ 302 - 0.016s
+INFO 2026-04-20 15:10:10,770 runserver 3052 25536 [32mHTTP GET /admin/api/category/ 302 [0.02, 127.0.0.1:62288][0m
+INFO 2026-04-20 15:10:10,817 middleware 3052 17148 GET /admin/login/ 200 - 0.036s
+INFO 2026-04-20 15:10:10,818 runserver 3052 25536 [mHTTP GET /admin/login/?next=/admin/api/category/ 200 [0.04, 127.0.0.1:62288][0m
+INFO 2026-04-20 15:10:11,055 runserver 3052 25536 [mHTTP GET /static/admin/css/base.css 200 [0.16, 127.0.0.1:62288][0m
+INFO 2026-04-20 15:10:11,060 runserver 3052 25536 [mHTTP GET /static/admin/css/login.css 200 [0.16, 127.0.0.1:49745][0m
+INFO 2026-04-20 15:10:11,061 runserver 3052 25536 [mHTTP GET /static/admin/css/nav_sidebar.css 200 [0.16, 127.0.0.1:54689][0m
+INFO 2026-04-20 15:10:11,067 runserver 3052 25536 [mHTTP GET /static/admin/js/theme.js 200 [0.16, 127.0.0.1:56314][0m
+INFO 2026-04-20 15:10:11,068 runserver 3052 25536 [mHTTP GET /static/admin/css/dark_mode.css 200 [0.17, 127.0.0.1:53209][0m
+INFO 2026-04-20 15:10:11,069 runserver 3052 25536 [mHTTP GET /static/admin/css/responsive.css 200 [0.17, 127.0.0.1:59248][0m
+INFO 2026-04-20 15:10:11,078 runserver 3052 25536 [mHTTP GET /static/admin/js/nav_sidebar.js 200 [0.00, 127.0.0.1:59248][0m
+INFO 2026-04-20 15:10:18,126 middleware 3052 21452 POST /admin/login/ 302 - 2.860s
+INFO 2026-04-20 15:10:18,128 runserver 3052 25536 [32mHTTP POST /admin/login/?next=/admin/api/category/ 302 [2.87, 127.0.0.1:59248][0m
+INFO 2026-04-20 15:10:20,502 middleware 3052 18216 GET /admin/api/category/ 200 - 2.367s
+INFO 2026-04-20 15:10:20,504 runserver 3052 25536 [mHTTP GET /admin/api/category/ 200 [2.37, 127.0.0.1:59248][0m
+INFO 2026-04-20 15:10:20,539 runserver 3052 25536 [mHTTP GET /static/admin/css/changelists.css 200 [0.00, 127.0.0.1:59248][0m
+INFO 2026-04-20 15:10:20,558 runserver 3052 25536 [mHTTP GET /static/admin/js/jquery.init.js 200 [0.01, 127.0.0.1:54689][0m
+INFO 2026-04-20 15:10:20,559 runserver 3052 25536 [mHTTP GET /static/admin/js/actions.js 200 [0.01, 127.0.0.1:59248][0m
+INFO 2026-04-20 15:10:20,559 runserver 3052 25536 [mHTTP GET /static/admin/js/admin/RelatedObjectLookups.js 200 [0.01, 127.0.0.1:62288][0m
+INFO 2026-04-20 15:10:20,560 runserver 3052 25536 [mHTTP GET /static/admin/js/core.js 200 [0.01, 127.0.0.1:49745][0m
+INFO 2026-04-20 15:10:20,562 runserver 3052 25536 [mHTTP GET /static/admin/js/vendor/jquery/jquery.js 200 [0.01, 127.0.0.1:56314][0m
+INFO 2026-04-20 15:10:20,570 runserver 3052 25536 [mHTTP GET /static/admin/js/urlify.js 200 [0.01, 127.0.0.1:54689][0m
+INFO 2026-04-20 15:10:20,571 runserver 3052 25536 [mHTTP GET /static/admin/js/prepopulate.js 200 [0.01, 127.0.0.1:59248][0m
+INFO 2026-04-20 15:10:20,573 runserver 3052 25536 [mHTTP GET /static/admin/js/vendor/xregexp/xregexp.js 200 [0.01, 127.0.0.1:62288][0m
+INFO 2026-04-20 15:10:20,599 runserver 3052 25536 [mHTTP GET /static/admin/js/filters.js 200 [0.00, 127.0.0.1:62288][0m
+INFO 2026-04-20 15:10:22,256 middleware 3052 22696 GET /admin/jsi18n/ 200 - 1.706s
+INFO 2026-04-20 15:10:22,257 runserver 3052 25536 [mHTTP GET /admin/jsi18n/ 200 [1.71, 127.0.0.1:53209][0m
+INFO 2026-04-20 15:10:22,289 runserver 3052 25536 [mHTTP GET /static/admin/img/tooltag-add.svg 200 [0.00, 127.0.0.1:62288][0m
+INFO 2026-04-20 15:10:22,291 runserver 3052 25536 [mHTTP GET /static/admin/img/sorting-icons.svg 200 [0.01, 127.0.0.1:54689][0m
+INFO 2026-04-20 15:10:22,292 runserver 3052 25536 [mHTTP GET /static/admin/img/icon-addlink.svg 200 [0.01, 127.0.0.1:53209][0m
+INFO 2026-04-20 15:10:53,961 middleware 3052 25628 GET /admin/api/category/add/ 200 - 1.896s
+INFO 2026-04-20 15:10:53,962 runserver 3052 25536 [mHTTP GET /admin/api/category/add/ 200 [1.90, 127.0.0.1:54689][0m
+INFO 2026-04-20 15:10:53,995 runserver 3052 25536 [mHTTP GET /static/admin/css/forms.css 200 [0.00, 127.0.0.1:54689][0m
+INFO 2026-04-20 15:10:54,001 runserver 3052 25536 [mHTTP GET /static/admin/js/prepopulate_init.js 200 [0.00, 127.0.0.1:62288][0m
+INFO 2026-04-20 15:10:54,006 runserver 3052 25536 [mHTTP GET /static/admin/css/widgets.css 200 [0.00, 127.0.0.1:54689][0m
+INFO 2026-04-20 15:10:54,037 runserver 3052 25536 [mHTTP GET /static/admin/js/change_form.js 200 [0.00, 127.0.0.1:54689][0m
+INFO 2026-04-20 15:10:55,698 middleware 3052 12976 GET /admin/jsi18n/ 200 - 1.699s
+INFO 2026-04-20 15:10:55,701 runserver 3052 25536 [mHTTP GET /admin/jsi18n/ 200 [1.71, 127.0.0.1:53209][0m
+INFO 2026-04-20 15:11:42,131 middleware 3052 26284 POST /admin/api/category/add/ 302 - 3.034s
+INFO 2026-04-20 15:11:42,136 runserver 3052 25536 [32mHTTP POST /admin/api/category/add/ 302 [3.04, 127.0.0.1:53209][0m
+INFO 2026-04-20 15:11:44,489 middleware 3052 9492 GET /admin/api/category/ 200 - 2.347s
+INFO 2026-04-20 15:11:44,491 runserver 3052 25536 [mHTTP GET /admin/api/category/ 200 [2.35, 127.0.0.1:53209][0m
+INFO 2026-04-20 15:11:46,227 middleware 3052 23740 GET /admin/jsi18n/ 200 - 1.701s
+INFO 2026-04-20 15:11:46,229 runserver 3052 25536 [mHTTP GET /admin/jsi18n/ 200 [1.71, 127.0.0.1:53209][0m
+INFO 2026-04-20 15:11:46,243 runserver 3052 25536 [mHTTP GET /static/admin/img/icon-yes-dark.svg 200 [0.00, 127.0.0.1:53209][0m
+INFO 2026-04-20 15:11:54,525 middleware 3052 25680 GET /admin/api/category/2/change/ 200 - 1.950s
+INFO 2026-04-20 15:11:54,527 runserver 3052 25536 [mHTTP GET /admin/api/category/2/change/ 200 [1.95, 127.0.0.1:53209][0m
+INFO 2026-04-20 15:11:56,308 middleware 3052 25060 GET /admin/jsi18n/ 200 - 1.749s
+INFO 2026-04-20 15:11:56,309 runserver 3052 25536 [mHTTP GET /admin/jsi18n/ 200 [1.75, 127.0.0.1:53209][0m
+INFO 2026-04-20 15:12:08,799 middleware 3052 14400 POST /admin/api/category/2/change/ 302 - 3.287s
+INFO 2026-04-20 15:12:08,801 runserver 3052 25536 [32mHTTP POST /admin/api/category/2/change/ 302 [3.29, 127.0.0.1:58644][0m
+INFO 2026-04-20 15:12:11,099 middleware 3052 8708 GET /admin/api/category/ 200 - 2.292s
+INFO 2026-04-20 15:12:11,101 runserver 3052 25536 [mHTTP GET /admin/api/category/ 200 [2.30, 127.0.0.1:58644][0m
+INFO 2026-04-20 15:12:12,848 middleware 3052 19896 GET /admin/jsi18n/ 200 - 1.710s
+INFO 2026-04-20 15:12:12,850 runserver 3052 25536 [mHTTP GET /admin/jsi18n/ 200 [1.71, 127.0.0.1:58644][0m
+INFO 2026-04-20 15:12:17,312 middleware 3052 672 GET /admin/api/category/1/change/ 200 - 2.245s
+INFO 2026-04-20 15:12:17,315 runserver 3052 25536 [mHTTP GET /admin/api/category/1/change/ 200 [2.25, 127.0.0.1:58644][0m
+INFO 2026-04-20 15:12:19,101 middleware 3052 8492 GET /admin/jsi18n/ 200 - 1.748s
+INFO 2026-04-20 15:12:19,103 runserver 3052 25536 [mHTTP GET /admin/jsi18n/ 200 [1.75, 127.0.0.1:58644][0m
+INFO 2026-04-20 15:12:43,171 middleware 3052 14320 POST /admin/api/category/1/change/ 302 - 3.296s
+INFO 2026-04-20 15:12:43,172 runserver 3052 25536 [32mHTTP POST /admin/api/category/1/change/ 302 [3.30, 127.0.0.1:58644][0m
+INFO 2026-04-20 15:12:45,553 middleware 3052 8580 GET /admin/api/category/ 200 - 2.375s
+INFO 2026-04-20 15:12:45,555 runserver 3052 25536 [mHTTP GET /admin/api/category/ 200 [2.38, 127.0.0.1:58644][0m
+INFO 2026-04-20 15:12:47,357 middleware 3052 25656 GET /admin/jsi18n/ 200 - 1.766s
+INFO 2026-04-20 15:12:47,359 runserver 3052 25536 [mHTTP GET /admin/jsi18n/ 200 [1.77, 127.0.0.1:58644][0m
+INFO 2026-04-20 15:12:52,960 runserver 3052 25536 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A12%3A52.643Z 200 [0.00, 127.0.0.1:60811][0m
+INFO 2026-04-20 15:12:55,377 middleware 3052 24644 GET /api/categories/ 200 - 2.413s
+INFO 2026-04-20 15:12:55,379 runserver 3052 25536 [mHTTP GET /api/categories/ 200 [2.42, 127.0.0.1:60431][0m
+INFO 2026-04-20 15:12:55,399 middleware 3052 6384 GET /api/favorites/ 200 - 2.844s
+INFO 2026-04-20 15:12:55,401 runserver 3052 25536 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.85, 127.0.0.1:60000][0m
+INFO 2026-04-20 15:12:56,003 middleware 3052 26360 GET /api/listings/ 200 - 3.033s
+INFO 2026-04-20 15:12:56,005 runserver 3052 25536 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A12%3A52.643Z 200 [3.04, 127.0.0.1:60811][0m
+INFO 2026-04-20 15:12:56,396 middleware 3052 9824 GET /api/regions/ 200 - 3.432s
+INFO 2026-04-20 15:12:56,398 runserver 3052 25536 [mHTTP GET /api/regions/ 200 [3.44, 127.0.0.1:55902][0m
+INFO 2026-04-20 15:12:56,637 middleware 3052 7440 GET /api/listings/ 200 - 3.825s
+INFO 2026-04-20 15:12:56,638 runserver 3052 25536 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.83, 127.0.0.1:51905][0m
+INFO 2026-04-20 15:12:56,808 middleware 3052 24480 GET /api/listings/ 200 - 3.844s
+INFO 2026-04-20 15:12:56,810 runserver 3052 25536 [mHTTP GET /api/listings/?page_size=6 200 [3.85, 127.0.0.1:58234][0m
+INFO 2026-04-20 15:12:58,246 middleware 3052 26292 GET /api/favorites/ 200 - 2.822s
+INFO 2026-04-20 15:12:58,248 runserver 3052 25536 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.83, 127.0.0.1:60431][0m
+INFO 2026-04-20 15:12:59,587 middleware 3052 1696 GET /api/listings/14/ 200 - 4.159s
+INFO 2026-04-20 15:12:59,589 runserver 3052 25536 [mHTTP GET /api/listings/14/ 200 [4.16, 127.0.0.1:60000][0m
+INFO 2026-04-20 15:12:59,865 middleware 3052 10312 GET /api/listings/8/ 200 - 3.844s
+INFO 2026-04-20 15:12:59,867 runserver 3052 25536 [mHTTP GET /api/listings/8/ 200 [3.85, 127.0.0.1:60811][0m
+INFO 2026-04-20 15:18:08,554 autoreload 3052 22816 C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py changed, reloading.
+INFO 2026-04-20 15:18:09,865 autoreload 22072 15860 Watching for file changes with StatReloader
+INFO 2026-04-20 15:18:13,254 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A18%3A12.934Z 200 [0.01, 127.0.0.1:62477][0m
+INFO 2026-04-20 15:18:15,217 middleware 22072 19876 GET /api/favorites/ 200 - 2.810s
+INFO 2026-04-20 15:18:15,221 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.82, 127.0.0.1:54233][0m
+INFO 2026-04-20 15:18:15,430 middleware 22072 26256 GET /api/listings/ 200 - 2.161s
+INFO 2026-04-20 15:18:15,432 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A18%3A12.934Z 200 [2.17, 127.0.0.1:62477][0m
+INFO 2026-04-20 15:18:15,732 middleware 22072 22360 GET /api/categories/ 200 - 2.473s
+INFO 2026-04-20 15:18:15,733 runserver 22072 17960 [mHTTP GET /api/categories/ 200 [2.49, 127.0.0.1:64807][0m
+INFO 2026-04-20 15:18:16,009 middleware 22072 26452 GET /api/listings/ 200 - 3.069s
+INFO 2026-04-20 15:18:16,012 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.07, 127.0.0.1:64258][0m
+INFO 2026-04-20 15:18:16,407 middleware 22072 9408 GET /api/listings/ 200 - 3.149s
+INFO 2026-04-20 15:18:16,409 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6 200 [3.16, 127.0.0.1:54032][0m
+INFO 2026-04-20 15:18:16,718 middleware 22072 25996 GET /api/regions/ 200 - 3.460s
+INFO 2026-04-20 15:18:16,720 runserver 22072 17960 [mHTTP GET /api/regions/ 200 [3.47, 127.0.0.1:50180][0m
+INFO 2026-04-20 15:18:18,035 middleware 22072 9324 GET /api/favorites/ 200 - 2.796s
+INFO 2026-04-20 15:18:18,037 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.80, 127.0.0.1:54233][0m
+INFO 2026-04-20 15:18:21,629 middleware 22072 25976 GET /api/listings/14/ 200 - 6.175s
+INFO 2026-04-20 15:18:21,631 runserver 22072 17960 [mHTTP GET /api/listings/14/ 200 [6.18, 127.0.0.1:62477][0m
+INFO 2026-04-20 15:18:22,358 middleware 22072 23368 GET /api/listings/8/ 200 - 6.610s
+INFO 2026-04-20 15:18:22,360 runserver 22072 17960 [mHTTP GET /api/listings/8/ 200 [6.62, 127.0.0.1:64807][0m
+INFO 2026-04-20 15:26:07,104 middleware 22072 25664 GET /admin/api/region/ 302 - 0.017s
+INFO 2026-04-20 15:26:07,107 runserver 22072 17960 [32mHTTP GET /admin/api/region/ 302 [0.03, 127.0.0.1:49724][0m
+INFO 2026-04-20 15:26:07,148 middleware 22072 2556 GET /admin/login/ 200 - 0.036s
+INFO 2026-04-20 15:26:07,150 runserver 22072 17960 [mHTTP GET /admin/login/?next=/admin/api/region/ 200 [0.04, 127.0.0.1:49724][0m
+INFO 2026-04-20 15:26:15,068 middleware 22072 4896 POST /admin/login/ 302 - 3.071s
+INFO 2026-04-20 15:26:15,071 runserver 22072 17960 [32mHTTP POST /admin/login/?next=/admin/api/region/ 302 [3.08, 127.0.0.1:49724][0m
+INFO 2026-04-20 15:26:17,516 middleware 22072 17220 GET /admin/api/region/ 200 - 2.439s
+INFO 2026-04-20 15:26:17,517 runserver 22072 17960 [mHTTP GET /admin/api/region/ 200 [2.44, 127.0.0.1:49724][0m
+INFO 2026-04-20 15:26:19,281 middleware 22072 25852 GET /admin/jsi18n/ 200 - 1.721s
+INFO 2026-04-20 15:26:19,282 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.73, 127.0.0.1:49724][0m
+INFO 2026-04-20 15:26:34,827 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A26%3A34.511Z 200 [0.01, 127.0.0.1:63241][0m
+INFO 2026-04-20 15:26:36,984 middleware 22072 25884 GET /api/listings/ 200 - 2.141s
+INFO 2026-04-20 15:26:36,987 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A26%3A34.511Z 200 [2.15, 127.0.0.1:63241][0m
+INFO 2026-04-20 15:26:37,209 middleware 22072 25692 GET /api/categories/ 200 - 2.378s
+INFO 2026-04-20 15:26:37,211 runserver 22072 17960 [mHTTP GET /api/categories/ 200 [2.39, 127.0.0.1:52415][0m
+INFO 2026-04-20 15:26:37,644 middleware 22072 25948 GET /api/favorites/ 200 - 2.813s
+INFO 2026-04-20 15:26:37,646 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.83, 127.0.0.1:52023][0m
+INFO 2026-04-20 15:26:37,841 middleware 22072 22672 GET /api/listings/ 200 - 3.010s
+INFO 2026-04-20 15:26:37,844 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6 200 [3.02, 127.0.0.1:53271][0m
+INFO 2026-04-20 15:26:37,849 middleware 22072 22724 GET /api/listings/ 200 - 3.018s
+INFO 2026-04-20 15:26:37,851 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.03, 127.0.0.1:59568][0m
+INFO 2026-04-20 15:26:38,269 middleware 22072 26908 GET /api/regions/ 200 - 3.438s
+INFO 2026-04-20 15:26:38,271 runserver 22072 17960 [mHTTP GET /api/regions/ 200 [3.45, 127.0.0.1:60803][0m
+INFO 2026-04-20 15:26:47,181 middleware 22072 20320 GET /api/listings/ 200 - 2.969s
+INFO 2026-04-20 15:26:47,183 runserver 22072 17960 [mHTTP GET /api/listings/ 200 [2.97, 127.0.0.1:60803][0m
+INFO 2026-04-20 15:26:50,867 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A26%3A50.855Z 200 [0.01, 127.0.0.1:59568][0m
+INFO 2026-04-20 15:26:53,027 middleware 22072 21272 GET /api/listings/ 200 - 2.147s
+INFO 2026-04-20 15:26:53,029 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A26%3A50.855Z 200 [2.16, 127.0.0.1:59568][0m
+INFO 2026-04-20 15:26:53,203 middleware 22072 18712 GET /api/categories/ 200 - 2.333s
+INFO 2026-04-20 15:26:53,205 runserver 22072 17960 [mHTTP GET /api/categories/ 200 [2.34, 127.0.0.1:52415][0m
+INFO 2026-04-20 15:26:53,670 middleware 22072 19048 GET /api/favorites/ 200 - 2.799s
+INFO 2026-04-20 15:26:53,672 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.81, 127.0.0.1:52023][0m
+INFO 2026-04-20 15:26:53,879 middleware 22072 26592 GET /api/listings/ 200 - 3.008s
+INFO 2026-04-20 15:26:53,881 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6 200 [3.02, 127.0.0.1:53271][0m
+INFO 2026-04-20 15:26:53,922 middleware 22072 7856 GET /api/listings/ 200 - 3.052s
+INFO 2026-04-20 15:26:53,924 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [3.07, 127.0.0.1:60803][0m
+INFO 2026-04-20 15:26:54,253 middleware 22072 26164 GET /api/regions/ 200 - 3.381s
+INFO 2026-04-20 15:26:54,255 runserver 22072 17960 [mHTTP GET /api/regions/ 200 [3.39, 127.0.0.1:63241][0m
+INFO 2026-04-20 15:31:52,236 runserver 22072 17960 [mHTTP OPTIONS /api/favorites/?page=1&page_size=100 200 [0.00, 127.0.0.1:51666][0m
+INFO 2026-04-20 15:31:52,616 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A31%3A52.301Z 200 [0.00, 127.0.0.1:63070][0m
+INFO 2026-04-20 15:31:52,617 runserver 22072 17960 [mHTTP OPTIONS /api/regions/ 200 [0.00, 127.0.0.1:51598][0m
+INFO 2026-04-20 15:31:52,618 runserver 22072 17960 [mHTTP OPTIONS /api/categories/ 200 [0.01, 127.0.0.1:61879][0m
+INFO 2026-04-20 15:31:54,762 middleware 22072 15396 GET /api/listings/ 200 - 2.135s
+INFO 2026-04-20 15:31:54,764 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A31%3A52.301Z 200 [2.14, 127.0.0.1:61879][0m
+INFO 2026-04-20 15:31:54,961 middleware 22072 21952 GET /api/categories/ 200 - 2.334s
+INFO 2026-04-20 15:31:54,963 runserver 22072 17960 [mHTTP GET /api/categories/ 200 [2.34, 127.0.0.1:63070][0m
+INFO 2026-04-20 15:31:55,298 middleware 22072 26708 GET /api/favorites/ 200 - 3.058s
+INFO 2026-04-20 15:31:55,300 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.06, 127.0.0.1:51666][0m
+INFO 2026-04-20 15:31:55,460 middleware 22072 25356 GET /api/listings/ 200 - 2.974s
+INFO 2026-04-20 15:31:55,462 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [2.98, 127.0.0.1:49492][0m
+INFO 2026-04-20 15:31:55,646 middleware 22072 25072 GET /api/listings/ 200 - 3.026s
+INFO 2026-04-20 15:31:55,649 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6 200 [3.04, 127.0.0.1:63212][0m
+INFO 2026-04-20 15:31:56,085 middleware 22072 10048 GET /api/regions/ 200 - 3.458s
+INFO 2026-04-20 15:31:56,087 runserver 22072 17960 [mHTTP GET /api/regions/ 200 [3.47, 127.0.0.1:51598][0m
+INFO 2026-04-20 15:31:58,115 middleware 22072 21544 GET /api/favorites/ 200 - 2.802s
+INFO 2026-04-20 15:31:58,117 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.81, 127.0.0.1:63070][0m
+INFO 2026-04-20 15:31:59,206 middleware 22072 26220 GET /api/listings/8/ 200 - 3.886s
+INFO 2026-04-20 15:31:59,208 runserver 22072 17960 [mHTTP GET /api/listings/8/ 200 [3.89, 127.0.0.1:61879][0m
+INFO 2026-04-20 15:31:59,378 middleware 22072 25664 GET /api/listings/14/ 200 - 4.058s
+INFO 2026-04-20 15:31:59,380 runserver 22072 17960 [mHTTP GET /api/listings/14/ 200 [4.07, 127.0.0.1:51666][0m
+INFO 2026-04-20 15:32:30,529 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A32%3A30.516Z 200 [0.01, 127.0.0.1:61879][0m
+INFO 2026-04-20 15:32:33,343 middleware 22072 9136 GET /api/listings/ 200 - 2.752s
+INFO 2026-04-20 15:32:33,346 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A32%3A30.516Z 200 [2.81, 127.0.0.1:61879][0m
+INFO 2026-04-20 15:32:33,580 middleware 22072 9824 GET /api/categories/ 200 - 2.999s
+INFO 2026-04-20 15:32:33,582 runserver 22072 17960 [mHTTP GET /api/categories/ 200 [3.06, 127.0.0.1:63212][0m
+INFO 2026-04-20 15:32:33,951 middleware 22072 23972 GET /api/favorites/ 200 - 3.370s
+INFO 2026-04-20 15:32:33,955 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [3.43, 127.0.0.1:51598][0m
+INFO 2026-04-20 15:32:34,212 middleware 22072 15824 GET /api/listings/ 200 - 3.631s
+INFO 2026-04-20 15:32:34,214 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6 200 [3.69, 127.0.0.1:63070][0m
+INFO 2026-04-20 15:32:34,812 middleware 22072 2164 GET /api/listings/ 200 - 4.246s
+INFO 2026-04-20 15:32:34,814 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.29, 127.0.0.1:51666][0m
+INFO 2026-04-20 15:32:35,236 middleware 22072 22172 GET /api/regions/ 200 - 4.655s
+INFO 2026-04-20 15:32:35,238 runserver 22072 17960 [mHTTP GET /api/regions/ 200 [4.72, 127.0.0.1:49492][0m
+INFO 2026-04-20 15:34:29,300 middleware 22072 27496 GET /admin/api/listing/ 200 - 5.311s
+INFO 2026-04-20 15:34:29,302 runserver 22072 17960 [mHTTP GET /admin/api/listing/ 200 [5.32, 127.0.0.1:54472][0m
+INFO 2026-04-20 15:34:29,432 runserver 22072 17960 [mHTTP GET /static/admin/img/search.svg 200 [0.10, 127.0.0.1:63225][0m
+INFO 2026-04-20 15:34:31,091 middleware 22072 27200 GET /admin/jsi18n/ 200 - 1.748s
+INFO 2026-04-20 15:34:31,093 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.76, 127.0.0.1:54472][0m
+INFO 2026-04-20 15:34:31,115 runserver 22072 17960 [mHTTP GET /static/admin/img/icon-viewlink.svg 200 [0.00, 127.0.0.1:54472][0m
+INFO 2026-04-20 15:34:57,725 middleware 22072 25780 GET /api/listings/ 401 - 0.007s
+WARNING 2026-04-20 15:34:57,731 runserver 22072 17960 [31;1mHTTP GET /api/listings/ 401 [0.02, 127.0.0.1:56056][0m
+INFO 2026-04-20 15:34:58,297 runserver 22072 17960 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.00, 127.0.0.1:56056][0m
+INFO 2026-04-20 15:35:01,364 middleware 22072 9688 POST /api/auth/token/refresh/ 200 - 3.029s
+INFO 2026-04-20 15:35:01,366 runserver 22072 17960 [mHTTP POST /api/auth/token/refresh/ 200 [3.04, 127.0.0.1:56056][0m
+INFO 2026-04-20 15:35:05,414 middleware 22072 14400 GET /api/listings/ 200 - 4.036s
+INFO 2026-04-20 15:35:05,417 runserver 22072 17960 [mHTTP GET /api/listings/ 200 [4.04, 127.0.0.1:56056][0m
+INFO 2026-04-20 15:40:45,735 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-favorite_count 200 [0.02, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:40:45,738 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A40%3A45.407Z 200 [0.01, 127.0.0.1:51484][0m
+INFO 2026-04-20 15:40:45,739 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6 200 [0.02, 127.0.0.1:64301][0m
+INFO 2026-04-20 15:40:48,087 middleware 22072 22516 GET /api/categories/ 200 - 2.338s
+INFO 2026-04-20 15:40:48,093 runserver 22072 17960 [mHTTP GET /api/categories/ 200 [2.37, 127.0.0.1:62769][0m
+INFO 2026-04-20 15:40:48,515 middleware 22072 24744 GET /api/favorites/ 200 - 2.764s
+INFO 2026-04-20 15:40:48,516 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.79, 127.0.0.1:51989][0m
+INFO 2026-04-20 15:40:49,139 middleware 22072 27364 GET /api/regions/ 200 - 3.389s
+INFO 2026-04-20 15:40:49,141 runserver 22072 17960 [mHTTP GET /api/regions/ 200 [3.42, 127.0.0.1:52836][0m
+INFO 2026-04-20 15:40:49,628 middleware 22072 26084 GET /api/listings/ 200 - 3.868s
+INFO 2026-04-20 15:40:49,630 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A40%3A45.407Z 200 [3.89, 127.0.0.1:51484][0m
+INFO 2026-04-20 15:40:49,925 middleware 22072 26880 GET /api/listings/ 200 - 4.165s
+INFO 2026-04-20 15:40:49,927 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.18, 127.0.0.1:64301][0m
+INFO 2026-04-20 15:40:50,086 middleware 22072 22388 GET /api/listings/ 200 - 4.325s
+INFO 2026-04-20 15:40:50,088 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6 200 [4.34, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:40:53,718 runserver 22072 17960 [mHTTP OPTIONS /api/listings/ 200 [0.00, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:40:57,994 middleware 22072 21376 GET /api/listings/ 200 - 4.268s
+INFO 2026-04-20 15:40:57,995 runserver 22072 17960 [mHTTP GET /api/listings/ 200 [4.27, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:41:34,939 middleware 22072 6356 GET /admin/api/listing/ 200 - 6.559s
+INFO 2026-04-20 15:41:34,941 runserver 22072 17960 [mHTTP GET /admin/api/listing/ 200 [6.56, 127.0.0.1:54688][0m
+INFO 2026-04-20 15:41:36,748 middleware 22072 10364 GET /admin/jsi18n/ 200 - 1.767s
+INFO 2026-04-20 15:41:36,750 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.77, 127.0.0.1:54688][0m
+INFO 2026-04-20 15:41:55,249 middleware 22072 21152 GET /api/profile/ 200 - 2.129s
+INFO 2026-04-20 15:41:55,251 runserver 22072 17960 [mHTTP GET /api/profile/ 200 [2.13, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:41:57,342 middleware 22072 23248 GET /api/profile/ 200 - 2.084s
+INFO 2026-04-20 15:41:57,344 runserver 22072 17960 [mHTTP GET /api/profile/ 200 [2.09, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:41:59,375 middleware 22072 24908 GET /api/listings/8/ 200 - 3.816s
+INFO 2026-04-20 15:41:59,378 runserver 22072 17960 [mHTTP GET /api/listings/8/ 200 [3.82, 127.0.0.1:63056][0m
+INFO 2026-04-20 15:41:59,408 runserver 22072 17960 [mHTTP OPTIONS /api/favorites/8/check/ 200 [0.00, 127.0.0.1:63056][0m
+INFO 2026-04-20 15:42:01,539 middleware 22072 27008 GET /api/favorites/8/check/ 200 - 2.124s
+INFO 2026-04-20 15:42:01,541 runserver 22072 17960 [mHTTP GET /api/favorites/8/check/ 200 [2.13, 127.0.0.1:63056][0m
+INFO 2026-04-20 15:42:01,555 runserver 22072 17960 [mHTTP OPTIONS /api/mongolia/utility-estimate/?area_sqm=65 200 [0.00, 127.0.0.1:63056][0m
+INFO 2026-04-20 15:42:03,224 middleware 22072 1864 GET /api/listings/8/ 200 - 3.830s
+INFO 2026-04-20 15:42:03,226 runserver 22072 17960 [mHTTP GET /api/listings/8/ 200 [3.83, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:03,323 middleware 22072 23640 GET /api/mongolia/utility-estimate/ 200 - 1.761s
+INFO 2026-04-20 15:42:03,325 runserver 22072 17960 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=65 200 [1.77, 127.0.0.1:63056][0m
+INFO 2026-04-20 15:42:03,341 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?owner_id=2&page_size=6 200 [0.00, 127.0.0.1:63056][0m
+INFO 2026-04-20 15:42:05,378 middleware 22072 20664 GET /api/favorites/8/check/ 200 - 2.135s
+INFO 2026-04-20 15:42:05,380 runserver 22072 17960 [mHTTP GET /api/favorites/8/check/ 200 [2.14, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:06,304 middleware 22072 26924 GET /api/listings/ 200 - 2.958s
+INFO 2026-04-20 15:42:06,307 runserver 22072 17960 [mHTTP GET /api/listings/?owner_id=2&page_size=6 200 [2.96, 127.0.0.1:63056][0m
+INFO 2026-04-20 15:42:07,114 middleware 22072 20888 GET /api/mongolia/utility-estimate/ 200 - 1.715s
+INFO 2026-04-20 15:42:07,116 runserver 22072 17960 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=65 200 [1.72, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:10,195 middleware 22072 18532 GET /api/listings/ 200 - 3.064s
+INFO 2026-04-20 15:42:10,197 runserver 22072 17960 [mHTTP GET /api/listings/?owner_id=2&page_size=6 200 [3.07, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:17,072 middleware 22072 27256 GET /api/profile/ 200 - 2.198s
+INFO 2026-04-20 15:42:17,073 runserver 22072 17960 [mHTTP GET /api/profile/ 200 [2.20, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:17,085 runserver 22072 17960 [mHTTP OPTIONS /api/listings/18/ 200 [0.00, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:20,976 middleware 22072 22208 GET /api/listings/18/ 200 - 3.885s
+INFO 2026-04-20 15:42:20,979 runserver 22072 17960 [mHTTP GET /api/listings/18/ 200 [3.89, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:21,012 runserver 22072 17960 [mHTTP OPTIONS /api/favorites/18/check/ 200 [0.00, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:23,148 middleware 22072 20272 GET /api/favorites/18/check/ 200 - 2.129s
+INFO 2026-04-20 15:42:23,151 runserver 22072 17960 [mHTTP GET /api/favorites/18/check/ 200 [2.13, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:23,173 runserver 22072 17960 [mHTTP OPTIONS /api/mongolia/utility-estimate/?area_sqm=55 200 [0.00, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:24,905 middleware 22072 3732 GET /api/mongolia/utility-estimate/ 200 - 1.722s
+INFO 2026-04-20 15:42:24,907 runserver 22072 17960 [mHTTP GET /api/mongolia/utility-estimate/?area_sqm=55 200 [1.73, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:24,920 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?owner_id=1&page_size=6 200 [0.00, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:28,818 middleware 22072 23648 GET /api/listings/ 200 - 3.894s
+INFO 2026-04-20 15:42:28,821 runserver 22072 17960 [mHTTP GET /api/listings/?owner_id=1&page_size=6 200 [3.90, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:38,254 runserver 22072 17960 [mHTTP OPTIONS /api/messages/ 200 [0.00, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:41,846 middleware 22072 18116 GET /api/messages/ 200 - 3.586s
+INFO 2026-04-20 15:42:41,847 runserver 22072 17960 [mHTTP GET /api/messages/ 200 [3.59, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:43,150 runserver 22072 17960 [mHTTP OPTIONS /api/messages/18/ 200 [0.00, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:45,713 middleware 22072 20268 GET /api/messages/18/ 200 - 2.557s
+INFO 2026-04-20 15:42:45,715 runserver 22072 17960 [mHTTP GET /api/messages/18/ 200 [2.56, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:42:53,987 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A42%3A53.978Z 200 [0.00, 127.0.0.1:63056][0m
+INFO 2026-04-20 15:42:56,692 middleware 22072 27004 GET /api/categories/ 200 - 2.391s
+INFO 2026-04-20 15:42:56,694 runserver 22072 17960 [mHTTP GET /api/categories/ 200 [2.40, 127.0.0.1:54625][0m
+INFO 2026-04-20 15:42:56,844 middleware 22072 1404 GET /api/favorites/ 200 - 2.842s
+INFO 2026-04-20 15:42:56,846 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.86, 127.0.0.1:63056][0m
+INFO 2026-04-20 15:42:57,790 middleware 22072 21936 GET /api/regions/ 200 - 3.488s
+INFO 2026-04-20 15:42:57,792 runserver 22072 17960 [mHTTP GET /api/regions/ 200 [3.49, 127.0.0.1:60236][0m
+INFO 2026-04-20 15:42:58,180 middleware 22072 27332 GET /api/listings/ 200 - 3.878s
+INFO 2026-04-20 15:42:58,181 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A42%3A53.978Z 200 [3.88, 127.0.0.1:64475][0m
+INFO 2026-04-20 15:42:58,285 middleware 22072 21224 GET /api/listings/ 200 - 4.293s
+INFO 2026-04-20 15:42:58,286 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6 200 [4.30, 127.0.0.1:53173][0m
+INFO 2026-04-20 15:42:58,338 middleware 22072 26872 GET /api/listings/ 200 - 4.346s
+INFO 2026-04-20 15:42:58,340 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.36, 127.0.0.1:62417][0m
+INFO 2026-04-20 15:44:33,225 middleware 22072 27028 GET /api/listings/ 200 - 4.512s
+INFO 2026-04-20 15:44:33,226 runserver 22072 17960 [mHTTP GET /api/listings/ 200 [4.52, 127.0.0.1:55222][0m
+INFO 2026-04-20 15:44:35,303 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A44%3A35.296Z 200 [0.00, 127.0.0.1:55222][0m
+INFO 2026-04-20 15:44:37,983 middleware 22072 21152 GET /api/categories/ 200 - 2.362s
+INFO 2026-04-20 15:44:37,986 runserver 22072 17960 [mHTTP GET /api/categories/ 200 [2.37, 127.0.0.1:63095][0m
+INFO 2026-04-20 15:44:38,382 middleware 22072 23248 GET /api/favorites/ 200 - 2.761s
+INFO 2026-04-20 15:44:38,384 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.77, 127.0.0.1:55031][0m
+INFO 2026-04-20 15:44:39,085 middleware 22072 1864 GET /api/regions/ 200 - 3.464s
+INFO 2026-04-20 15:44:39,087 runserver 22072 17960 [mHTTP GET /api/regions/ 200 [3.47, 127.0.0.1:50579][0m
+INFO 2026-04-20 15:44:39,488 middleware 22072 24908 GET /api/listings/ 200 - 3.866s
+INFO 2026-04-20 15:44:39,490 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A44%3A35.296Z 200 [3.87, 127.0.0.1:57509][0m
+INFO 2026-04-20 15:44:39,578 middleware 22072 10364 GET /api/listings/ 200 - 4.268s
+INFO 2026-04-20 15:44:39,580 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6 200 [4.27, 127.0.0.1:55222][0m
+INFO 2026-04-20 15:44:39,655 middleware 22072 24056 GET /api/listings/ 200 - 4.347s
+INFO 2026-04-20 15:44:39,657 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.36, 127.0.0.1:63738][0m
+INFO 2026-04-20 15:45:00,022 middleware 22072 26592 GET /admin/api/listing/19/change/ 200 - 5.926s
+INFO 2026-04-20 15:45:00,025 runserver 22072 17960 [mHTTP GET /admin/api/listing/19/change/ 200 [5.93, 127.0.0.1:62070][0m
+INFO 2026-04-20 15:45:00,068 runserver 22072 17960 [mHTTP GET /static/admin/js/inlines.js 200 [0.01, 127.0.0.1:62070][0m
+INFO 2026-04-20 15:45:01,799 middleware 22072 27444 GET /admin/api/listing/19/change/listings/sukhbaatar.png 301 - 1.727s
+INFO 2026-04-20 15:45:01,801 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png 301 [1.74, 127.0.0.1:59256][0m
+INFO 2026-04-20 15:45:01,823 middleware 22072 26712 GET /admin/jsi18n/ 200 - 1.753s
+INFO 2026-04-20 15:45:01,825 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.77, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:45:01,845 runserver 22072 17960 [mHTTP GET /static/admin/img/icon-changelink.svg 200 [0.01, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:45:01,846 runserver 22072 17960 [mHTTP GET /static/admin/img/icon-deletelink.svg 200 [0.00, 127.0.0.1:62070][0m
+INFO 2026-04-20 15:45:01,885 runserver 22072 17960 [mHTTP GET /static/admin/img/inline-delete.svg 200 [0.00, 127.0.0.1:62070][0m
+INFO 2026-04-20 15:45:03,629 middleware 22072 24476 GET /admin/api/listing/19/change/listings/sukhbaatar.png/ 302 - 1.821s
+INFO 2026-04-20 15:45:03,631 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png/ 302 [1.82, 127.0.0.1:59256][0m
+INFO 2026-04-20 15:45:05,377 middleware 22072 26740 GET /admin/api/listing/19/change/listings/sukhbaatar.png/change/ 302 - 1.741s
+INFO 2026-04-20 15:45:05,380 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png/change/ 302 [1.75, 127.0.0.1:59256][0m
+INFO 2026-04-20 15:45:07,532 middleware 22072 25040 GET /admin/ 200 - 2.147s
+INFO 2026-04-20 15:45:07,534 runserver 22072 17960 [mHTTP GET /admin/ 200 [2.15, 127.0.0.1:59256][0m
+INFO 2026-04-20 15:45:23,468 middleware 22072 25496 POST /admin/api/listing/19/change/ 200 - 7.588s
+INFO 2026-04-20 15:45:23,470 runserver 22072 17960 [mHTTP POST /admin/api/listing/19/change/ 200 [7.59, 127.0.0.1:59256][0m
+INFO 2026-04-20 15:45:25,253 middleware 22072 2332 GET /admin/jsi18n/ 200 - 1.744s
+INFO 2026-04-20 15:45:25,255 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.75, 127.0.0.1:59256][0m
+INFO 2026-04-20 15:45:25,258 middleware 22072 20152 GET /admin/api/listing/19/change/listings/sukhbaatar.png 301 - 1.748s
+INFO 2026-04-20 15:45:25,261 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png 301 [1.75, 127.0.0.1:62070][0m
+INFO 2026-04-20 15:45:27,002 middleware 22072 24736 GET /admin/api/listing/19/change/listings/sukhbaatar.png/ 302 - 1.731s
+INFO 2026-04-20 15:45:27,005 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png/ 302 [1.74, 127.0.0.1:62070][0m
+INFO 2026-04-20 15:45:28,713 middleware 22072 16304 GET /admin/api/listing/19/change/listings/sukhbaatar.png/change/ 302 - 1.704s
+INFO 2026-04-20 15:45:28,715 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png/change/ 302 [1.71, 127.0.0.1:62070][0m
+INFO 2026-04-20 15:45:30,877 middleware 22072 20352 GET /admin/ 200 - 2.157s
+INFO 2026-04-20 15:45:30,878 runserver 22072 17960 [mHTTP GET /admin/ 200 [2.16, 127.0.0.1:62070][0m
+INFO 2026-04-20 15:45:54,528 middleware 22072 4804 POST /admin/api/listing/19/change/ 200 - 7.437s
+INFO 2026-04-20 15:45:54,530 runserver 22072 17960 [mHTTP POST /admin/api/listing/19/change/ 200 [7.44, 127.0.0.1:59256][0m
+INFO 2026-04-20 15:45:56,282 middleware 22072 25848 GET /admin/api/listing/19/change/listings/sukhbaatar.png 301 - 1.712s
+INFO 2026-04-20 15:45:56,284 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png 301 [1.72, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:45:56,307 middleware 22072 26028 GET /admin/jsi18n/ 200 - 1.737s
+INFO 2026-04-20 15:45:56,308 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.74, 127.0.0.1:59256][0m
+INFO 2026-04-20 15:45:57,997 middleware 22072 18608 GET /admin/api/listing/19/change/listings/sukhbaatar.png/ 302 - 1.710s
+INFO 2026-04-20 15:45:57,999 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png/ 302 [1.71, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:45:59,751 middleware 22072 25704 GET /admin/api/listing/19/change/listings/sukhbaatar.png/change/ 302 - 1.746s
+INFO 2026-04-20 15:45:59,753 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png/change/ 302 [1.75, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:46:01,924 middleware 22072 24584 GET /admin/ 200 - 2.165s
+INFO 2026-04-20 15:46:01,926 runserver 22072 17960 [mHTTP GET /admin/ 200 [2.17, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:46:12,828 middleware 22072 17216 GET /admin/api/listing/ 200 - 6.613s
+INFO 2026-04-20 15:46:12,830 runserver 22072 17960 [mHTTP GET /admin/api/listing/ 200 [6.62, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:46:14,578 middleware 22072 22484 GET /admin/jsi18n/ 200 - 1.716s
+INFO 2026-04-20 15:46:14,579 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.72, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:46:22,307 middleware 22072 17620 GET /admin/api/listing/14/change/ 200 - 5.817s
+INFO 2026-04-20 15:46:22,310 runserver 22072 17960 [mHTTP GET /admin/api/listing/14/change/ 200 [5.82, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:46:24,052 middleware 22072 26500 GET /admin/jsi18n/ 200 - 1.715s
+INFO 2026-04-20 15:46:24,054 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.72, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:46:38,262 middleware 22072 20076 GET /admin/api/listing/14/change/ 200 - 5.839s
+INFO 2026-04-20 15:46:38,264 runserver 22072 17960 [mHTTP GET /admin/api/listing/14/change/ 200 [5.84, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:46:52,552 middleware 22072 25592 GET /admin/api/listing/ 200 - 6.710s
+INFO 2026-04-20 15:46:52,554 runserver 22072 17960 [mHTTP GET /admin/api/listing/ 200 [6.71, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:46:54,344 middleware 22072 19612 GET /admin/jsi18n/ 200 - 1.761s
+INFO 2026-04-20 15:46:54,346 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.77, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:47:05,811 middleware 22072 11036 GET /admin/api/listing/19/change/ 200 - 5.651s
+INFO 2026-04-20 15:47:05,813 runserver 22072 17960 [mHTTP GET /admin/api/listing/19/change/ 200 [5.65, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:47:07,551 middleware 22072 13132 GET /admin/api/listing/19/change/listings/sukhbaatar.png 301 - 1.704s
+INFO 2026-04-20 15:47:07,553 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png 301 [1.71, 127.0.0.1:49774][0m
+INFO 2026-04-20 15:47:07,595 middleware 22072 17664 GET /admin/jsi18n/ 200 - 1.753s
+INFO 2026-04-20 15:47:07,597 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.76, 127.0.0.1:61273][0m
+INFO 2026-04-20 15:47:09,286 middleware 22072 23060 GET /admin/api/listing/19/change/listings/sukhbaatar.png/ 302 - 1.728s
+INFO 2026-04-20 15:47:09,288 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png/ 302 [1.73, 127.0.0.1:49774][0m
+INFO 2026-04-20 15:47:11,004 middleware 22072 5904 GET /admin/api/listing/19/change/listings/sukhbaatar.png/change/ 302 - 1.712s
+INFO 2026-04-20 15:47:11,006 runserver 22072 17960 [32mHTTP GET /admin/api/listing/19/change/listings/sukhbaatar.png/change/ 302 [1.72, 127.0.0.1:49774][0m
+INFO 2026-04-20 15:47:13,139 middleware 22072 15224 GET /admin/ 200 - 2.127s
+INFO 2026-04-20 15:47:13,141 runserver 22072 17960 [mHTTP GET /admin/ 200 [2.13, 127.0.0.1:49774][0m
+INFO 2026-04-20 15:47:21,151 middleware 22072 27076 POST /admin/api/listing/19/change/ 302 - 5.499s
+INFO 2026-04-20 15:47:21,154 runserver 22072 17960 [32mHTTP POST /admin/api/listing/19/change/ 302 [5.50, 127.0.0.1:49774][0m
+INFO 2026-04-20 15:47:27,784 middleware 22072 21804 GET /admin/api/listing/ 200 - 6.624s
+INFO 2026-04-20 15:47:27,786 runserver 22072 17960 [mHTTP GET /admin/api/listing/ 200 [6.63, 127.0.0.1:49774][0m
+INFO 2026-04-20 15:47:29,523 middleware 22072 404 GET /admin/jsi18n/ 200 - 1.709s
+INFO 2026-04-20 15:47:29,525 runserver 22072 17960 [mHTTP GET /admin/jsi18n/ 200 [1.71, 127.0.0.1:49774][0m
+INFO 2026-04-20 15:47:39,481 runserver 22072 17960 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A47%3A39.163Z 200 [0.01, 127.0.0.1:63284][0m
+INFO 2026-04-20 15:47:41,849 middleware 22072 21692 GET /api/categories/ 200 - 2.363s
+INFO 2026-04-20 15:47:41,850 runserver 22072 17960 [mHTTP GET /api/categories/ 200 [2.38, 127.0.0.1:65518][0m
+INFO 2026-04-20 15:47:42,283 middleware 22072 20568 GET /api/favorites/ 200 - 2.797s
+INFO 2026-04-20 15:47:42,286 runserver 22072 17960 [mHTTP GET /api/favorites/?page=1&page_size=100 200 [2.81, 127.0.0.1:65168][0m
+INFO 2026-04-20 15:47:42,929 middleware 22072 27624 GET /api/regions/ 200 - 3.443s
+INFO 2026-04-20 15:47:42,931 runserver 22072 17960 [mHTTP GET /api/regions/ 200 [3.46, 127.0.0.1:51964][0m
+INFO 2026-04-20 15:47:43,440 middleware 22072 22780 GET /api/listings/ 200 - 3.941s
+INFO 2026-04-20 15:47:43,442 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-13T07%3A47%3A39.163Z 200 [3.95, 127.0.0.1:63284][0m
+INFO 2026-04-20 15:47:43,805 middleware 22072 16612 GET /api/listings/ 200 - 4.319s
+INFO 2026-04-20 15:47:43,807 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6 200 [4.33, 127.0.0.1:60366][0m
+INFO 2026-04-20 15:47:43,861 middleware 22072 18252 GET /api/listings/ 200 - 4.375s
+INFO 2026-04-20 15:47:43,863 runserver 22072 17960 [mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 200 [4.39, 127.0.0.1:60210][0m
+INFO 2026-04-20 15:47:51,190 middleware 22072 18564 GET /api/listings/ 200 - 4.331s
+INFO 2026-04-20 15:47:51,193 runserver 22072 17960 [mHTTP GET /api/listings/ 200 [4.34, 127.0.0.1:60210][0m

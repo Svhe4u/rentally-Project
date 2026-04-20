@@ -139,17 +139,20 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
     try {
-      const [listRes, favRes, catRes, regRes] = await Promise.all([
-        ListingAPI.list({ page_size: 20 }),
+      const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+      const [popRes, newRes, nearbyRes, favRes, catRes, regRes] = await Promise.all([
+        ListingAPI.list({ page_size: 6, ordering: '-favorite_count' }), // Actively Loved
+        ListingAPI.list({ page_size: 6, ordering: '-created_at', created_after: lastWeek }), // Added this week
+        ListingAPI.list({ page_size: 6 }), // Recommended
         FavoriteAPI.list().catch(() => ({ results: [] as any[] })),
         CategoryAPI.list(),
         RegionAPI.list(),
       ]);
 
-      const all: Listing[] = listRes.results ?? (listRes as any);
-      setNearby(all.slice(0, 6));
-      setPopular(all.slice(6, 12));
-      setNewListings(all.slice(12, 18));
+      setPopular(popRes.results ?? []);
+      setNewListings(newRes.results ?? []);
+      setNearby(nearbyRes.results ?? []);
       setCategories(catRes);
       setRegions(regRes);
 
@@ -213,7 +216,7 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
         </View>
 
         {/* Search bar */}
-        <TouchableOpacity style={s.searchBar} onPress={() => setSearchOpen(true)} activeOpacity={0.8}>
+        <TouchableOpacity style={s.searchBar} onPress={() => onNavigate('search_filter')} activeOpacity={0.8}>
           <Ionicons name="search" size={18} color={Colors.textLight} />
           <Text style={s.searchTxt}>Ямар байр хайж байна вэ?</Text>
         </TouchableOpacity>
@@ -259,15 +262,15 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
           </TouchableOpacity>
         </View>
 
-        {/* ── Nearby for you ────────────────────────────── */}
+        {/* New properties */}
         <View style={s.section}>
           <SectionHeader
-            title="👋 Ойрхон байрлал"
-            subtitle="Таны хүсэлтэд тохирсон"
-            action={{ label: 'Бүгд →', onPress: () => onNavigate('map') }}
+            title="Энэ долоо хоногт нэмэгдсэн"
+            subtitle="Сүүлийн 7 хоногт шинээр орсон байрнууд"
+            action={{ label: 'Бүгдийг үзэх', onPress: () => onNavigate('map') }}
           />
           <ListingRow
-            listings={nearby}
+            listings={newListings}
             loading={loading}
             onCardPress={handleCardPress}
             onFavorite={handleFavorite}
@@ -275,12 +278,12 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
           />
         </View>
 
-        {/* ── Popular this week ──────────────────────────── */}
+        {/* High demand */}
         <View style={s.section}>
           <SectionHeader
-            title="🔥 Өндөр эрэлттэй"
-            subtitle="Идэвхтэй хайрлаж буй"
-            action={{ label: 'Бүгд →', onPress: () => onNavigate('map') }}
+            title="Идэвхтэй хайрлаж буй"
+            subtitle="Хүмүүсийн хамгийн их сонирхож, хадгалсан"
+            action={{ label: 'Бүгдийг үзэх', onPress: () => onNavigate('map') }}
           />
           <ListingRow
             listings={popular}

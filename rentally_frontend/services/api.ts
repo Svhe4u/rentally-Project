@@ -152,14 +152,24 @@ export const ListingAPI = {
     region?: string;
     min_price?: string;
     max_price?: string;
+    owner_id?: number | string;
+    ordering?: string;
+    created_after?: string;
+    price_type?: string;
+    min_area?: string | number;
+    max_area?: string | number;
+    bedrooms?: string | number;
     page?: number;
     page_size?: number;
   }) => {
-    const q = new URLSearchParams(
-      Object.entries(params || {})
-        .filter(([, v]) => v !== undefined && v !== '')
-        .map(([k, v]) => [k, String(v)]),
-    ).toString();
+    const query = new URLSearchParams();
+    Object.entries(params || {}).forEach(([key, val]) => {
+      const sVal = String(val).toLowerCase();
+      if (val !== undefined && val !== null && sVal !== '' && sVal !== 'null' && sVal !== 'undefined') {
+        query.append(key, String(val));
+      }
+    });
+    const q = query.toString();
     return request<{ meta: any; results: Listing[] }>(`/listings/${q ? '?' + q : ''}`);
   },
 
@@ -237,14 +247,14 @@ export const ReviewAPI = {
       body: JSON.stringify(data),
     }),
 
-  update: (pk: number, data: { user_id: number; rating?: number; comment?: string }) =>
+  update: (pk: number, data: { rating?: number; comment?: string }) =>
     request<Review>(`/reviews/${pk}/`, {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
 
-  delete: (pk: number, user_id: number) =>
-    request(`/reviews/${pk}/?user_id=${user_id}`, { method: 'DELETE' }),
+  delete: (pk: number) =>
+    request(`/reviews/${pk}/`, { method: 'DELETE' }),
 };
 
 // ─── FAVORITES ───────────────────────────────────────────────
@@ -324,6 +334,9 @@ export const UserAPI = {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
+
+  currentProfile: () =>
+    request<User>('/profile/'),
 };
 
 // ─── BROKERS ─────────────────────────────────────────────────

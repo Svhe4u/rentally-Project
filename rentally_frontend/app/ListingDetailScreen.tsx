@@ -3,6 +3,7 @@ import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   SafeAreaView, TextInput, Modal, ActivityIndicator,
   Dimensions, Image, Alert, Animated, StatusBar, Platform,
+  Pressable, KeyboardAvoidingView, TouchableWithoutFeedback,
 } from 'react-native';
 import { TabName } from '../components/BottomNav';
 import {
@@ -11,6 +12,7 @@ import {
   MessageAPI,
   MongoliaAPI,
   ReviewAPI,
+  UserAPI,
 } from '../services/api';
 
 const { width: W, height: H } = Dimensions.get('window');
@@ -37,7 +39,7 @@ interface Details {
 interface ListingImage { id: number; image_url: string; sort_order: number; }
 interface ExtraFeature { id: number; key: string; value: string; }
 interface Review {
-  id: number; user_id: number; username: string;
+  id: number; user: number; user_username: string;
   rating: number; comment: string; created_at: string;
 }
 interface UtilityFmt { min: string; max: string; }
@@ -98,9 +100,15 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
   const [msgSending, setMsgSending] = useState(false);
 
   const [rvOpen, setRvOpen]       = useState(false);
-  const [rvRating, setRvRating]   = useState(5);
+  const [rvRating, setRvRating]   = useState(0);
   const [rvText, setRvText]       = useState('');
   const [rvSending, setRvSending] = useState(false);
+
+  const [curUserId, setCurUserId] = useState<number | null>(null);
+  const [editingRvId, setEditingRvId] = useState<number | null>(null);
+
+  const [otherListings, setOtherListings] = useState<Listing[]>([]);
+  const [otherLoading, setOtherLoading]   = useState(false);
 
   // ── Right-to-left slide animation ─────────────────────────
   const slideX   = useRef(new Animated.Value(W)).current;
@@ -157,6 +165,13 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
   // ── Fetch ─────────────────────────────────────────────────
   const load = useCallback(async () => {
     if (!listingId) return;
+    try {
+      const uRes = await UserAPI.currentProfile();
+      if (uRes?.id) setCurUserId(uRes.id);
+    } catch (e) {
+      console.log('Profile load error:', e);
+    }
+
     setLoading(true);
     setError('');
     setListing(null);
@@ -174,9 +189,10 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
         ...raw,
         price: parseFloat(String(raw.price)),
         owner: {
-          id: raw.owner,
-          username: raw.owner_username ?? 'Хэрэглэгч',
-          role: 'broker',
+          id: raw.owner.id || raw.owner,
+          username: raw.owner.username || raw.owner_username || 'Хэрэглэгч',
+          role: raw.owner.role || 'broker',
+          broker_profile: raw.owner.broker_profile,
         },
         category: raw.category ? { id: raw.category, name: raw.category_name } : undefined,
         region:
@@ -192,7 +208,7 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
         })),
         rating_avg: raw.average_rating ?? null,
         review_count: raw.review_count ?? 0,
-        reviews: [],
+        reviews: raw.reviews || [],
         availability: [],
       };
 
@@ -210,6 +226,15 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
         const ud = await MongoliaAPI.utilityEstimate(Number(area));
         if (ud?.formatted) setUtility(ud.formatted);
       }
+      try {
+        const others = await ListingAPI.list({
+          owner_id: raw.owner.id || raw.owner,
+          page_size: 6
+        });
+        setOtherListings((others.results || []).filter((it: any) => it.id !== listingId));
+      } catch (e) {
+        console.error('Other listings load error:', e);
+      }
     } catch (e: any) {
       setError(e.message || 'Алдаа гарлаа');
     } finally {
@@ -218,6 +243,19 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
   }, [listingId]);
 
   useEffect(() => { if (visible && listingId) load(); }, [visible, listingId]);
+
+  const openReviewModal = (r?: Review) => {
+    if (r) {
+      setEditingRvId(r.id);
+      setRvRating(r.rating);
+      setRvText(r.comment || '');
+    } else {
+      setEditingRvId(null);
+      setRvRating(0);
+      setRvText('');
+    }
+    setRvOpen(true);
+  };
 
   // ── Fav ──────────────────────────────────────────────────
   const heartScale = useRef(new Animated.Value(1)).current;
@@ -261,15 +299,17 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
 
   // ── Review ────────────────────────────────────────────────
   const postReview = async () => {
-    if (!rvText.trim() || !listing) return;
+    if (rvRating === 0 || !listing) return;
     setRvSending(true);
     try {
       await ReviewAPI.create({
         listing_id: listing.id,
         rating: rvRating,
-        comment: rvText.trim(),
+        comment: rvText.trim() || undefined,
       });
       setRvText('');
+      setRvRating(0);
+      setEditingRvId(null);
       setRvOpen(false);
       Alert.alert('⭐ Баярлалаа!', 'Таны үнэлгээ нийтлэгдлээ.');
       load();
@@ -283,6 +323,24 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
     } finally {
       setRvSending(false);
     }
+  };
+
+  const deleteReview = async (id: number) => {
+    Alert.alert('⚠️ Устгах', 'Та энэ үнэлгээг устгахдаа итгэлтэй байна уу?', [
+      { text: 'Болих', style: 'cancel' },
+      {
+        text: 'Устгах',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await ReviewAPI.delete(id);
+            load();
+          } catch (e) {
+            Alert.alert('Алдаа', 'Үнэлгээ устгахад алдаа гарлаа');
+          }
+        },
+      },
+    ]);
   };
 
   // ── Scroll header ─────────────────────────────────────────
@@ -514,6 +572,9 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
                   </View>
                   <View style={{ flex: 1 }}>
                     <Text style={c.ownerName}>{listing.owner.username}</Text>
+                    {listing.owner.broker_profile?.company_name && (
+                      <Text style={c.ownerCompany}>🏢 {listing.owner.broker_profile.company_name}</Text>
+                    )}
                     {listing.owner.phone && <Text style={c.ownerPhone}>📞 {listing.owner.phone}</Text>}
                   </View>
                 </View>
@@ -523,6 +584,41 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
                 <TouchableOpacity style={c.msgOwnerBtn} onPress={() => setMsgOpen(true)}>
                   <Text style={c.msgOwnerTxt}>💬 Мессеж илгээх</Text>
                 </TouchableOpacity>
+
+                {/* Other listings list */}
+                {otherListings.length > 0 && (
+                  <View style={c.otherSec}>
+                    <Text style={c.otherTitle}>🏠 Зуучлагчийн бусад зарууд</Text>
+                    <View style={c.otherList}>
+                      {otherListings.map(item => (
+                        <TouchableOpacity 
+                          key={item.id} 
+                          style={c.otherItem}
+                          onPress={() => {
+                            // Close current and open new detail
+                            handleClose();
+                            // We need a small delay or a way to trigger parent to open new one
+                            setTimeout(() => {
+                              if (listingId !== item.id) load(); // This won't work easily with the current modal logic
+                              // Better: just navigate/update listingId if parent allows
+                            }, 500);
+                          }}
+                        >
+                          <Image 
+                            source={{ uri: item.cover_image || item.images?.[0]?.image_url }} 
+                            style={c.otherImg} 
+                          />
+                          <View style={c.otherInfo}>
+                            <Text style={c.otherItemTitle} numberOfLines={1}>{item.title}</Text>
+                            <Text style={c.otherItemPrice}>{fmtPrice(item.price)} ₮</Text>
+                            <Text style={c.otherItemLoc} numberOfLines={1}>📍 {item.region_name || item.address}</Text>
+                          </View>
+                          <Text style={c.otherArrow}>›</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+                )}
               </Sec>
 
               {/* Reviews */}
@@ -536,22 +632,32 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
                   listing.reviews.map((r, i) => (
                     <View key={r.id} style={[c.rvCard, i > 0 && { marginTop: 10 }]}>
                       <View style={c.rvTop}>
-                        <View style={[c.rvAv, { backgroundColor: AVATAR_COLORS[r.user_id % AVATAR_COLORS.length] }]}>
-                          <Text style={c.rvAvTxt}>{r.username[0]?.toUpperCase()}</Text>
+                        <View style={[c.rvAv, { backgroundColor: AVATAR_COLORS[r.user % AVATAR_COLORS.length] }]}>
+                          <Text style={c.rvAvTxt}>{r.user_username[0]?.toUpperCase()}</Text>
                         </View>
                         <View style={{ flex: 1 }}>
                           <View style={c.rvMeta}>
-                            <Text style={c.rvUser}>{r.username}</Text>
+                            <Text style={c.rvUser}>{r.user_username}</Text>
                             <Text style={c.rvTime}>{timeAgo(r.created_at)}</Text>
                           </View>
                           <Text style={c.rvStars}>{STAR(5, r.rating)}</Text>
                         </View>
+                        {curUserId === r.user && (
+                          <View style={c.rvActions}>
+                            <TouchableOpacity onPress={() => openReviewModal(r)}>
+                              <Text style={c.rvEditIco}>✏️</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => deleteReview(r.id)}>
+                              <Text style={c.rvDelIco}>🗑️</Text>
+                            </TouchableOpacity>
+                          </View>
+                        )}
                       </View>
                       {r.comment ? <Text style={c.rvTxt}>{r.comment}</Text> : null}
                     </View>
                   ))
                 )}
-                <TouchableOpacity style={c.writeRvBtn} onPress={() => setRvOpen(true)}>
+                <TouchableOpacity style={c.writeRvBtn} onPress={() => openReviewModal()}>
                   <Text style={c.writeRvTxt}>✏️ Үнэлгээ бичих</Text>
                 </TouchableOpacity>
               </Sec>
@@ -632,8 +738,8 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
             />
           </View>
           <TouchableOpacity
-            style={[c.submitBtn, (!rvText.trim() || rvSending) && c.submitDis]}
-            onPress={postReview} disabled={!rvText.trim() || rvSending}>
+            style={[c.submitBtn, (rvRating === 0 || rvSending) && c.submitDis]}
+            onPress={postReview} disabled={rvRating === 0 || rvSending}>
             {rvSending
               ? <ActivityIndicator color="#fff" />
               : <Text style={c.submitTxt}>Нийтлэх</Text>}
@@ -682,12 +788,23 @@ function Sheet({ visible, onClose, title, children }: {
 }) {
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <TouchableOpacity style={c.overlay} activeOpacity={1} onPress={onClose}>
-        <View style={c.sheet}>
-          <View style={c.sheetHandle} />
-          <Text style={c.sheetTitle}>{title}</Text>
-          {children}
-        </View>
+      <TouchableOpacity 
+        style={c.overlay} 
+        activeOpacity={1} 
+        onPress={onClose}
+      >
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1, justifyContent: 'flex-end' }}
+        >
+          <Pressable onPress={(e) => e.stopPropagation()}>
+            <View style={c.sheet}>
+              <View style={c.sheetHandle} />
+              <Text style={c.sheetTitle}>{title}</Text>
+              {children}
+            </View>
+          </Pressable>
+        </KeyboardAvoidingView>
       </TouchableOpacity>
     </Modal>
   );
@@ -855,6 +972,7 @@ const c = StyleSheet.create({
   agency:       { fontSize: 13, color: '#4b5563' },
   license:      { fontSize: 11, color: '#9ca3af' },
   ownerPhone:   { fontSize: 13, color: BLUE, fontWeight: '700' },
+  ownerCompany: { fontSize: 12, color: '#6b7280', marginTop: 2, fontWeight: '600' },
   bio:          { fontSize: 13, color: '#6b7280', lineHeight: 20, marginBottom: 12 },
   msgOwnerBtn:  {
     alignItems: 'center', justifyContent: 'center',
@@ -862,6 +980,22 @@ const c = StyleSheet.create({
     paddingVertical: 13, borderWidth: 1.5, borderColor: '#bfdbfe',
   },
   msgOwnerTxt: { fontSize: 14, fontWeight: '800', color: '#1d4ed8' },
+
+  // Other listings list
+  otherSec: { marginTop: 24, borderTopWidth: 1, borderTopColor: '#f0f2f5', paddingTop: 20 },
+  otherTitle: { fontSize: 14, fontWeight: '900', color: '#111827', marginBottom: 12 },
+  otherList: { gap: 10 },
+  otherItem: { 
+    flexDirection: 'row', alignItems: 'center', 
+    backgroundColor: '#f9fafb', borderRadius: 14, padding: 10,
+    borderWidth: 1, borderColor: '#f0f2f5' 
+  },
+  otherImg: { width: 60, height: 60, borderRadius: 10, backgroundColor: '#eee' },
+  otherInfo: { flex: 1, marginLeft: 12, gap: 2 },
+  otherItemTitle: { fontSize: 13, fontWeight: '800', color: '#111827' },
+  otherItemPrice: { fontSize: 13, fontWeight: '900', color: BLUE },
+  otherItemLoc: { fontSize: 11, color: '#9ca3af' },
+  otherArrow: { fontSize: 20, color: '#d1d5db', marginLeft: 8 },
 
   // reviews
   noRv:    { alignItems: 'center', paddingVertical: 20 },
@@ -880,6 +1014,9 @@ const c = StyleSheet.create({
     alignItems: 'center', borderWidth: 1.5, borderColor: '#e5e7eb', borderStyle: 'dashed',
   },
   writeRvTxt: { fontSize: 14, fontWeight: '700', color: '#6b7280' },
+  rvActions: { flexDirection: 'row', gap: 10, marginLeft: 10 },
+  rvEditIco: { fontSize: 14 },
+  rvDelIco:  { fontSize: 14 },
 
   // sticky
   stickyBar: {

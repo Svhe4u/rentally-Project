@@ -123,6 +123,50 @@ class BrokerProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['status', 'verified_at', 'created_at']
 
 
+class UserPublicSerializer(serializers.ModelSerializer):
+    """Serializer for public user info including broker profile."""
+    broker_profile = BrokerProfileSerializer(read_only=True)
+    phone = serializers.CharField(source='profile.phone', read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name', 'last_name', 'phone', 'broker_profile']
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# REVIEW SERIALIZERS
+# ─────────────────────────────────────────────────────────────────────────
+
+class ReviewSerializer(serializers.ModelSerializer):
+    """Serializer for reviews."""
+
+    user_username = serializers.CharField(source='user.username', read_only=True)
+    listing_title = serializers.CharField(source='listing.title', read_only=True)
+
+    class Meta:
+        model = Review
+        fields = [
+            'id', 'listing', 'listing_title', 'user', 'user_username',
+            'rating', 'comment', 'is_verified_booking', 'helpful_count',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['helpful_count', 'created_at', 'updated_at', 'is_verified_booking']
+
+    def validate_rating(self, value):
+        if not (1 <= value <= 5):
+            raise serializers.ValidationError("Үнэлгээ 1-5 хооронд байх ёстой.")
+        return value
+
+
+
+class ReviewCreateSerializer(serializers.Serializer):
+    """Validate review create payload."""
+
+    listing_id = serializers.IntegerField(required=True)
+    rating = serializers.IntegerField(min_value=1, max_value=5, required=True)
+    comment = serializers.CharField(allow_blank=True, required=False)
+
+
 # ─────────────────────────────────────────────────────────────────────────
 # LISTING SERIALIZERS
 # ─────────────────────────────────────────────────────────────────────────
@@ -195,14 +239,16 @@ class MyListingSerializer(ListingSerializer):
 class ListingDetailedSerializer(ListingSerializer):
     """Detailed serializer including nested relationships."""
 
+    owner = UserPublicSerializer(read_only=True)
     images = ListingImageSerializer(many=True, read_only=True)
     features = ListingFeatureSerializer(many=True, read_only=True)
     detail = ListingDetailSerializer(read_only=True)
+    reviews = ReviewSerializer(many=True, read_only=True)
     review_count = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField()
 
     class Meta(ListingSerializer.Meta):
-        fields = ListingSerializer.Meta.fields + ['images', 'features', 'detail', 'review_count', 'average_rating']
+        fields = ListingSerializer.Meta.fields + ['images', 'features', 'detail', 'reviews', 'review_count', 'average_rating']
 
     def get_review_count(self, obj):
         """Review тоог annotate-аас эсвэл count-аас авна."""
@@ -285,47 +331,6 @@ class BookingCreateSerializer(serializers.Serializer):
         return data
 
 
-# ─────────────────────────────────────────────────────────────────────────
-# REVIEW SERIALIZERS
-# ─────────────────────────────────────────────────────────────────────────
-
-class ReviewSerializer(serializers.ModelSerializer):
-    """Serializer for reviews."""
-
-    user_username = serializers.CharField(source='user.username', read_only=True)
-    listing_title = serializers.CharField(source='listing.title', read_only=True)
-
-    class Meta:
-        model = Review
-        fields = [
-            'id', 'listing', 'listing_title', 'user', 'user_username',
-            'rating', 'comment', 'is_verified_booking', 'helpful_count',
-            'created_at', 'updated_at'
-        ]
-        read_only_fields = ['helpful_count', 'created_at', 'updated_at', 'is_verified_booking']
-
-    def validate_rating(self, value):
-        if not (1 <= value <= 5):
-            raise serializers.ValidationError("Үнэлгээ 1-5 хооронд байх ёстой.")
-        return value
-
-    def validate(self, data):
-        """Check if user has already reviewed this listing."""
-        request = self.context.get('request')
-        if request and request.method == 'POST':
-            user = request.user
-            listing = data.get('listing')
-            if Review.objects.filter(user=user, listing=listing).exists():
-                raise serializers.ValidationError("Та энэ зарын талаар өмнө үнэлгээ өгсөн байна.")
-        return data
-
-
-class ReviewCreateSerializer(serializers.Serializer):
-    """Validate review create payload."""
-
-    listing_id = serializers.IntegerField(required=True)
-    rating = serializers.IntegerField(min_value=1, max_value=5, required=True)
-    comment = serializers.CharField(allow_blank=True, required=False)
 
 
 # ─────────────────────────────────────────────────────────────────────────

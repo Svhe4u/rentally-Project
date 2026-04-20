@@ -16,10 +16,11 @@ import EditProfileScreen  from './app/EditProfileScreen';
 import SecurityScreen     from './app/SecurityScreen';
 import HelpScreen         from './app/HelpScreen';
 import AboutScreen        from './app/AboutScreen';
+import SearchFilterScreen from './app/SearchFilterScreen';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 
-type Screen = 'home' | 'saved' | 'map' | 'messages' | 'chat' | 'profile' | 'login' | 'register' | 'notifications' | 'editProfile' | 'security' | 'help' | 'about';
+type Screen = 'home' | 'saved' | 'map' | 'messages' | 'chat' | 'profile' | 'login' | 'register' | 'notifications' | 'editProfile' | 'security' | 'help' | 'about' | 'search_filter';
 
 export default function App() {
   return (
@@ -54,6 +55,7 @@ function AppNavigator() {
   const [chatParams, setChatParams] = useState<{
     senderId: number; receiverId: number; listingId?: number; receiverName: string;
   } | null>(null);
+  const [mapParams, setMapParams] = useState<any>(null);
 
   const openDetail = (id: number) => { setDetailId(id); setDetailVisible(true); };
   const closeDetail = () => setDetailVisible(false);
@@ -63,6 +65,9 @@ function AppNavigator() {
       setChatParams(params ?? { senderId: 1, receiverId: 2, receiverName: 'Зуучлагч' });
       setScreen('chat');
       return;
+    }
+    if (tab === 'map' || tab === 'search_filter') {
+      setMapParams(params);
     }
     setScreen(tab as Screen);
   };
@@ -77,7 +82,8 @@ function AppNavigator() {
       case 'login':     return <LoginScreen      onNavigate={navigate} />;
       case 'register':  return <RegisterScreen   onNavigate={navigate} />;
       case 'saved':     return <SavedScreen      onNavigate={navigate} onOpenDetail={openDetail} />;
-      case 'map':       return <MapScreen        onNavigate={navigate} onOpenDetail={openDetail} />;
+      case 'map':       return <MapScreen        onNavigate={navigate} onOpenDetail={openDetail} params={mapParams} />;
+      case 'search_filter': return <SearchFilterScreen onNavigate={navigate} />;
       case 'messages':  return <MessagesScreen   onNavigate={navigate} />;
       case 'chat':      return chatParams ? (
         <ChatScreen

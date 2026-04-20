@@ -1,0 +1,37 @@
+[
+  {
+    "id": 12,
+    "name": "Баянгол дүүрэг",
+    "slug": "bayangol"
+  },
+  {
+    "id": 9,
+    "name": "Баянзүрх дүүрэг",
+    "slug": "bayanzurkh"
+  },
+  {
+    "id": 13,
+    "name": "Сонгинохайрхан дүүрэг",
+    "slug": "songino-khairkhan"
+  },
+  {
+    "id": 8,
+    "name": "Сүхбаатар дүүрэг",
+    "slug": "sukhbaatar"
+  },
+  {
+    "id": 7,
+    "name": "Улаанбаатар",
+    "slug": "ulaanbaatar"
+  },
+  {
+    "id": 11,
+    "name": "Хан-Уул дүүрэг",
+    "slug": "han-uul"
+  },
+  {
+    "id": 10,
+    "name": "Чингэлтэй дүүрэг",
+    "slug": "chingeltei"
+  }
+]

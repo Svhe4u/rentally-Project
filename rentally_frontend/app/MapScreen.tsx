@@ -10,7 +10,7 @@ import BottomNav, { TabName } from '../components/BottomNav';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyAhcTN2Y9g3NpsaRus5Yc7rSvTsnhdE5FY';
 
-interface Props { onNavigate: (tab: TabName) => void; onOpenDetail?: (id: number) => void; }
+interface Props { onNavigate: (tab: TabName, params?: any) => void; onOpenDetail?: (id: number) => void; params?: any; }
 interface MapListing {
   id: number;
   title: string;
@@ -31,30 +31,29 @@ interface Committee { id: number | string; name: string; districtId: string | nu
 const UB = { lat: 47.9077, lng: 106.8832 };
 
 const DISTRICTS: District[] = [
-  { id:'bayanzurkh', name:'Баянзүрх',      lat:47.920, lng:106.970, zoom:13 },
-  { id:'sukhbaatar', name:'Сүхбаатар',      lat:47.920, lng:106.845, zoom:13 },
-  { id:'khan_uul',   name:'Хан-Уул',         lat:47.860, lng:106.900, zoom:13 },
-  { id:'bayangol',   name:'Баянгол',         lat:47.900, lng:106.820, zoom:13 },
-  { id:'songino',    name:'Сонгинохайрхан', lat:47.940, lng:106.750, zoom:12 },
-  { id:'chingeltei', name:'Чингэлтэй',      lat:47.930, lng:106.870, zoom:13 },
-  { id:'nalaikh',    name:'Налайх',          lat:47.760, lng:107.270, zoom:13 },
-  { id:'baganuur',   name:'Багануур',        lat:47.710, lng:108.280, zoom:13 },
+  { id: 9,  name:'Баянзүрх',       lat:47.920, lng:106.970, zoom:13 },
+  { id: 8,  name:'Сүхбаатар',       lat:47.920, lng:106.845, zoom:13 },
+  { id: 11, name:'Хан-Уул',          lat:47.860, lng:106.900, zoom:13 },
+  { id: 12, name:'Баянгол',          lat:47.900, lng:106.820, zoom:13 },
+  { id: 13, name:'Сонгинохайрхан',  lat:47.940, lng:106.750, zoom:12 },
+  { id: 10, name:'Чингэлтэй',       lat:47.930, lng:106.870, zoom:13 },
+  { id: 7,  name:'Улаанбаатар',     lat:47.907, lng:106.883, zoom:12 },
 ];
 
 const COMMITTEES: Committee[] = [
-  { id:'bz_1',  name:'1-р хороо',  districtId:'bayanzurkh', lat:47.925, lng:106.955 },
-  { id:'bz_3',  name:'3-р хороо',  districtId:'bayanzurkh', lat:47.930, lng:106.970 },
-  { id:'bz_15', name:'15-р хороо', districtId:'bayanzurkh', lat:47.910, lng:106.980 },
-  { id:'sb_1',  name:'1-р хороо',  districtId:'sukhbaatar', lat:47.920, lng:106.835 },
-  { id:'sb_4',  name:'4-р хороо',  districtId:'sukhbaatar', lat:47.915, lng:106.850 },
-  { id:'ku_1',  name:'1-р хороо',  districtId:'khan_uul',   lat:47.865, lng:106.880 },
-  { id:'ku_8',  name:'8-р хороо',  districtId:'khan_uul',   lat:47.855, lng:106.915 },
-  { id:'bg_1',  name:'1-р хороо',  districtId:'bayangol',   lat:47.910, lng:106.815 },
-  { id:'bg_7',  name:'7-р хороо',  districtId:'bayangol',   lat:47.895, lng:106.825 },
-  { id:'ct_1',  name:'1-р хороо',  districtId:'chingeltei', lat:47.928, lng:106.860 },
-  { id:'ct_3',  name:'3-р хороо',  districtId:'chingeltei', lat:47.932, lng:106.875 },
-  { id:'sk_1',  name:'1-р хороо',  districtId:'songino',    lat:47.945, lng:106.742 },
-  { id:'sk_5',  name:'5-р хороо',  districtId:'songino',    lat:47.935, lng:106.760 },
+  { id:'bz_1',  name:'1-р хороо',  districtId: 9,  lat:47.925, lng:106.955 },
+  { id:'bz_3',  name:'3-р хороо',  districtId: 9,  lat:47.930, lng:106.970 },
+  { id:'bz_15', name:'15-р хороо', districtId: 9,  lat:47.910, lng:106.980 },
+  { id:'sb_1',  name:'1-р хороо',  districtId: 8,  lat:47.920, lng:106.835 },
+  { id:'sb_4',  name:'4-р хороо',  districtId: 8,  lat:47.915, lng:106.850 },
+  { id:'ku_1',  name:'1-р хороо',  districtId: 11, lat:47.865, lng:106.880 },
+  { id:'ku_8',  name:'8-р хороо',  districtId: 11, lat:47.855, lng:106.915 },
+  { id:'bg_1',  name:'1-р хороо',  districtId: 12, lat:47.910, lng:106.815 },
+  { id:'bg_7',  name:'7-р хороо',  districtId: 12, lat:47.895, lng:106.825 },
+  { id:'ct_1',  name:'1-р хороо',  districtId: 10, lat:47.928, lng:106.860 },
+  { id:'ct_3',  name:'3-р хороо',  districtId: 10, lat:47.932, lng:106.875 },
+  { id:'sk_1',  name:'1-р хороо',  districtId: 13, lat:47.945, lng:106.742 },
+  { id:'sk_5',  name:'5-р хороо',  districtId: 13, lat:47.935, lng:106.760 },
 ];
 
 // ─── Build Google Maps HTML ────────────────────────────────────
@@ -184,8 +183,9 @@ function WebMap({ html, iframeRef }: { html: string; iframeRef: React.MutableRef
 }
 
 // ─── Main component ────────────────────────────────────────────
-export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
+export default function MapScreen({ onNavigate, onOpenDetail, params }: Props) {
   const mapRef = useRef<any>(null);   // iframe ref (web) or WebView ref (native)
+  const lastFetchId = useRef(0);
   const [zoom, setZoom] = useState(12);
   const [query, setQuery] = useState('');
   const [districtModal, setDistrictModal] = useState(false);
@@ -196,17 +196,36 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
   const [roomFilter, setRoomFilter] = useState<number | null>(null);
   const [listings, setListings] = useState<MapListing[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Selected category/price filters from SearchFilterScreen
+  const [selCategory, setSelCategory] = useState<string | null>(null);
+  const [selPriceType, setSelPriceType] = useState<string | null>(null);
+  const [minPriceLocal, setMinPriceLocal] = useState<string | null>(null);
+  const [maxPriceLocal, setMaxPriceLocal] = useState<string | null>(null);
+  const [minAreaLocal, setMinAreaLocal] = useState<string | null>(null);
+  const [maxAreaLocal, setMaxAreaLocal] = useState<string | null>(null);
 
   const isWeb = Platform.OS === 'web';
 
   // ── Fetch real data from Backend ────────────────────────────
   const fetchData = async () => {
+    const fetchId = ++lastFetchId.current;
     setLoading(true);
     try {
-      const params: any = { search: query };
-      if (selDistrict) params.region_id = selDistrict.id;
+      const apiParams: any = {};
+      if (query) apiParams.search = query;
+      if (selCategory) apiParams.category_id = selCategory;
+      if (selDistrict && selDistrict.id) apiParams.region_id = selDistrict.id;
+      if (selPriceType) apiParams.price_type = selPriceType;
+      if (minPriceLocal) apiParams.min_price = minPriceLocal;
+      if (maxPriceLocal) apiParams.max_price = maxPriceLocal;
+      if (minAreaLocal) apiParams.min_area = minAreaLocal;
+      if (maxAreaLocal) apiParams.max_area = maxAreaLocal;
+      if (roomFilter) apiParams.bedrooms = roomFilter;
       
-      const res = await ListingAPI.list(params);
+      const res = await ListingAPI.list(apiParams);
+      
+      if (fetchId !== lastFetchId.current) return; // Ignore stale result
       
       const serverItems = res.results || [];
       const mapped = serverItems.map((l: BackendListing) => ({
@@ -235,7 +254,73 @@ export default function MapScreen({ onNavigate, onOpenDetail }: Props) {
 
   useEffect(() => {
     fetchData();
-  }, [selDistrict, selCommittee, roomFilter]);
+  }, [selDistrict, selCommittee, roomFilter, query, selCategory, selPriceType, minPriceLocal, maxPriceLocal, minAreaLocal, maxAreaLocal]);
+
+  // Handle incoming params from SearchFilterScreen
+  useEffect(() => {
+    if (!params) return;
+
+    // Build apiParams directly from incoming params — no state update delay
+    const apiParams: any = {};
+    if (params.search)      apiParams.search     = params.search;
+    if (params.category)    apiParams.category_id = params.category;
+    if (params.price_type)  apiParams.price_type  = params.price_type;
+    if (params.min_price)   apiParams.min_price   = params.min_price;
+    if (params.max_price)   apiParams.max_price   = params.max_price;
+    if (params.min_area)    apiParams.min_area    = params.min_area;
+    if (params.max_area)    apiParams.max_area    = params.max_area;
+
+    // Handle region — find in DISTRICTS for map panning
+    let foundDistrict: District | null = null;
+    if (params.region) {
+      foundDistrict = DISTRICTS.find(d => String(d.id) === String(params.region)) || null;
+      if (foundDistrict) {
+        apiParams.region_id = foundDistrict.id;
+      } else {
+        apiParams.region_id = params.region;
+      }
+    }
+
+    // Fetch immediately with all params
+    const fetchId = ++lastFetchId.current;
+    setLoading(true);
+    ListingAPI.list(apiParams).then(res => {
+      if (fetchId !== lastFetchId.current) return;
+      const mapped = (res.results || []).map((l: any) => ({
+        id: l.id,
+        title: l.title,
+        price: (l.price || 0).toLocaleString() + ' ₮',
+        lat: Number(l.latitude) || UB.lat,
+        lng: Number(l.longitude) || UB.lng,
+        district: l.region_id != null ? String(l.region_id) : '',
+        committee: '',
+        rooms: l.bedrooms != null ? Number(l.bedrooms) : 0,
+        area: l.area_sqm != null ? Math.round(Number(l.area_sqm)) : 0,
+        address: l.address,
+        imageUrl: l.cover_image ?? l.images?.[0]?.image_url,
+        regionLabel: l.region_name,
+      }));
+      setListings(mapped);
+      evalInMap(`window.updateListings && window.updateListings(${JSON.stringify(mapped)})`);
+
+      // Pan map to selected district
+      if (foundDistrict) {
+        panTo(foundDistrict.lat, foundDistrict.lng, foundDistrict.zoom);
+      }
+    }).catch(e => console.error('Params fetch error:', e))
+      .finally(() => setLoading(false));
+
+    // Also sync state for UI chips
+    if (params.search !== undefined)    setQuery(params.search || '');
+    if (params.category !== undefined)  setSelCategory(params.category || null);
+    if (params.price_type !== undefined) setSelPriceType(params.price_type || null);
+    if (params.min_price !== undefined)  setMinPriceLocal(params.min_price || null);
+    if (params.max_price !== undefined)  setMaxPriceLocal(params.max_price || null);
+    if (params.min_area !== undefined)   setMinAreaLocal(params.min_area || null);
+    if (params.max_area !== undefined)   setMaxAreaLocal(params.max_area || null);
+    if (foundDistrict) setSelDistrict(foundDistrict);
+
+  }, [params]);
 
   // ── Listen for postMessage from iframe (web only) ────────────
   useEffect(() => {

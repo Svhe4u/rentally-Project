@@ -1,0 +1,19 @@
+{
+  "active_listings": [
+    {
+      "id": 8,
+      "title": "Сүхбаатар дүүрэгт 2 өрөө байр",
+      "region_name": "Сүхбаатар дүүрэг",
+      "region_slug": "sukhbaatar"
+    }
+  ],
+  "search_results_by_district_name": {
+    "Сүхбаатар дүүрэг": [
+      {
+        "id": 8,
+        "title": "Сүхбаатар дүүрэгт 2 өрөө байр",
+        "region__name": "Сүхбаатар дүүрэг"
+      }
+    ]
+  }
+}
