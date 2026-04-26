@@ -6,6 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { MessageAPI, Message } from '../services/api';
+import { storage } from '../services/storage';
 import { useAuth } from '../context/AuthContext';
 
 interface Props {
@@ -41,6 +42,63 @@ export default function ChatScreen({
   };
 
   useEffect(() => { load(); }, []);
+
+  // Set up WebSocket connection for realtime messages
+  useEffect(() => {
+    let ws: WebSocket | null = null;
+    let isActive = true;
+
+    const connectWS = async () => {
+      try {
+        const token = await storage.getItem('auth_token');
+        if (!token) return;
+
+        // Note: Change localhost to your IP if testing on physical device
+        const wsUrl = `ws://localhost:8000/ws/chat/?token=${token}`;
+        ws = new WebSocket(wsUrl);
+
+        ws.onopen = () => {
+          console.log('Real-time chat connected');
+        };
+
+        ws.onmessage = (e) => {
+          if (!isActive) return;
+          try {
+            const data = JSON.parse(e.data);
+            if (data.type === 'chat.message' && data.message) {
+              const incomingMsg = data.message as Message;
+              
+              // Only add if it belongs to this conversation (either from/to the current receiver)
+              // and prevent duplicates
+              if (incomingMsg.sender === receiverId || incomingMsg.recipient === receiverId) {
+                setMessages(prev => {
+                  if (prev.some(m => m.id === incomingMsg.id)) return prev;
+                  setTimeout(() => flatRef.current?.scrollToEnd({ animated: true }), 100);
+                  return [...prev, incomingMsg];
+                });
+              }
+            }
+          } catch (err) {
+            console.error('WS parse error:', err);
+          }
+        };
+
+        ws.onerror = (e) => {
+          console.log('Real-time chat error:', e);
+        };
+
+      } catch (err) {
+        console.error('Failed to init WebSocket:', err);
+      }
+    };
+
+    connectWS();
+
+    return () => {
+      isActive = false;
+      if (ws) ws.close();
+    };
+  }, [receiverId]);
 
   const sendMessage = async () => {
     const trimmed = text.trim();

@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, Image,
-  Animated, Platform,
+  View, Text, TouchableOpacity, Image,
+  Animated,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '../constants/colors';
+import { Heart, MapPin, Bed, Maximize, Star } from 'lucide-react-native';
+import { Card } from './ui/Card';
+import { Badge } from './ui/Badge';
+import { cn } from '../utils/cn';
 
 interface ListingCardProps {
   id: number;
@@ -22,9 +24,7 @@ interface ListingCardProps {
   isFavorite?: boolean;
   onPress?: (id: number) => void;
   onFavorite?: (id: number) => void;
-  /** Card width (default: screen-width - 32) */
   width?: number;
-  /** Show compact layout for horizontal scroll */
   compact?: boolean;
 }
 
@@ -53,181 +53,87 @@ export default function ListingCard({
   const priceLabel = `${fmtPrice(price)} ₮${PRICE_SUFFIX[priceType] ?? ''}`;
   const location = [districtName, regionName].filter(Boolean).join(', ') || address || '';
 
-  if (compact) {
-    return (
-      <TouchableOpacity
-        style={[c.card, c.cardCompact, { width: width ?? 200 }]}
-        onPress={() => onPress?.(id)}
-        activeOpacity={0.85}
-      >
-        {/* Image */}
-        <View style={c.imgWrapCompact}>
+  return (
+    <TouchableOpacity
+      onPress={() => onPress?.(id)}
+      activeOpacity={0.85}
+      style={width ? { width } : undefined}
+      className={cn('mr-4 last:mr-0', !compact && 'w-full mb-4 mr-0')}
+    >
+      <Card className="overflow-hidden border-border bg-card shadow-sm shadow-black/5">
+        {/* Image Area */}
+        <View className={cn('relative bg-muted', compact ? 'h-48' : 'h-64')}>
           {imageUrl ? (
-            <Image source={{ uri: imageUrl }} style={c.imgCompact} resizeMode="cover" />
+            <Image source={{ uri: imageUrl }} className="w-full h-full" resizeMode="cover" />
           ) : (
-            <View style={c.imgPlaceholder}>
-              <Ionicons name="home-outline" size={32} color="#ccc" />
+            <View className="w-full h-full items-center justify-center">
+              <MapPin size={48} className="text-muted-foreground/20" />
             </View>
           )}
-          {/* Favorite */}
-          <TouchableOpacity style={c.favBtnCompact} onPress={handleFavorite} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+
+          {/* Favorite Badge */}
+          <TouchableOpacity 
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/20 backdrop-blur-md items-center justify-center border border-white/20"
+            onPress={handleFavorite}
+          >
             <Animated.View style={{ transform: [{ scale: heartScale }] }}>
-              <Ionicons
-                name={isFavorite ? 'heart' : 'heart-outline'}
-                size={20}
-                color={isFavorite ? Colors.red : '#fff'}
+              <Heart 
+                size={22} 
+                fill={isFavorite ? '#ef4444' : 'transparent'} 
+                color={isFavorite ? '#ef4444' : 'white'} 
               />
             </Animated.View>
           </TouchableOpacity>
-          {/* Price badge */}
-          <View style={c.priceBadgeCompact}>
-            <Text style={c.priceBadgeTxt}>{priceLabel}</Text>
-          </View>
-        </View>
 
-        {/* Info */}
-        <View style={c.infoCompact}>
-          <Text style={c.titleCompact} numberOfLines={1}>{title}</Text>
-          <Text style={c.locCompact} numberOfLines={1}>{location}</Text>
-          <View style={c.specRow}>
-            {rooms && <Text style={c.specTxt}>{rooms} өрөө</Text>}
-            {area && <Text style={c.specTxt}>{area} м²</Text>}
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
-  return (
-    <TouchableOpacity
-      style={[c.card, { width: width ?? undefined }]}
-      onPress={() => onPress?.(id)}
-      activeOpacity={0.85}
-    >
-      {/* Image */}
-      <View style={c.imgWrap}>
-        {imageUrl ? (
-          <Image source={{ uri: imageUrl }} style={c.img} resizeMode="cover" />
-        ) : (
-          <View style={c.imgPlaceholder}>
-            <Ionicons name="home-outline" size={48} color="#ccc" />
-          </View>
-        )}
-        {/* Favorite */}
-        <TouchableOpacity style={c.favBtn} onPress={handleFavorite} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-          <Animated.View style={{ transform: [{ scale: heartScale }] }}>
-            <Ionicons
-              name={isFavorite ? 'heart' : 'heart-outline'}
-              size={24}
-              color={isFavorite ? Colors.red : '#fff'}
+          {/* Price Tag */}
+          <View className="absolute bottom-4 left-4">
+            <Badge 
+              label={priceLabel} 
+              variant="default" 
+              className="bg-primary px-3 py-1.5 h-auto rounded-xl" 
+              labelClasses="text-sm font-black" 
             />
-          </Animated.View>
-        </TouchableOpacity>
-        {/* Price overlay */}
-        <View style={c.priceOverlay}>
-          <Text style={c.priceOverlayTxt}>{priceLabel}</Text>
-        </View>
-      </View>
-
-      {/* Info */}
-      <View style={c.info}>
-        <View style={c.infoTop}>
-          <Text style={c.title} numberOfLines={2}>{title}</Text>
-          {location ? <Text style={c.loc} numberOfLines={1}>📍 {location}</Text> : null}
+          </View>
         </View>
 
-        <View style={c.specRow}>
-          {rooms && (
-            <View style={c.spec}>
-              <Ionicons name="bed-outline" size={14} color={Colors.textMuted} />
-              <Text style={c.specTxt}>{rooms} өрөө</Text>
-            </View>
-          )}
-          {area && (
-            <View style={c.spec}>
-              <Ionicons name="resize-outline" size={14} color={Colors.textMuted} />
-              <Text style={c.specTxt}>{area} м²</Text>
-            </View>
-          )}
-        </View>
+        {/* Info Area */}
+        <View className="p-5">
+          <View className="mb-2">
+            <Text className="text-lg font-black text-foreground tracking-tight leading-6" numberOfLines={2}>
+              {title}
+            </Text>
+            {location ? (
+              <View className="flex-row items-center mt-1">
+                <MapPin size={12} className="text-muted-foreground mr-1" />
+                <Text className="text-xs font-semibold text-muted-foreground" numberOfLines={1}>
+                  {location}
+                </Text>
+              </View>
+            ) : null}
+          </View>
 
-        {(rating != null || reviewCount) && (
-          <View style={c.ratingRow}>
-            {rating != null && (
-              <View style={c.ratingChip}>
-                <Ionicons name="star" size={12} color="#f59e0b" />
-                <Text style={c.ratingNum}>{rating.toFixed(1)}</Text>
+          <View className="flex-row items-center gap-4 mt-2">
+            {rooms && (
+              <View className="flex-row items-center gap-1.5 bg-secondary px-2.5 py-1.5 rounded-lg border border-border">
+                <Bed size={14} className="text-primary" />
+                <Text className="text-xs font-bold text-foreground">{rooms} өрөө</Text>
               </View>
             )}
-            {reviewCount != null && reviewCount > 0 && (
-              <Text style={c.reviewCnt}>({reviewCount} үнэлгээ)</Text>
+            {area && (
+              <View className="flex-row items-center gap-1.5 bg-secondary px-2.5 py-1.5 rounded-lg border border-border">
+                <Maximize size={14} className="text-primary" />
+                <Text className="text-xs font-bold text-foreground">{area} м²</Text>
+              </View>
+            )}
+            {rating != null && (
+               <View className="flex-row items-center gap-1.5 bg-amber-50 px-2.5 py-1.5 rounded-lg border border-amber-100 ml-auto">
+                 <Star size={14} fill="#f59e0b" color="#f59e0b" />
+                 <Text className="text-xs font-black text-amber-700">{rating.toFixed(1)}</Text>
+               </View>
             )}
           </View>
-        )}
-      </View>
+        </View>
+      </Card>
     </TouchableOpacity>
   );
 }
-
-// ─── Styles ───────────────────────────────────────────────────
-const RADIUS = 24;
-const c = StyleSheet.create({
-  // ── Full card ──────────────────────────────────────────────
-  card: {
-    backgroundColor: Colors.white,
-    borderRadius: RADIUS,
-    overflow: 'hidden',
-    marginBottom: 12,
-    ...Platform.select({
-      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8 },
-      android: { elevation: 3 },
-    }),
-  },
-  imgWrap: { height: 180, backgroundColor: Colors.bg },
-  img: { width: '100%', height: '100%' },
-  imgPlaceholder: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#e8eaf0' },
-  favBtn: {
-    position: 'absolute', top: 10, right: 10,
-    width: 36, height: 36, borderRadius: 18,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  priceOverlay: {
-    position: 'absolute', bottom: 10, left: 10,
-    backgroundColor: 'rgba(46,85,250,0.88)',
-    borderRadius: 20, paddingVertical: 4, paddingHorizontal: 10,
-  },
-  priceOverlayTxt: { color: '#fff', fontSize: 12, fontWeight: '900' },
-
-  info: { padding: 14 },
-  infoTop: { marginBottom: 8 },
-  title: { fontSize: 16, fontWeight: '800', color: Colors.text, lineHeight: 22, marginBottom: 4 },
-  loc: { fontSize: 12, color: Colors.textMuted, marginTop: 1 },
-  specRow: { flexDirection: 'row', gap: 14, marginBottom: 8 },
-  spec: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  specTxt: { fontSize: 13, color: Colors.textMuted, fontWeight: '700' },
-  ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  ratingChip: { flexDirection: 'row', alignItems: 'center', gap: 3, backgroundColor: '#fffbeb', paddingVertical: 2, paddingHorizontal: 8, borderRadius: 12, borderWidth: 1, borderColor: '#fde68a' },
-  ratingNum: { fontSize: 12, fontWeight: '800', color: '#92400e' },
-  reviewCnt: { fontSize: 11, color: Colors.textMuted },
-
-  // ── Compact card ────────────────────────────────────────────
-  cardCompact: { marginBottom: 0, marginRight: 12 },
-  imgWrapCompact: { height: 120, backgroundColor: Colors.bg, position: 'relative' },
-  imgCompact: { width: '100%', height: '100%' },
-  favBtnCompact: {
-    position: 'absolute', top: 8, right: 8,
-    width: 30, height: 30, borderRadius: 15,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  priceBadgeCompact: {
-    position: 'absolute', bottom: 8, left: 8,
-    backgroundColor: 'rgba(46,85,250,0.88)',
-    borderRadius: 14, paddingVertical: 3, paddingHorizontal: 8,
-  },
-  priceBadgeTxt: { color: '#fff', fontSize: 11, fontWeight: '900' },
-  infoCompact: { padding: 10 },
-  titleCompact: { fontSize: 13, fontWeight: '800', color: Colors.text, marginBottom: 2 },
-  locCompact: { fontSize: 11, color: Colors.textMuted, marginBottom: 4 },
-});

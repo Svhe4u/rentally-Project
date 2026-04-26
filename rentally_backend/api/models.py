@@ -204,6 +204,17 @@ class ListingDetail(models.Model):
     bathrooms = models.PositiveIntegerField(blank=True, null=True)
     area_sqm = models.PositiveIntegerField(blank=True, null=True)
 
+    floor_type = models.CharField(max_length=100, blank=True, null=True)
+    window_type = models.CharField(max_length=100, blank=True, null=True)
+    door_type = models.CharField(max_length=100, blank=True, null=True)
+    balcony = models.BooleanField(default=False)
+    garage = models.BooleanField(default=False)
+    year_built = models.PositiveIntegerField(blank=True, null=True)
+    floor_number = models.PositiveSmallIntegerField(blank=True, null=True)
+    building_floors = models.PositiveSmallIntegerField(blank=True, null=True)
+    window_count = models.PositiveSmallIntegerField(blank=True, null=True)
+    payment_terms = models.TextField(blank=True, null=True)
+
     utilities_estimated = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)])
     heating_type = models.CharField(max_length=100, blank=True, null=True)
     air_type = models.CharField(max_length=100, blank=True, null=True)

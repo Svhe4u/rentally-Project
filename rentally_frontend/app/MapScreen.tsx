@@ -1,12 +1,30 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, SafeAreaView,
-  TextInput, ScrollView, Modal, FlatList, Platform, ActivityIndicator, Image,
+  View, Text, TouchableOpacity, SafeAreaView,
+  TextInput, ScrollView, Modal, FlatList, Platform, ActivityIndicator, Image, Pressable
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { 
+  Search, 
+  ChevronDown, 
+  RefreshCcw, 
+  LocateFixed, 
+  Plus, 
+  Minus, 
+  Sparkles, 
+  MapPin, 
+  Star, 
+  Map as MapIcon,
+  X,
+  ArrowRight,
+  SlidersHorizontal,
+  Home as HomeIcon,
+  DollarSign
+} from 'lucide-react-native';
 import { Colors } from '../constants/colors';
-import { ListingAPI, Listing as BackendListing } from '../services/api';
+import { ListingAPI, Listing as BackendListing, CategoryAPI, Category } from '../services/api';
 import BottomNav, { TabName } from '../components/BottomNav';
+import { cn } from '../utils/cn';
+import { Badge } from '../components/ui/Badge';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyAhcTN2Y9g3NpsaRus5Yc7rSvTsnhdE5FY';
 
@@ -26,7 +44,6 @@ interface MapListing {
   regionLabel?: string;
 }
 interface District { id: number | string; name: string; lat: number; lng: number; zoom: number; }
-interface Committee { id: number | string; name: string; districtId: string | number; lat: number; lng: number; }
 
 const UB = { lat: 47.9077, lng: 106.8832 };
 
@@ -40,23 +57,6 @@ const DISTRICTS: District[] = [
   { id: 7,  name:'Улаанбаатар',     lat:47.907, lng:106.883, zoom:12 },
 ];
 
-const COMMITTEES: Committee[] = [
-  { id:'bz_1',  name:'1-р хороо',  districtId: 9,  lat:47.925, lng:106.955 },
-  { id:'bz_3',  name:'3-р хороо',  districtId: 9,  lat:47.930, lng:106.970 },
-  { id:'bz_15', name:'15-р хороо', districtId: 9,  lat:47.910, lng:106.980 },
-  { id:'sb_1',  name:'1-р хороо',  districtId: 8,  lat:47.920, lng:106.835 },
-  { id:'sb_4',  name:'4-р хороо',  districtId: 8,  lat:47.915, lng:106.850 },
-  { id:'ku_1',  name:'1-р хороо',  districtId: 11, lat:47.865, lng:106.880 },
-  { id:'ku_8',  name:'8-р хороо',  districtId: 11, lat:47.855, lng:106.915 },
-  { id:'bg_1',  name:'1-р хороо',  districtId: 12, lat:47.910, lng:106.815 },
-  { id:'bg_7',  name:'7-р хороо',  districtId: 12, lat:47.895, lng:106.825 },
-  { id:'ct_1',  name:'1-р хороо',  districtId: 10, lat:47.928, lng:106.860 },
-  { id:'ct_3',  name:'3-р хороо',  districtId: 10, lat:47.932, lng:106.875 },
-  { id:'sk_1',  name:'1-р хороо',  districtId: 13, lat:47.945, lng:106.742 },
-  { id:'sk_5',  name:'5-р хороо',  districtId: 13, lat:47.935, lng:106.760 },
-];
-
-// ─── Build Google Maps HTML ────────────────────────────────────
 function buildMapHTML(listings: MapListing[], center:{lat:number,lng:number}, initZoom:number) {
   const listingsJSON = JSON.stringify(listings);
   return `<!DOCTYPE html>
@@ -68,15 +68,15 @@ function buildMapHTML(listings: MapListing[], center:{lat:number,lng:number}, in
 *{margin:0;padding:0;box-sizing:border-box}
 html,body,#map{width:100%;height:100%;overflow:hidden;background:#f8f9fa}
 .pp{
-  background:#ffffff;color:#1a1a1a;padding:6px 14px;border-radius:22px;
-  font-size:14px;font-weight:800;border:1px solid rgba(0,0,0,0.08);
-  box-shadow:0 4px 12px rgba(0,0,0,0.12);cursor:pointer;
+  background:#ffffff;color:#111;padding:8px 16px;border-radius:12px;
+  font-size:13px;font-weight:900;border:1px solid rgba(0,0,0,0.05);
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);cursor:pointer;
   white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);
   display:flex;align-items:center;justify-content:center;
 }
-.pp:active{transform:scale(0.92)}
-.pp.hot{background:#222;color:#fff;border-color:#000;z-index:999 !important;box-shadow:0 8px 16px rgba(0,0,0,0.25);transform:scale(1.1)}
+.pp:active{transform:scale(0.9)}
+.pp.hot{background:#2e55fa;color:#fff;border-color:transparent;z-index:999 !important;box-shadow:0 8px 20px rgba(46,85,250,0.3);transform:scale(1.1)}
 </style>
 </head>
 <body>
@@ -96,17 +96,24 @@ function initMap(){
     disableDefaultUI:true,zoomControl:false,gestureHandling:'greedy',clickableIcons:false,
     styles:[
       {featureType:'all',elementType:'labels.text.fill',stylers:[{color:'#7c93a3'}]},
-      {featureType:'all',elementType:'labels.text.stroke',stylers:[{visibility:'off'}]},
       {featureType:'landscape',elementType:'geometry',stylers:[{color:'#f5f5f5'}]},
-      {featureType:'poi',stylers:[{visibility:'off'}]},
       {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},
-      {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#ffffff'}]},
-      {featureType:'road.highway',elementType:'labels',stylers:[{visibility:'off'}]},
-      {featureType:'water',elementType:'geometry',stylers:[{color:'#deebf4'}]},
-      {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#92998d'}]}
+      {featureType:'water',elementType:'geometry',stylers:[{color:'#deebf4'}]}
     ]
   });
-  map.addListener('zoom_changed',function(){notify({type:'zoom',zoom:map.getZoom()});renderPins();});
+  map.addListener('zoom_changed',function(){notify({type:'zoom',zoom:map.getZoom()});});
+  map.addListener('idle', function() {
+    var b = map.getBounds();
+    var ne = b.getNorthEast();
+    var sw = b.getSouthWest();
+    notify({
+      type: 'bounds',
+      min_lat: sw.lat(),
+      max_lat: ne.lat(),
+      min_lng: sw.lng(),
+      max_lng: ne.lng()
+    });
+  });
   renderPins();
 }
 function clearAll(){
@@ -149,7 +156,7 @@ function renderPins(){
         position:{lat:L.lat,lng:L.lng},map:map,
         icon:{
           path:'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
-          fillColor:hot?'#000':'#2e55fa',fillOpacity:1,strokeColor:'#fff',strokeWeight:2,scale:0.7,anchor:new google.maps.Point(0,0)
+          fillColor:hot?'#2e55fa':'#fff',fillOpacity:1,strokeColor:hot?'#fff':'#2e55fa',strokeWeight:2,scale:0.6,anchor:new google.maps.Point(0,0)
         }
       });
       (function(m,l){m.addListener('click',function(){activeId=l.id;notify({type:'click',listing:l});renderPins();});})(mk,L);
@@ -165,8 +172,6 @@ window.updateListings=function(data){listings=data;renderPins();};
 </html>`;
 }
 
-// ─── Web-only iframe map ───────────────────────────────────────
-// Only imported/used when Platform.OS === 'web'
 function WebMap({ html, iframeRef }: { html: string; iframeRef: React.MutableRefObject<any> }) {
   const [src, setSrc] = useState('');
   useEffect(() => {
@@ -175,508 +180,357 @@ function WebMap({ html, iframeRef }: { html: string; iframeRef: React.MutableRef
     setSrc(url);
     return () => URL.revokeObjectURL(url);
   }, [html]);
-
   if (!src) return null;
-
-  // @ts-ignore - iframe is a valid web element
   return <iframe ref={iframeRef} src={src} style={{ width:'100%', height:'100%', border:'none' }} title="map" />;
 }
 
-// ─── Main component ────────────────────────────────────────────
 export default function MapScreen({ onNavigate, onOpenDetail, params }: Props) {
-  const mapRef = useRef<any>(null);   // iframe ref (web) or WebView ref (native)
+  const mapRef = useRef<any>(null);
   const lastFetchId = useRef(0);
+  const debounceTimer = useRef<any>(null);
+  
+  // States
   const [zoom, setZoom] = useState(12);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(params?.search || '');
   const [districtModal, setDistrictModal] = useState(false);
-  const [committeeModal, setCommitteeModal] = useState(false);
   const [selDistrict, setSelDistrict] = useState<District | null>(null);
-  const [selCommittee, setSelCommittee] = useState<Committee | null>(null);
   const [selListing, setSelListing] = useState<MapListing | null>(null);
-  const [roomFilter, setRoomFilter] = useState<number | null>(null);
   const [listings, setListings] = useState<MapListing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [bounds, setBounds] = useState<any>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   
-  // Selected category/price filters from SearchFilterScreen
-  const [selCategory, setSelCategory] = useState<string | null>(null);
-  const [selPriceType, setSelPriceType] = useState<string | null>(null);
-  const [minPriceLocal, setMinPriceLocal] = useState<string | null>(null);
-  const [maxPriceLocal, setMaxPriceLocal] = useState<string | null>(null);
-  const [minAreaLocal, setMinAreaLocal] = useState<string | null>(null);
-  const [maxAreaLocal, setMaxAreaLocal] = useState<string | null>(null);
+  // Filter States
+  const [selCategory, setSelCategory] = useState<number | null>(params?.category ? Number(params.category) : null);
+  const [selRooms, setSelRooms] = useState<number | null>(params?.bedrooms ? Number(params.bedrooms) : null);
+  const [priceRange, setPriceRange] = useState<{min?: string, max?: string}>(
+    {min: params?.min_price, max: params?.max_price}
+  );
 
   const isWeb = Platform.OS === 'web';
 
-  // ── Fetch real data from Backend ────────────────────────────
-  const fetchData = async () => {
+  // Load Categories on mount
+  useEffect(() => {
+    CategoryAPI.list().then(setCategories).catch(console.error);
+  }, []);
+
+  // Sync params if they change (e.g. returning from SearchFilterScreen)
+  useEffect(() => {
+    if (params) {
+      if (params.search !== undefined) setQuery(params.search);
+      if (params.category !== undefined) setSelCategory(params.category ? Number(params.category) : null);
+      if (params.bedrooms !== undefined) setSelRooms(params.bedrooms ? Number(params.bedrooms) : null);
+      if (params.min_price !== undefined || params.max_price !== undefined) {
+        setPriceRange({ min: params.min_price, max: params.max_price });
+      }
+      if (params.region) {
+        const found = DISTRICTS.find(d => String(d.id) === String(params.region));
+        if (found) { setSelDistrict(found); panTo(found.lat, found.lng, found.zoom); }
+      }
+    }
+  }, [params]);
+
+  const fetchData = useCallback(async (currentBounds?: any) => {
     const fetchId = ++lastFetchId.current;
     setLoading(true);
     try {
-      const apiParams: any = {};
-      if (query) apiParams.search = query;
-      if (selCategory) apiParams.category_id = selCategory;
-      if (selDistrict && selDistrict.id) apiParams.region_id = selDistrict.id;
-      if (selPriceType) apiParams.price_type = selPriceType;
-      if (minPriceLocal) apiParams.min_price = minPriceLocal;
-      if (maxPriceLocal) apiParams.max_price = maxPriceLocal;
-      if (minAreaLocal) apiParams.min_area = minAreaLocal;
-      if (maxAreaLocal) apiParams.max_area = maxAreaLocal;
-      if (roomFilter) apiParams.bedrooms = roomFilter;
+      const apiParams: any = {
+        search: query,
+        region_id: selDistrict?.id || params?.region,
+        category: selCategory,
+        bedrooms: selRooms,
+        min_price: priceRange.min,
+        max_price: priceRange.max,
+      };
+      
+      if (currentBounds) {
+        apiParams.min_lat = currentBounds.min_lat;
+        apiParams.max_lat = currentBounds.max_lat;
+        apiParams.min_lng = currentBounds.min_lng;
+        apiParams.max_lng = currentBounds.max_lng;
+      }
       
       const res = await ListingAPI.list(apiParams);
+      if (fetchId !== lastFetchId.current) return;
       
-      if (fetchId !== lastFetchId.current) return; // Ignore stale result
-      
-      const serverItems = res.results || [];
-      const mapped = serverItems.map((l: BackendListing) => ({
+      const mapped = (res.results || []).map((l: BackendListing) => ({
         id: l.id,
         title: l.title,
-        price: (l.price || 0).toLocaleString() + ' ₮',
+        price: (l.price || 0).toLocaleString(),
         lat: Number(l.latitude) || UB.lat,
         lng: Number(l.longitude) || UB.lng,
-        district: l.region_id != null ? String(l.region_id) : '',
-        committee: '',
-        rooms: l.bedrooms != null ? Number(l.bedrooms) : 0,
-        area: l.area_sqm != null ? Math.round(Number(l.area_sqm)) : 0,
+        rooms: l.bedrooms ?? 0,
+        area: Math.round(Number(l.area_sqm ?? 0)),
         address: l.address,
         imageUrl: l.cover_image ?? l.images?.[0]?.image_url,
         regionLabel: l.region_name,
       }));
-      
       setListings(mapped);
       evalInMap(`window.updateListings && window.updateListings(${JSON.stringify(mapped)})`);
     } catch (e) {
-      console.error('Fetch error:', e);
+      console.error(e);
     } finally {
       setLoading(false);
     }
-  };
+  }, [query, selDistrict, selCategory, selRooms, priceRange]);
 
+  // Sync effect for all logic-based filters
   useEffect(() => {
-    fetchData();
-  }, [selDistrict, selCommittee, roomFilter, query, selCategory, selPriceType, minPriceLocal, maxPriceLocal, minAreaLocal, maxAreaLocal]);
+    fetchData(bounds);
+  }, [selDistrict, query, selCategory, selRooms, priceRange]);
 
-  // Handle incoming params from SearchFilterScreen
+  // Debounced fetch on bounds change
   useEffect(() => {
-    if (!params) return;
+    if (!bounds) return;
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      fetchData(bounds);
+    }, 600);
+    return () => { if (debounceTimer.current) clearTimeout(debounceTimer.current); };
+  }, [bounds, fetchData]);
 
-    // Build apiParams directly from incoming params — no state update delay
-    const apiParams: any = {};
-    if (params.search)      apiParams.search     = params.search;
-    if (params.category)    apiParams.category_id = params.category;
-    if (params.price_type)  apiParams.price_type  = params.price_type;
-    if (params.min_price)   apiParams.min_price   = params.min_price;
-    if (params.max_price)   apiParams.max_price   = params.max_price;
-    if (params.min_area)    apiParams.min_area    = params.min_area;
-    if (params.max_area)    apiParams.max_area    = params.max_area;
-
-    // Handle region — find in DISTRICTS for map panning
-    let foundDistrict: District | null = null;
-    if (params.region) {
-      foundDistrict = DISTRICTS.find(d => String(d.id) === String(params.region)) || null;
-      if (foundDistrict) {
-        apiParams.region_id = foundDistrict.id;
-      } else {
-        apiParams.region_id = params.region;
-      }
-    }
-
-    // Fetch immediately with all params
-    const fetchId = ++lastFetchId.current;
-    setLoading(true);
-    ListingAPI.list(apiParams).then(res => {
-      if (fetchId !== lastFetchId.current) return;
-      const mapped = (res.results || []).map((l: any) => ({
-        id: l.id,
-        title: l.title,
-        price: (l.price || 0).toLocaleString() + ' ₮',
-        lat: Number(l.latitude) || UB.lat,
-        lng: Number(l.longitude) || UB.lng,
-        district: l.region_id != null ? String(l.region_id) : '',
-        committee: '',
-        rooms: l.bedrooms != null ? Number(l.bedrooms) : 0,
-        area: l.area_sqm != null ? Math.round(Number(l.area_sqm)) : 0,
-        address: l.address,
-        imageUrl: l.cover_image ?? l.images?.[0]?.image_url,
-        regionLabel: l.region_name,
-      }));
-      setListings(mapped);
-      evalInMap(`window.updateListings && window.updateListings(${JSON.stringify(mapped)})`);
-
-      // Pan map to selected district
-      if (foundDistrict) {
-        panTo(foundDistrict.lat, foundDistrict.lng, foundDistrict.zoom);
-      }
-    }).catch(e => console.error('Params fetch error:', e))
-      .finally(() => setLoading(false));
-
-    // Also sync state for UI chips
-    if (params.search !== undefined)    setQuery(params.search || '');
-    if (params.category !== undefined)  setSelCategory(params.category || null);
-    if (params.price_type !== undefined) setSelPriceType(params.price_type || null);
-    if (params.min_price !== undefined)  setMinPriceLocal(params.min_price || null);
-    if (params.max_price !== undefined)  setMaxPriceLocal(params.max_price || null);
-    if (params.min_area !== undefined)   setMinAreaLocal(params.min_area || null);
-    if (params.max_area !== undefined)   setMaxAreaLocal(params.max_area || null);
-    if (foundDistrict) setSelDistrict(foundDistrict);
-
-  }, [params]);
-
-  // ── Listen for postMessage from iframe (web only) ────────────
   useEffect(() => {
     if (!isWeb) return;
     const handler = (e: MessageEvent) => {
-      try { handleMsg(JSON.parse(typeof e.data === 'string' ? e.data : JSON.stringify(e.data))); } catch {}
+      try { 
+        const data = JSON.parse(typeof e.data === 'string' ? e.data : JSON.stringify(e.data));
+        handleMsg(data);
+      } catch {}
     };
     window.addEventListener('message', handler);
     return () => window.removeEventListener('message', handler);
   }, []);
 
   const evalInMap = (js: string) => {
-    if (isWeb) {
-      try { mapRef.current?.contentWindow?.eval(js); } catch {}
-    } else {
-      mapRef.current?.injectJavaScript(js + '; true;');
-    }
+    if (isWeb) mapRef.current?.contentWindow?.eval(js);
+    else mapRef.current?.injectJavaScript(js + '; true;');
   };
 
   const handleMsg = (d: any) => {
     if (!d) return;
     if (d.type === 'zoom') setZoom(d.zoom);
     if (d.type === 'click') setSelListing(d.listing);
+    if (d.type === 'bounds') {
+      setBounds({
+        min_lat: d.min_lat,
+        max_lat: d.max_lat,
+        min_lng: d.min_lng,
+        max_lng: d.max_lng
+      });
+    }
   };
 
   const panTo = (lat: number, lng: number, z: number) =>
     evalInMap(`window.goTo && window.goTo(${lat},${lng},${z})`);
 
   const pickDistrict = (d: District) => {
-    setSelDistrict(d); setSelCommittee(null); setDistrictModal(false);
+    setSelDistrict(d); setDistrictModal(false);
     panTo(d.lat, d.lng, d.zoom);
   };
-  const pickCommittee = (c: Committee) => {
-    setSelCommittee(c); setCommitteeModal(false);
-    panTo(c.lat, c.lng, 15);
-  };
-  const clearAll = () => {
-    setSelDistrict(null); setSelCommittee(null); setRoomFilter(null); setSelListing(null);
-    panTo(UB.lat, UB.lng, 12);
-  };
-  const doSearch = () => {
-    const q = query.trim().toLowerCase();
-    if (!q) {
-      void fetchData();
-      return;
-    }
-    const d = DISTRICTS.find(x => x.name.toLowerCase().includes(q));
-    if (d) {
-      pickDistrict(d);
-      return;
-    }
-    const c = COMMITTEES.find(x => x.name.toLowerCase().includes(q));
-    if (c) {
-      const p = DISTRICTS.find(x => x.id === c.districtId);
-      if (p) setSelDistrict(p);
-      pickCommittee(c);
-      return;
-    }
-    void fetchData();
-  };
 
-  const committees = selDistrict ? COMMITTEES.filter(c => c.districtId === selDistrict.id) : COMMITTEES;
-  const mapHTML = buildMapHTML(listings, UB, zoom);
-
-  // ── Render map area ──────────────────────────────────────────
   const renderMapView = () => {
-    if (isWeb) {
-      return <WebMap html={mapHTML} iframeRef={mapRef} />;
-    }
-    // Native: lazy require so web bundle never touches this module
+    const html = buildMapHTML(listings, UB, zoom);
+    if (isWeb) return <WebMap html={html} iframeRef={mapRef} />;
     try {
       const { WebView } = require('react-native-webview');
       return (
         <WebView
           ref={mapRef}
-          source={{ html: mapHTML }}
-          style={{ flex: 1, backgroundColor: '#eaf2e5' }}
-          javaScriptEnabled
-          domStorageEnabled
-          originWhitelist={['*']}
-          mixedContentMode="always"
+          source={{ html }}
+          style={{ flex: 1 }}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
           onMessage={(e: any) => { try { handleMsg(JSON.parse(e.nativeEvent.data)); } catch {} }}
         />
       );
     } catch {
-      return (
-        <View style={s.fallback}>
-          <Text style={s.fallbackEmoji}>🗺️</Text>
-          <Text style={s.fallbackTitle}>Газрын зураг</Text>
-          <Text style={s.fallbackSub}>react-native-webview суулгана уу:</Text>
-          <View style={s.fallbackCode}><Text style={s.fallbackCodeTxt}>npx expo install react-native-webview</Text></View>
-        </View>
-      );
+      return <View className="flex-1 items-center justify-center bg-muted"><Text>Map requires Webview</Text></View>;
     }
   };
 
   return (
-    <SafeAreaView style={s.safe}>
-      {/* Floating Top UI */}
-      <View style={s.floatingTop}>
-        <View style={s.searchRow}>
-          <Ionicons name="search" size={18} color={Colors.textMuted} />
-          <TextInput
-            style={s.input}
-            placeholder="Хаана байр хайж байна?"
-            placeholderTextColor="#888"
-            value={query}
-            onChangeText={setQuery}
-            onSubmitEditing={doSearch}
-            returnKeyType="search"
-          />
-          {query.length > 0 && (
-            <TouchableOpacity onPress={() => setQuery('')}>
-              <Ionicons name="close-circle" size={18} color="#ccc" />
-            </TouchableOpacity>
-          )}
+    <SafeAreaView className="flex-1 bg-background" style={{ flex: 1 }}>
+      {/* Floating Header */}
+      <View className="absolute top-4 left-5 right-5 z-20 gap-3">
+        <View className="flex-row gap-2">
+          <View className="flex-1 bg-white/95 border border-border rounded-3xl p-2 px-4 flex-row items-center shadow-lg shadow-black/10">
+            <Search size={20} className="text-muted-foreground" />
+            <TextInput
+              className="flex-1 h-12 ml-3 text-sm font-bold text-foreground"
+              placeholder="Хаана байр хайж байна?"
+              value={query}
+              onChangeText={setQuery}
+            />
+            {query !== '' && <TouchableOpacity onPress={() => setQuery('')}><X size={18} className="text-muted-foreground mr-2" /></TouchableOpacity>}
+          </View>
+          <TouchableOpacity 
+            onPress={() => onNavigate('search_filter')}
+            className="w-16 h-16 bg-slate-900 rounded-3xl items-center justify-center shadow-lg shadow-black/20"
+          >
+            <SlidersHorizontal size={24} color="white" />
+          </TouchableOpacity>
         </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={s.chipBar} contentContainerStyle={s.chipScroll}>
-          <TouchableOpacity style={[s.chip, !!selDistrict && s.chipOn]} onPress={() => setDistrictModal(true)}>
-            <Text style={[s.chipTxt, !!selDistrict && s.chipTxtOn]}>{selDistrict?.name ?? 'Дүүрэг'}</Text>
-            <Ionicons name="chevron-down" size={12} color={selDistrict ? Colors.primary : Colors.textMuted} />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2 pr-5">
+          <TouchableOpacity 
+            onPress={() => setDistrictModal(true)}
+            className={cn(
+              "flex-row items-center gap-2 bg-white/95 border px-4 py-2.5 rounded-2xl shadow-sm",
+              selDistrict ? "border-primary bg-primary/5" : "border-border"
+            )}
+          >
+            <MapPin size={14} className={selDistrict ? "text-primary" : "text-muted-foreground"} />
+            <Text className={cn("text-xs font-black", selDistrict ? "text-primary" : "text-foreground")}>
+              {selDistrict?.name ?? 'Бүх дүүрэг'}
+            </Text>
+            <ChevronDown size={14} className={selDistrict ? "text-primary" : "text-muted-foreground"} />
           </TouchableOpacity>
-          <TouchableOpacity style={[s.chip, !!selCommittee && s.chipOn]} onPress={() => setCommitteeModal(true)}>
-            <Text style={[s.chipTxt, !!selCommittee && s.chipTxtOn]}>{selCommittee?.name ?? 'Хороо'}</Text>
-            <Ionicons name="chevron-down" size={12} color={selCommittee ? Colors.primary : Colors.textMuted} />
+
+          <TouchableOpacity 
+             onPress={() => setSelRooms(selRooms === 1 ? null : 1)}
+             className={cn(
+               "flex-row items-center gap-2 bg-white/95 border px-4 py-2.5 rounded-2xl shadow-sm",
+               selRooms === 1 ? "border-primary bg-primary/5" : "border-border"
+             )}
+          >
+            <Text className={cn("text-xs font-black", selRooms === 1 ? "text-primary" : "text-foreground")}>1 өрөө</Text>
           </TouchableOpacity>
-          {[1,2,3].map(r => (
-            <TouchableOpacity key={r} style={[s.chip, roomFilter===r && s.chipOn]} onPress={() => setRoomFilter(roomFilter===r ? null : r)}>
-              <Text style={[s.chipTxt, roomFilter===r && s.chipTxtOn]}>{r} өрөө</Text>
-            </TouchableOpacity>
-          ))}
-          {(selDistrict || selCommittee || roomFilter) && (
-            <TouchableOpacity style={s.chipReset} onPress={clearAll}>
-              <Ionicons name="refresh" size={14} color="#fff" />
-            </TouchableOpacity>
-          )}
+
+          <TouchableOpacity 
+             onPress={() => setSelRooms(selRooms === 2 ? null : 2)}
+             className={cn(
+               "flex-row items-center gap-2 bg-white/95 border px-4 py-2.5 rounded-2xl shadow-sm",
+               selRooms === 2 ? "border-primary bg-primary/5" : "border-border"
+             )}
+          >
+            <Text className={cn("text-xs font-black", selRooms === 2 ? "text-primary" : "text-foreground")}>2 өрөө</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+             onPress={() => setSelRooms(selRooms === 3 ? null : 3)}
+             className={cn(
+               "flex-row items-center gap-2 bg-white/95 border px-4 py-2.5 rounded-2xl shadow-sm",
+               selRooms === 3 ? "border-primary bg-primary/5" : "border-border"
+             )}
+          >
+            <Text className={cn("text-xs font-black", selRooms === 3 ? "text-primary" : "text-foreground")}>3+ өрөө</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            onPress={() => fetchData(bounds)}
+            className="w-10 h-10 bg-white/95 border border-border rounded-xl items-center justify-center shadow-sm"
+          >
+            <RefreshCcw size={16} className="text-foreground" />
+          </TouchableOpacity>
         </ScrollView>
       </View>
 
-      {/* Map Area */}
-      <View style={s.mapWrap}>
+      <View className="flex-1 relative">
         {renderMapView()}
-        
+
         {/* Floating Controls */}
-        <View style={s.leftControls}>
-          <View style={s.glassBadge}>
-            <Text style={s.glassBadgeTxt}>{listings.length} байр олдлоо</Text>
+        <View className="absolute bottom-28 right-5 gap-3">
+          <TouchableOpacity 
+            className="w-12 h-12 bg-white rounded-2xl items-center justify-center border border-border shadow-lg"
+            onPress={() => panTo(UB.lat, UB.lng, 12)}
+          >
+            <LocateFixed size={24} className="text-primary" />
+          </TouchableOpacity>
+          <View className="bg-white rounded-2xl border border-border shadow-lg">
+            <TouchableOpacity className="w-12 h-12 items-center justify-center border-b border-border" onPress={() => evalInMap('map.setZoom(map.getZoom()+1)')}>
+              <Plus size={20} className="text-foreground" />
+            </TouchableOpacity>
+            <TouchableOpacity className="w-12 h-12 items-center justify-center" onPress={() => evalInMap('map.setZoom(map.getZoom()-1)')}>
+              <Minus size={20} className="text-foreground" />
+            </TouchableOpacity>
           </View>
         </View>
 
-        <View style={s.rightControls}>
-          <TouchableOpacity style={s.floatingBtn} onPress={() => panTo(UB.lat, UB.lng, 12)}>
-            <Ionicons name="locate" size={24} color={Colors.primary} />
-          </TouchableOpacity>
-          <TouchableOpacity style={[s.floatingBtn, { marginTop: 12 }]} onPress={() => evalInMap('map.setZoom(map.getZoom()+1)')}>
-            <Ionicons name="add" size={24} color={Colors.text} />
-          </TouchableOpacity>
-          <TouchableOpacity style={[s.floatingBtn, { marginTop: 4 }]} onPress={() => evalInMap('map.setZoom(map.getZoom()-1)')}>
-            <Ionicons name="remove" size={24} color={Colors.text} />
-          </TouchableOpacity>
+        {/* Info Indicator */}
+        <View className="absolute bottom-28 left-5">
+           <View className="bg-slate-900 px-4 py-2 rounded-full flex-row items-center gap-2">
+             <Sparkles size={14} className="text-primary" />
+             <Text className="text-white text-[11px] font-black">{listings.length} байр олдлоо</Text>
+           </View>
         </View>
-
-        <TouchableOpacity style={s.aiFab}>
-          <Ionicons name="sparkles" size={20} color="#fff" />
-          <Text style={s.aiFabTxt}>AI Хайлт</Text>
-        </TouchableOpacity>
       </View>
 
-      {/* Listing bottom-sheet modal */}
-      <Modal visible={!!selListing} transparent animationType="slide" onRequestClose={() => setSelListing(null)}>
-        <TouchableOpacity style={s.overlay} activeOpacity={1} onPress={() => setSelListing(null)}>
-          <TouchableOpacity activeOpacity={1} style={s.cardSheet}>
-            <View style={s.handle} />
+      {/* Property Slide-up Sheet */}
+      <Modal visible={!!selListing} transparent animationType="slide">
+        <Pressable className="flex-1 bg-black/10 justify-end" onPress={() => setSelListing(null)}>
+          <Pressable onPress={e => e.stopPropagation()}>
+            <View className="bg-card border-t border-border rounded-t-[40px] p-6 pb-12 shadow-2xl">
+              <View className="w-12 h-1.5 bg-muted rounded-full self-center mb-6" />
+            
             {selListing && (
-              <View style={s.cardContent}>
-                <View style={s.cardImageWrap}>
-                  {selListing.imageUrl ? (
-                    <Image source={{ uri: selListing.imageUrl }} style={s.cardImage} resizeMode="cover" />
-                  ) : (
-                    <View style={s.cardImagePlaceholder}>
-                      <Ionicons name="image-outline" size={40} color={Colors.border} />
+              <TouchableOpacity onPress={() => { setSelListing(null); onOpenDetail?.(selListing.id); }}>
+                <View className="flex-row items-center gap-5">
+                  <Image source={{ uri: selListing.imageUrl }} className="w-32 h-32 rounded-[28px] bg-muted" />
+                  <View className="flex-1">
+                    <View className="flex-row items-center gap-2 mb-1">
+                      <Text className="text-xl font-black text-foreground tracking-tight">{selListing.price} ₮</Text>
+                      <View className="bg-primary/10 px-2 py-0.5 rounded-lg">
+                        <Text className="text-[10px] font-black text-primary">Сул</Text>
+                      </View>
                     </View>
-                  )}
-                  <View style={s.priceBadge}>
-                    <Text style={s.priceBadgeTxt}>{selListing.price}</Text>
+                    <Text className="text-sm font-bold text-foreground mb-1" numberOfLines={1}>{selListing.title}</Text>
+                    <View className="flex-row items-center gap-3">
+                       <View className="flex-row items-center gap-1">
+                         <MapPin size={12} className="text-muted-foreground" />
+                         <Text className="text-[10px] font-bold text-muted-foreground">{selListing.regionLabel}</Text>
+                       </View>
+                       <View className="flex-row items-center gap-1">
+                         <Star size={12} fill="#f59e0b" color="#f59e0b" />
+                         <Text className="text-[10px] font-bold text-foreground">4.8</Text>
+                       </View>
+                    </View>
+                    
+                    <View className="flex-row gap-3 mt-4">
+                       <Badge label={`${selListing.rooms} өрөө`} variant="secondary" />
+                       <Badge label={`${selListing.area} м²`} variant="secondary" />
+                    </View>
                   </View>
                 </View>
                 
-                <View style={s.cardInfo}>
-                  <View style={s.cardMetaRow}>
-                    <View style={s.tag}><Text style={s.tagTxt}>{selListing.rooms} өрөө</Text></View>
-                    <View style={s.tag}><Text style={s.tagTxt}>{selListing.area}м²</Text></View>
-                    <View style={s.rating}><Ionicons name="star" size={14} color="#FFD700" /><Text style={s.ratingTxt}>4.8</Text></View>
-                  </View>
-                  
-                  <Text style={s.cardTitle}>{selListing.title}</Text>
-                  <Text style={s.cardLoc}>
-                    <Ionicons name="location-outline" size={14} />{' '}
-                    {selListing.regionLabel || selListing.address
-                      || [DISTRICTS.find(d => d.id === selListing.district)?.name, COMMITTEES.find(c => c.id === selListing.committee)?.name].filter(Boolean).join(', ')
-                      || 'Улаанбаатар'}
-                  </Text>
-                  
-                  <TouchableOpacity
-                    style={s.mainBtn}
-                    onPress={() => { setSelListing(null); onOpenDetail?.(selListing.id); }}
-                  >
-                    <Text style={s.mainBtnTxt}>Харах</Text>
-                    <Ionicons name="arrow-forward" size={18} color="#fff" />
-                  </TouchableOpacity>
+                <View className="mt-8 bg-primary h-14 rounded-2xl flex-row items-center justify-center gap-2">
+                   <Text className="text-white font-black">Дэлгэрэнгүй харах</Text>
+                   <ArrowRight size={18} color="white" />
                 </View>
-              </View>
+              </TouchableOpacity>
             )}
-          </TouchableOpacity>
-        </TouchableOpacity>
-      </Modal>
-
-      {/* District modal */}
-      <Modal visible={districtModal} transparent animationType="slide" onRequestClose={() => setDistrictModal(false)}>
-        <TouchableOpacity style={s.overlay} activeOpacity={1} onPress={() => setDistrictModal(false)}>
-          <View style={s.sheet}>
-            <View style={s.handle} />
-            <Text style={s.sheetTitle}>🏙 Дүүрэг сонгох</Text>
-            <FlatList data={DISTRICTS} keyExtractor={d => String(d.id)}
-              contentContainerStyle={{ paddingBottom: 40 }}
-              renderItem={({item:d}) => (
-                <TouchableOpacity style={[s.row, selDistrict?.id===d.id&&s.rowOn]} onPress={() => pickDistrict(d)}>
-                  <Text style={[s.rowTxt, selDistrict?.id===d.id&&s.rowTxtOn]}>{d.name}</Text>
-                  {selDistrict?.id===d.id && <Ionicons name="checkmark-circle" size={20} color={Colors.primary} />}
-                </TouchableOpacity>
-              )}
-              ItemSeparatorComponent={() => <View style={s.sep} />}
-            />
-          </View>
-        </TouchableOpacity>
-      </Modal>
-
-      {/* Committee modal */}
-      <Modal visible={committeeModal} transparent animationType="slide" onRequestClose={() => setCommitteeModal(false)}>
-        <TouchableOpacity style={s.overlay} activeOpacity={1} onPress={() => setCommitteeModal(false)}>
-          <View style={s.sheet}>
-            <View style={s.handle} />
-            <Text style={s.sheetTitle}>📍 Сонгох</Text>
-            {committees.length === 0
-              ? <Text style={s.empty}>Эхлээд дүүрэг сонгоно уу</Text>
-              : <FlatList data={committees} keyExtractor={c => String(c.id)}
-                  contentContainerStyle={{ paddingBottom: 40 }}
-                  renderItem={({item:c}) => (
-                    <TouchableOpacity style={[s.row, selCommittee?.id===c.id&&s.rowOn]} onPress={() => pickCommittee(c)}>
-                      <Text style={[s.rowTxt, selCommittee?.id===c.id&&s.rowTxtOn]}>{c.name}</Text>
-                      {selCommittee?.id===c.id && <Ionicons name="checkmark-circle" size={20} color={Colors.primary} />}
-                    </TouchableOpacity>
-                  )}
-                  ItemSeparatorComponent={() => <View style={s.sep} />}
-                />
-            }
-          </View>
-        </TouchableOpacity>
-      </Modal>
-
-      {/* Bottom Nav */}
-      <BottomNav active="map" onNavigate={onNavigate} />
-
-      {/* Loading Overlay */}
-      {loading && (
-        <View style={StyleSheet.absoluteFillObject}>
-          <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.4)', alignItems: 'center', justifyContent: 'center' }}>
-            <View style={{ backgroundColor: '#fff', padding: 20, borderRadius: 20, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10, elevation: 5 }}>
-              <ActivityIndicator size="large" color={Colors.primary} />
             </View>
-          </View>
-        </View>
-      )}
+          </Pressable>
+        </Pressable>
+      </Modal>
+
+      {/* District Picker */}
+      <Modal visible={districtModal} transparent animationType="fade">
+        <TouchableOpacity className="flex-1 bg-black/40 justify-center px-10" onPress={() => setDistrictModal(false)}>
+           <View className="bg-card rounded-[32px] overflow-hidden max-h-[60%]">
+              <View className="p-6 border-b border-border flex-row justify-between items-center bg-secondary/50">
+                <Text className="text-lg font-black text-foreground uppercase tracking-widest">Дүүрэг сонгох</Text>
+                <X size={20} className="text-muted-foreground" />
+              </View>
+              <FlatList
+                data={DISTRICTS}
+                keyExtractor={item => String(item.id)}
+                renderItem={({ item }) => (
+                  <TouchableOpacity 
+                    onPress={() => pickDistrict(item)}
+                    className="p-5 border-b border-border/50 flex-row justify-between items-center"
+                  >
+                    <Text className={cn("text-base font-bold", selDistrict?.id === item.id ? "text-primary" : "text-foreground")}>
+                      {item.name}
+                    </Text>
+                    {selDistrict?.id === item.id && <View className="w-2 h-2 rounded-full bg-primary" />}
+                  </TouchableOpacity>
+                )}
+              />
+           </View>
+        </TouchableOpacity>
+      </Modal>
+
+      <BottomNav active="map" onNavigate={onNavigate} />
     </SafeAreaView>
   );
 }
-
-const s = StyleSheet.create({
-  safe:{flex:1,backgroundColor:'#fff'},
-  floatingTop:{position:'absolute',top: Platform.OS === 'ios' ? 60 : 20,left:16,right:16,zIndex:10,gap:12},
-  searchRow:{
-    flexDirection:'row',alignItems:'center',backgroundColor:'rgba(255,255,255,0.95)',
-    borderRadius:28,paddingHorizontal:16,paddingVertical:12,gap:12,
-    shadowColor:'#000',shadowOffset:{width:0,height:8},shadowOpacity:0.1,shadowRadius:15,elevation:10
-  },
-  input:{flex:1,fontSize:15,color:'#111',fontWeight:'600'},
-  chipBar:{maxHeight:44},
-  chipScroll:{gap:8,paddingRight:40},
-  chip:{
-    flexDirection:'row',alignItems:'center',gap:6,backgroundColor:'rgba(255,255,255,0.9)',
-    borderRadius:20,paddingHorizontal:14,paddingVertical:8,borderWidth:1,borderColor:'rgba(0,0,0,0.05)',
-    shadowColor:'#000',shadowOffset:{width:0,height:4},shadowOpacity:0.05,shadowRadius:8,elevation:3
-  },
-  chipOn:{backgroundColor:Colors.primary,borderColor:Colors.primary},
-  chipTxt:{fontSize:13,fontWeight:'700',color:Colors.text},
-  chipTxtOn:{color:'#fff'},
-  chipReset:{
-    backgroundColor:'#222',width:36,height:36,borderRadius:18,
-    alignItems:'center',justifyContent:'center',shadowColor:'#000',shadowOpacity:0.2,shadowRadius:5
-  },
-  mapWrap:{flex:1,position:'relative'},
-  leftControls:{position:'absolute',bottom:30,left:16,zIndex:5},
-  rightControls:{position:'absolute',bottom:30,right:16,zIndex:5},
-  glassBadge:{backgroundColor:'rgba(0,0,0,0.7)',paddingVertical:8,paddingHorizontal:14,borderRadius:20},
-  glassBadgeTxt:{color:'#fff',fontSize:12,fontWeight:'800'},
-  floatingBtn:{
-    backgroundColor:'#fff',width:48,height:48,borderRadius:24,
-    alignItems:'center',justifyContent:'center',
-    shadowColor:'#000',shadowOffset:{width:0,height:4},shadowOpacity:0.15,shadowRadius:10,elevation:6
-  },
-  aiFab:{
-    position:'absolute',top:140,right:16,backgroundColor:Colors.primary,
-    flexDirection:'row',alignItems:'center',gap:8,paddingVertical:10,paddingHorizontal:16,
-    borderRadius:25,shadowColor:Colors.primary,shadowOpacity:0.3,shadowRadius:10,elevation:8
-  },
-  aiFabTxt:{color:'#fff',fontSize:13,fontWeight:'900'},
-  overlay:{flex:1,backgroundColor:'rgba(0,0,0,0.4)',justifyContent:'flex-end'},
-  cardSheet:{backgroundColor:'#fff',borderTopLeftRadius:32,borderTopRightRadius:32,paddingBottom:20},
-  handle:{width:40,height:5,borderRadius:3,backgroundColor:'#e0e0e0',alignSelf:'center',marginTop:12,marginBottom:8},
-  cardContent:{padding:20,gap:20},
-  cardImageWrap:{
-    width:'100%',height:180,borderRadius:24,overflow:'hidden',position:'relative',backgroundColor:'#f8f9fa',
-  },
-  cardImage:{width:'100%',height:'100%'},
-  cardImagePlaceholder:{
-    width:'100%',height:'100%',
-    alignItems:'center',justifyContent:'center',
-  },
-  priceBadge:{position:'absolute',top:16,right:16,backgroundColor:Colors.primary,paddingVertical:6,paddingHorizontal:12,borderRadius:12},
-  priceBadgeTxt:{color:'#fff',fontSize:15,fontWeight:'900'},
-  cardInfo:{gap:12},
-  cardMetaRow:{flexDirection:'row',alignItems:'center',gap:10},
-  tag:{backgroundColor:'#f0f2f5',paddingVertical:4,paddingHorizontal:10,borderRadius:8},
-  tagTxt:{fontSize:12,fontWeight:'800',color:Colors.textMuted},
-  rating:{flexDirection:'row',alignItems:'center',gap:4,marginLeft:'auto'},
-  ratingTxt:{fontSize:13,fontWeight:'800',color:Colors.text},
-  cardTitle:{fontSize:20,fontWeight:'900',color:Colors.text},
-  cardLoc:{fontSize:14,color:Colors.textMuted,flexDirection:'row',alignItems:'center'},
-  mainBtn:{
-    backgroundColor:Colors.primary,height:56,borderRadius:18,
-    flexDirection:'row',alignItems:'center',justifyContent:'center',gap:10,marginTop:8
-  },
-  mainBtnTxt:{color:'#fff',fontSize:16,fontWeight:'800'},
-  sheet:{backgroundColor:'#fff',borderTopLeftRadius:32,borderTopRightRadius:32,maxHeight:'70%'},
-  sheetTitle:{fontSize:18,fontWeight:'900',color:Colors.text,padding:24,paddingBottom:12},
-  row:{flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingVertical:18,paddingHorizontal:24},
-  rowOn:{backgroundColor:Colors.primary + '08'},
-  rowTxt:{fontSize:16,fontWeight:'600',color:Colors.text},
-  rowTxtOn:{color:Colors.primary,fontWeight:'800'},
-  sep:{height:1,backgroundColor:'#f4f5f7',marginHorizontal:24},
-  empty:{textAlign:'center',color:'#aaa',fontSize:14,padding:40},
-  fallback:{flex:1,backgroundColor:'#f8f9fa',alignItems:'center',justifyContent:'center',gap:16,padding:40},
-  fallbackEmoji:{fontSize:64},
-  fallbackTitle:{fontSize:20,fontWeight:'900',color:Colors.text},
-  fallbackSub:{fontSize:14,color:Colors.textMuted,textAlign:'center'},
-  fallbackCode:{backgroundColor:'#111',borderRadius:12,padding:16,marginTop:8},
-  fallbackCodeTxt:{color:Colors.primary,fontFamily:Platform.OS==='ios'?'Courier':'monospace',fontSize:12},
-});

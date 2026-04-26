@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import './global.css';
+import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Animated, Easing } from 'react-native';
 
 import HomeScreen          from './app/HomeScreen';
 import SavedScreen         from './app/SavedScreen';
@@ -32,23 +33,27 @@ export default function App() {
 
 function AppNavigator() {
   const { isAuthenticated, isLoading } = useAuth();
-  const [screen, setScreen] = useState<Screen>('register'); // Start on register
+  const [screen, setScreen] = useState<Screen>('register');
+  const [prevScreen, setPrevScreen] = useState<Screen | null>(null);
+
+  // Animation values
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current;
 
   // Auto-redirect after auth state loads
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isLoading) {
       if (isAuthenticated) {
         if (screen === 'login' || screen === 'register') {
-          setScreen('home');
+          navigate('home');
         }
       } else {
-        // Not authenticated
         if (screen !== 'login' && screen !== 'register') {
-          setScreen('login');
+          navigate('login');
         }
       }
     }
-  }, [isAuthenticated, isLoading, screen]);
+  }, [isAuthenticated, isLoading]);
 
   const [detailId, setDetailId]           = useState<number | null>(null);
   const [detailVisible, setDetailVisible] = useState(false);
@@ -61,19 +66,52 @@ function AppNavigator() {
   const closeDetail = () => setDetailVisible(false);
 
   const navigate = (tab: string, params?: any) => {
-    if (tab === 'chat') {
-      setChatParams(params ?? { senderId: 1, receiverId: 2, receiverName: 'Зуучлагч' });
-      setScreen('chat');
-      return;
-    }
-    if (tab === 'map' || tab === 'search_filter') {
-      setMapParams(params);
-    }
-    setScreen(tab as Screen);
+    const nextScreen = tab as Screen;
+    if (nextScreen === screen) return;
+
+    // Start Transition
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.ease)
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 10,
+        duration: 100,
+        useNativeDriver: true
+      })
+    ]).start(() => {
+       if (tab === 'chat') {
+         setChatParams(params ?? { senderId: 1, receiverId: 2, receiverName: 'Зуучлагч' });
+       }
+       if (tab === 'map' || tab === 'search_filter') {
+         setMapParams(params);
+       }
+       
+       setPrevScreen(screen);
+       setScreen(nextScreen);
+
+       // Fade back in
+       Animated.parallel([
+         Animated.timing(fadeAnim, {
+           toValue: 1,
+           duration: 200,
+           useNativeDriver: true,
+           easing: Easing.in(Easing.ease)
+         }),
+         Animated.spring(slideAnim, {
+           toValue: 0,
+           useNativeDriver: true,
+           tension: 50,
+           friction: 8
+         })
+       ]).start();
+    });
   };
 
   const renderScreen = () => {
-    // Top-level Auth Guard: Force login if not authenticated and trying to access private screens
     if (!isAuthenticated && screen !== 'login' && screen !== 'register') {
       return <LoginScreen onNavigate={navigate} />;
     }
@@ -91,7 +129,7 @@ function AppNavigator() {
           receiverId={chatParams.receiverId}
           listingId={chatParams.listingId}
           receiverName={chatParams.receiverName}
-          onNavigate={(s: string) => { if (s === 'home') setScreen('home'); }}
+          onNavigate={(s: string) => navigate(s)}
         />
       ) : null;
       case 'profile':   return <ProfileScreen    onNavigate={navigate} />;
@@ -107,7 +145,16 @@ function AppNavigator() {
   return (
     <View style={styles.root}>
       <StatusBar style="auto" />
-      {renderScreen()}
+      <Animated.View 
+        className="flex-1"
+        style={{ 
+          flex: 1, 
+          opacity: fadeAnim,
+          transform: [{ translateY: slideAnim }]
+        }}
+      >
+        {renderScreen()}
+      </Animated.View>
 
       <ListingDetailScreen
         visible={detailVisible}
@@ -120,5 +167,5 @@ function AppNavigator() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1 },
+  root: { flex: 1, backgroundColor: '#fff' },
 });

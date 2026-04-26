@@ -1,20 +1,34 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, ScrollView,
-  SafeAreaView, TextInput, RefreshControl, Dimensions,
-  ActivityIndicator, FlatList, Animated,
+  View, Text, TouchableOpacity, ScrollView,
+  SafeAreaView, RefreshControl, Dimensions,
+  Animated, FlatList,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { 
+  Bell, 
+  Search, 
+  ChevronRight, 
+  LayoutGrid, 
+  Home as HomeIcon, 
+  Filter,
+  Map,
+  Sparkles,
+  TrendingUp,
+  MapPin
+} from 'lucide-react-native';
 import { Colors } from '../constants/colors';
 import BottomNav, { TabName } from '../components/BottomNav';
 import ListingCard from '../components/ListingCard';
 import { ListingAPI, FavoriteAPI, Category, Region, Listing, RegionAPI, CategoryAPI } from '../services/api';
+import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { Badge } from '../components/ui/Badge';
+import { cn } from '../utils/cn';
 
 const { width: W } = Dimensions.get('window');
-const CARD_W = W * 0.62;
+const CARD_W = W * 0.75;
 
 interface Props {
-  onNavigate: (tab: TabName) => void;
+  onNavigate: (tab: TabName, params?: any) => void;
   onOpenDetail?: (id: number) => void;
 }
 
@@ -28,44 +42,41 @@ function SkeletonCard({ compact }: { compact?: boolean }) {
     loop.start();
     return () => loop.stop();
   }, []);
-  const opacity = shimmer.interpolate({ inputRange: [0, 1], outputRange: [0.3, 0.8] });
+  const opacity = shimmer.interpolate({ inputRange: [0, 1], outputRange: [0.3, 0.6] });
 
-  if (compact) {
-    return (
-      <View style={[s.skelCard, { width: CARD_W }]}>
-        <Animated.View style={[s.skelImg, { opacity }]} />
-        <View style={s.skelInfo}>
-          <Animated.View style={[s.skelLine, { width: '80%', opacity }]} />
-          <Animated.View style={[s.skelLine, { width: '55%', opacity }]} />
-          <Animated.View style={[s.skelLineShort, { opacity }]} />
-        </View>
-      </View>
-    );
-  }
   return (
-    <View style={s.skelCardFull}>
-      <Animated.View style={[s.skelImgFull, { opacity }]} />
-      <View style={s.skelInfoFull}>
-        <Animated.View style={[s.skelLine, { width: '90%', opacity }]} />
-        <Animated.View style={[s.skelLine, { width: '65%', opacity }]} />
-        <Animated.View style={[s.skelLineShort, { opacity }]} />
+    <View className={cn('bg-card rounded-[32px] overflow-hidden mr-4', compact ? 'w-64' : 'w-full mb-4')}>
+      <Animated.View style={{ opacity }} className={cn('bg-muted', compact ? 'h-40' : 'h-52')} />
+      <View className="p-4 gap-2">
+        <Animated.View style={{ opacity }} className="h-4 w-3/4 bg-muted rounded-full" />
+        <Animated.View style={{ opacity }} className="h-3 w-1/2 bg-muted rounded-full" />
+        <View className="flex-row gap-2 mt-2">
+          <Animated.View style={{ opacity }} className="h-6 w-16 bg-muted rounded-full" />
+          <Animated.View style={{ opacity }} className="h-6 w-16 bg-muted rounded-full" />
+        </View>
       </View>
     </View>
   );
 }
 
 // ─── Section header ───────────────────────────────────────────
-function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: { label: string; onPress: () => void } }) {
+function SectionHeader({ title, subtitle, icon: Icon, action }: { title: string; subtitle?: string; icon?: any; action?: { label: string; onPress: () => void } }) {
   return (
-    <View style={s.secHeader}>
-      <View>
-        <Text style={s.secTitle}>{title}</Text>
-        {subtitle ? <Text style={s.secSub}>{subtitle}</Text> : null}
+    <View className="flex-row items-center justify-between px-5 mb-4">
+      <View className="flex-1">
+        <View className="flex-row items-center gap-2">
+          {Icon && <Icon size={18} className="text-primary" />}
+          <Text className="text-xl font-black text-foreground tracking-tight">{title}</Text>
+        </View>
+        {subtitle && <Text className="text-sm font-medium text-muted-foreground mt-0.5">{subtitle}</Text>}
       </View>
       {action && (
-        <TouchableOpacity onPress={action.onPress} style={s.secAction}>
-          <Text style={s.secActionTxt}>{action.label}</Text>
-          <Ionicons name="chevron-forward" size={14} color={Colors.primary} />
+        <TouchableOpacity 
+          onPress={action.onPress} 
+          className="flex-row items-center bg-primary/10 px-3 py-1.5 rounded-full"
+        >
+          <Text className="text-xs font-bold text-primary mr-1">{action.label}</Text>
+          <ChevronRight size={14} className="text-primary" />
         </TouchableOpacity>
       )}
     </View>
@@ -84,7 +95,7 @@ function ListingRow({
 }) {
   if (loading) {
     return (
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.rowScroll}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="px-5">
         {[0, 1, 2].map(i => <SkeletonCard key={i} compact />)}
       </ScrollView>
     );
@@ -96,7 +107,7 @@ function ListingRow({
       data={listings}
       keyExtractor={item => String(item.id)}
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={s.rowScroll}
+      contentContainerClassName="px-5"
       renderItem={({ item }) => (
         <ListingCard
           id={item.id}
@@ -105,12 +116,9 @@ function ListingRow({
           priceType={item.price_type}
           address={item.address}
           regionName={item.region_name}
-          districtName={undefined}
           imageUrl={item.cover_image ?? item.images?.[0]?.image_url}
           area={item.area_sqm != null ? Number(item.area_sqm) : undefined}
           rooms={item.bedrooms != null ? Number(item.bedrooms) : undefined}
-          rating={null}
-          reviewCount={undefined}
           isFavorite={favorites.has(item.id)}
           onPress={onCardPress}
           onFavorite={onFavorite}
@@ -122,7 +130,6 @@ function ListingRow({
   );
 }
 
-// ─── Main screen ──────────────────────────────────────────────
 export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
   const [refreshing, setRefreshing] = useState(false);
   const [nearby, setNearby]         = useState<Listing[]>([]);
@@ -130,8 +137,6 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
   const [newListings, setNewListings] = useState<Listing[]>([]);
   const [favorites, setFavorites]   = useState<Set<number>>(new Set());
   const [loading, setLoading]       = useState(true);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQ, setSearchQ]       = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [regions, setRegions]       = useState<Region[]>([]);
 
@@ -142,10 +147,10 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
       const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
       const [popRes, newRes, nearbyRes, favRes, catRes, regRes] = await Promise.all([
-        ListingAPI.list({ page_size: 6, ordering: '-favorite_count' }), // Actively Loved
-        ListingAPI.list({ page_size: 6, ordering: '-created_at', created_after: lastWeek }), // Added this week
-        ListingAPI.list({ page_size: 6 }), // Recommended
-        FavoriteAPI.list().catch(() => ({ results: [] as any[] })),
+        ListingAPI.list({ page_size: 6, ordering: '-favorite_count' }),
+        ListingAPI.list({ page_size: 6, ordering: '-created_at', created_after: lastWeek }),
+        ListingAPI.list({ page_size: 6 }),
+        FavoriteAPI.list().catch(() => ({ results: [] })),
         CategoryAPI.list(),
         RegionAPI.list(),
       ]);
@@ -157,9 +162,7 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
       setRegions(regRes);
 
       const favRows = (favRes as any).results ?? favRes ?? [];
-      const favIds = new Set(
-        (Array.isArray(favRows) ? favRows : []).map((f: any) => f.listing as number),
-      );
+      const favIds = new Set((Array.isArray(favRows) ? favRows : []).map((f: any) => f.listing as number));
       setFavorites(favIds);
     } catch (e) {
       console.error('Home fetch error:', e);
@@ -170,12 +173,6 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
-
-  const onRefresh = () => fetchData(true);
-
-  const handleCardPress = (id: number) => {
-    onOpenDetail?.(id);
-  };
 
   const handleFavorite = async (id: number) => {
     try {
@@ -190,278 +187,145 @@ export default function HomeScreen({ onNavigate, onOpenDetail }: Props) {
         await FavoriteAPI.toggle(id);
         setFavorites(prev => new Set(prev).add(id));
       }
-    } catch (e) {
-      console.error('Fav error:', e);
-    }
-  };
-
-  const handleCategoryPress = (catId: number) => {
-    // Navigate to map with category filter
-    onNavigate('map');
-  };
-
-  const CATEGORY_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
-    default: 'business-outline',
+    } catch (e) { console.error('Fav error:', e); }
   };
 
   return (
-    <SafeAreaView style={s.safe}>
-      {/* ── Top bar ─────────────────────────────────────── */}
-      <View style={s.topBar}>
-        <View style={s.logoRow}>
-          <Text style={s.logo}>РЕНТАЛ<Text style={s.logoAccent}>ЛИ</Text></Text>
-          <TouchableOpacity style={s.topBtn} onPress={() => onNavigate('profile')}>
-            <Ionicons name="notifications-outline" size={24} color={Colors.text} />
+    <SafeAreaView className="flex-1 bg-background" style={{ flex: 1 }}>
+      {/* Top Bar */}
+      <View className="bg-background px-5 py-4 gap-4">
+        <View className="flex-row items-center justify-between">
+          <View>
+            <Text className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Тавтай морил</Text>
+            <Text className="text-2xl font-black text-primary tracking-tight">РЕНТАЛ<Text className="text-amber-400">ЛИ</Text></Text>
+          </View>
+          <TouchableOpacity 
+            className="w-12 h-12 rounded-2xl bg-secondary items-center justify-center border border-border" 
+            onPress={() => onNavigate('profile')}
+          >
+            <Bell size={22} className="text-foreground" />
           </TouchableOpacity>
         </View>
 
-        {/* Search bar */}
-        <TouchableOpacity style={s.searchBar} onPress={() => onNavigate('search_filter')} activeOpacity={0.8}>
-          <Ionicons name="search" size={18} color={Colors.textLight} />
-          <Text style={s.searchTxt}>Ямар байр хайж байна вэ?</Text>
+        {/* Search Input Bar */}
+        <TouchableOpacity 
+          className="bg-secondary h-14 rounded-2xl px-5 flex-row items-center border border-border shadow-sm shadow-black/5" 
+          onPress={() => onNavigate('search_filter')}
+          activeOpacity={0.8}
+        >
+          <Search size={20} className="text-muted-foreground mr-3" />
+          <Text className="text-sm font-medium text-muted-foreground flex-1">Ямар байр хайж байна вэ?</Text>
+          <View className="w-8 h-8 rounded-lg bg-primary items-center justify-center">
+            <Filter size={16} color="white" />
+          </View>
         </TouchableOpacity>
       </View>
 
       <ScrollView
-        style={s.scroll}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={s.scrollContent}
+        className="flex-1"
+        style={{ flex: 1 }}
+        contentContainerClassName="pt-2 pb-24"
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={Colors.primary}
-            colors={[Colors.primary]}
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={() => fetchData(true)} tintColor={Colors.primary} />
         }
       >
-        {/* ── Hero categories (horizontal) ────────────── */}
-        <View style={s.catRow}>
-          {categories.slice(0, 4).map(cat => (
+        {/* Categories */}
+        <View className="flex-row px-5 pb-6 gap-3">
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-3 pr-5">
+            {categories.slice(0, 5).map(cat => (
+              <TouchableOpacity
+                key={cat.id}
+                className="items-center justify-center bg-card border border-border rounded-2xl px-4 py-3 min-w-[100px]"
+                onPress={() => onNavigate('map', { category: cat.id })}
+              >
+                <View className="w-10 h-10 rounded-full bg-primary/10 items-center justify-center mb-2">
+                  <HomeIcon size={20} className="text-primary" />
+                </View>
+                <Text className="text-xs font-bold text-foreground">{cat.name}</Text>
+              </TouchableOpacity>
+            ))}
             <TouchableOpacity
-              key={cat.id}
-              style={s.catItem}
-              onPress={() => handleCategoryPress(cat.id)}
-              activeOpacity={0.8}
+              className="items-center justify-center bg-primary border border-primary rounded-2xl px-4 py-3 min-w-[100px]"
+              onPress={() => onNavigate('map')}
             >
-              <View style={[s.catCircle, { backgroundColor: Colors.primary + '15' }]}>
-                <Ionicons name={CATEGORY_ICONS.default} size={22} color={Colors.primary} />
+              <View className="w-10 h-10 rounded-full bg-white/20 items-center justify-center mb-2">
+                <LayoutGrid size={20} color="white" />
               </View>
-              <Text style={s.catLabel} numberOfLines={1}>{cat.name}</Text>
+              <Text className="text-xs font-bold text-white">Бүгд</Text>
             </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            style={s.catItem}
-            onPress={() => onNavigate('map')}
-            activeOpacity={0.8}
-          >
-            <View style={[s.catCircle, { backgroundColor: '#845ef715' }]}>
-              <Ionicons name="options-outline" size={22} color="#845ef7" />
-            </View>
-            <Text style={s.catLabel}>Бүгд</Text>
-          </TouchableOpacity>
+          </ScrollView>
         </View>
 
         {/* New properties */}
-        <View style={s.section}>
+        <View className="mb-8">
           <SectionHeader
-            title="Энэ долоо хоногт нэмэгдсэн"
-            subtitle="Сүүлийн 7 хоногт шинээр орсон байрнууд"
-            action={{ label: 'Бүгдийг үзэх', onPress: () => onNavigate('map') }}
+            title="Шинэ байрнууд"
+            subtitle="Энэ долоо хоногт нэмэгдсэн"
+            icon={Sparkles}
+            action={{ label: 'Бүгд', onPress: () => onNavigate('map') }}
           />
           <ListingRow
             listings={newListings}
             loading={loading}
-            onCardPress={handleCardPress}
+            onCardPress={onOpenDetail || (() => {})}
             onFavorite={handleFavorite}
             favorites={favorites}
           />
         </View>
 
         {/* High demand */}
-        <View style={s.section}>
+        <View className="mb-8">
           <SectionHeader
-            title="Идэвхтэй хайрлаж буй"
-            subtitle="Хүмүүсийн хамгийн их сонирхож, хадгалсан"
-            action={{ label: 'Бүгдийг үзэх', onPress: () => onNavigate('map') }}
+            title="Хамгийн их үзсэн"
+            subtitle="Хүмүүсийн сонирхож буй байрнууд"
+            icon={TrendingUp}
+            action={{ label: 'Бүгд', onPress: () => onNavigate('map') }}
           />
           <ListingRow
             listings={popular}
             loading={loading}
-            onCardPress={handleCardPress}
+            onCardPress={onOpenDetail || (() => {})}
             onFavorite={handleFavorite}
             favorites={favorites}
           />
         </View>
 
-        {/* ── Promo banner ──────────────────────────────── */}
-        <TouchableOpacity style={s.promoBanner} activeOpacity={0.9}>
-          <View style={{ flex: 1 }}>
-            <Text style={s.promoTitle}>
-              Хамгийн <Text style={s.promoHighlight}>хүсэмжтэй</Text> {'\n'}апартментийн брэнд?
+        {/* Promo Banner */}
+        <TouchableOpacity className="mx-5 mb-8 bg-slate-900 rounded-[32px] p-6 relative overflow-hidden" activeOpacity={0.9}>
+          <View className="absolute -right-10 -top-10 w-40 h-40 bg-primary/20 rounded-full" />
+          <View className="z-10">
+            <Badge label="Шинэ боломж" variant="default" className="mb-3 bg-amber-400" labelClasses="text-slate-900" />
+            <Text className="text-2xl font-black text-white leading-tight mb-2">
+              Хамгийн хүсэмжтэй{'\n'}апартментийн брэнд?
             </Text>
-            <Text style={s.promoSub}>Санал асуулгад оролцоод шагнал аваарай!</Text>
-          </View>
-          <View style={s.promoSticker}>
-            <Text style={{ fontSize: 22 }}>☕</Text>
-            <Text style={s.promoStickerTxt}>50,000₮</Text>
-            <Text style={s.promoStickerMini}>2/2</Text>
+            <Text className="text-sm font-medium text-slate-400">Санал асуулгад оролцоод шагнал аваарай!</Text>
           </View>
         </TouchableOpacity>
 
-        {/* ── New listings ──────────────────────────────── */}
-        <View style={s.section}>
+        {/* Districts */}
+        <View className="mb-0">
           <SectionHeader
-            title="✨ Шинэ байрнууд"
-            subtitle="Энэ долоо хоногт нэмэгдсэн"
+            title="Дүүргээр хайх"
+            subtitle="Улаанбаатар хот"
+            icon={Map}
           />
-          <ListingRow
-            listings={newListings}
-            loading={loading}
-            onCardPress={handleCardPress}
-            onFavorite={handleFavorite}
-            favorites={favorites}
-          />
-        </View>
-
-        {/* ── Districts quick access ───────────────────── */}
-        <View style={s.section}>
-          <SectionHeader
-            title="🗺️ Дүүргээр хайх"
-            subtitle="Улаанбаатар"
-          />
-          <View style={s.districtGrid}>
-            {regions.filter(r => !r.parent_id).slice(0, 8).map(r => (
+          <View className="flex-row flex-wrap px-5 gap-2">
+            {regions.filter(r => !r.parent_id).slice(0, 9).map(r => (
               <TouchableOpacity
                 key={r.id}
-                style={s.districtChip}
-                onPress={() => onNavigate('map')}
-                activeOpacity={0.8}
+                className="bg-card border border-border rounded-2xl px-4 py-3 flex-row items-center"
+                onPress={() => onNavigate('map', { region: r.id })}
               >
-                <Text style={s.districtChipTxt}>{r.name}</Text>
+                <MapPin size={14} className="text-primary mr-2" />
+                <Text className="text-sm font-bold text-foreground">{r.name}</Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
-
-        <View style={{ height: 12 }} />
       </ScrollView>
 
       <BottomNav active="home" onNavigate={onNavigate} />
     </SafeAreaView>
   );
 }
-
-// ─── Styles ───────────────────────────────────────────────────
-const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.bg },
-
-  // top bar
-  topBar: {
-    backgroundColor: Colors.white,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    gap: 12,
-  },
-  logoRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  logo: { fontSize: 20, fontWeight: '900', color: Colors.primary, letterSpacing: 1 },
-  logoAccent: { color: Colors.yellow },
-  topBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: Colors.bg, alignItems: 'center', justifyContent: 'center' },
-  searchBar: {
-    backgroundColor: Colors.bg,
-    borderRadius: 24,
-    paddingVertical: 12,
-    paddingHorizontal: 18,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  searchTxt: { fontSize: 14, color: Colors.textLight, fontWeight: '500' },
-
-  scroll: { flex: 1 },
-  scrollContent: { paddingTop: 12 },
-
-  // categories
-  catRow: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    gap: 8,
-  },
-  catItem: { alignItems: 'center', gap: 8, flex: 1 },
-  catCircle: {
-    width: 60, height: 60, borderRadius: 20,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  catLabel: { fontSize: 12, fontWeight: 'bold', color: Colors.text, textAlign: 'center' },
-
-  // section
-  section: { marginBottom: 24 },
-  secHeader: {
-    flexDirection: 'row', alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginBottom: 15,
-  },
-  secTitle: { fontSize: 18, fontWeight: '900', color: Colors.text, letterSpacing: -0.2 },
-  secSub: { fontSize: 13, color: Colors.textMuted, marginTop: 4 },
-  secAction: { flexDirection: 'row', alignItems: 'center', gap: 2, backgroundColor: Colors.primary + '10', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 },
-  secActionTxt: { fontSize: 12, fontWeight: 'bold', color: Colors.primary },
-  rowScroll: { paddingHorizontal: 16, gap: 14 },
-
-  // promo banner
-  promoBanner: {
-    marginHorizontal: 16,
-    marginBottom: 24,
-    backgroundColor: Colors.darkBg,
-    borderRadius: 24,
-    padding: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  promoTitle: { fontSize: 18, fontWeight: '900', color: Colors.white, lineHeight: 28, marginBottom: 8 },
-  promoHighlight: { color: '#60b4ff' },
-  promoSub: { fontSize: 12, color: 'rgba(255,255,255,0.7)' },
-  promoSticker: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: 16,
-    padding: 14,
-    alignItems: 'center',
-    marginLeft: 14,
-  },
-  promoStickerTxt: { fontSize: 12, color: Colors.white, fontWeight: '800', marginTop: 3 },
-  promoStickerMini: { fontSize: 10, color: 'rgba(255,255,255,0.6)', marginTop: 2 },
-
-  // district grid
-  districtGrid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 16, gap: 10 },
-  districtChip: {
-    backgroundColor: Colors.white,
-    borderRadius: 14,
-    paddingVertical: 10,
-    paddingHorizontal: 18,
-    borderWidth: 1.5,
-    borderColor: '#f0f0f5',
-  },
-  districtChipTxt: { fontSize: 13, fontWeight: 'bold', color: Colors.text },
-
-  // skeletons
-  skelCard: {
-    backgroundColor: Colors.white,
-    borderRadius: 24,
-    overflow: 'hidden',
-    marginRight: 12,
-  },
-  skelImg: { height: 120, backgroundColor: '#f0f2f7' },
-  skelInfo: { padding: 12, gap: 8 },
-  skelLine: { height: 12, backgroundColor: '#f0f2f7', borderRadius: 6 },
-  skelLineShort: { height: 12, width: '40%', backgroundColor: '#f0f2f7', borderRadius: 6 },
-  skelCardFull: {
-    backgroundColor: Colors.white,
-    borderRadius: 24,
-    overflow: 'hidden',
-    marginBottom: 16,
-  },
-  skelImgFull: { height: 180, backgroundColor: '#f0f2f7' },
-  skelInfoFull: { padding: 16, gap: 10 },
-});

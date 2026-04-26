@@ -176,7 +176,12 @@ class ListingDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ListingDetail
-        fields = ['bedrooms', 'bathrooms', 'area_sqm', 'utilities_estimated', 'heating_type', 'air_type']
+        fields = [
+            'bedrooms', 'bathrooms', 'area_sqm', 'utilities_estimated', 
+            'heating_type', 'air_type', 'floor_type', 'window_type', 
+            'door_type', 'balcony', 'garage', 'year_built', 
+            'floor_number', 'building_floors', 'window_count', 'payment_terms'
+        ]
 
 
 class ListingImageSerializer(serializers.ModelSerializer):

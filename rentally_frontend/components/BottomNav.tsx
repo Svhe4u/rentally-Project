@@ -1,24 +1,30 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import {
-  View, TouchableOpacity, StyleSheet, Animated, Platform,
+  View, TouchableOpacity, Text, Platform,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { 
+  Home, 
+  Heart, 
+  Map as MapIcon, 
+  MessageSquare, 
+  User 
+} from 'lucide-react-native';
+import { cn } from '../utils/cn';
 
 export type TabName = 'home' | 'saved' | 'map' | 'messages' | 'profile';
 
 interface NavItem {
   key: TabName;
-  icon: keyof typeof Ionicons.glyphMap;
-  iconActive: keyof typeof Ionicons.glyphMap;
+  icon: any;
   label: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { key: 'home',      icon: 'home-outline',         iconActive: 'home',           label: 'Нүүр' },       // ⌂ → home
-  { key: 'saved',     icon: 'heart-outline',         iconActive: 'heart',          label: 'Хадгалсан' },  // ♡ → heart
-  { key: 'map',       icon: 'map-outline',           iconActive: 'map',            label: 'Газрын зураг' }, // ◎ → map
-  { key: 'messages', icon: 'chatbubbles-outline',   iconActive: 'chatbubbles',    label: 'Мессеж' },      // 💬
-  { key: 'profile',   icon: 'person-outline',       iconActive: 'person',         label: 'Профайл' },     // □ → person
+  { key: 'home',      icon: Home,          label: 'Нүүр' },
+  { key: 'saved',     icon: Heart,         label: 'Хадгалсан' },
+  { key: 'map',       icon: MapIcon,       label: 'Газар' },
+  { key: 'messages',  icon: MessageSquare, label: 'Мессеж' },
+  { key: 'profile',   icon: User,          label: 'Профайл' },
 ];
 
 interface Props {
@@ -26,143 +32,51 @@ interface Props {
   onNavigate: (tab: TabName) => void;
 }
 
-function Tab({
-  item, isActive, onPress,
-}: {
-  item: NavItem;
-  isActive: boolean;
-  onPress: () => void;
-}) {
-  const scale     = useRef(new Animated.Value(1)).current;
-  const glowOp    = useRef(new Animated.Value(isActive ? 1 : 0)).current;
-  const labelOp   = useRef(new Animated.Value(isActive ? 1 : 0.45)).current;
-  const pillW     = useRef(new Animated.Value(isActive ? 28 : 0)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.spring(glowOp,  { toValue: isActive ? 1 : 0,    useNativeDriver: true,  speed: 20 }),
-      Animated.spring(labelOp, { toValue: isActive ? 1 : 0.45, useNativeDriver: true,  speed: 20 }),
-      Animated.spring(pillW,   { toValue: isActive ? 28 : 0,   useNativeDriver: false, speed: 20, bounciness: 8 }),
-    ]).start();
-  }, [isActive]);
-
-  const handlePress = () => {
-    Animated.sequence([
-      Animated.spring(scale, { toValue: 0.80, useNativeDriver: true, speed: 50 }),
-      Animated.spring(scale, { toValue: 1,    useNativeDriver: true, speed: 18, bounciness: 12 }),
-    ]).start();
-    onPress();
-  };
-
-  return (
-    <TouchableOpacity style={st.tab} onPress={handlePress} activeOpacity={1}>
-      <Animated.View style={[st.inner, { transform: [{ scale }] }]}>
-        {/* glow backdrop behind icon */}
-        <Animated.View style={[st.glow, { opacity: glowOp }]} />
-
-        {/* icon */}
-        <Ionicons
-          name={isActive ? item.iconActive : item.icon}
-          size={24}
-          color={isActive ? NavColors.primary : NavColors.inactive}
-          style={st.icon}
-        />
-
-        {/* sliding pill underline */}
-        <Animated.View style={[st.pill, { width: pillW }]} />
-
-        {/* label */}
-        <Animated.Text
-          numberOfLines={1}
-          style={[st.label, { opacity: labelOp }, isActive && st.labelOn]}
-        >
-          {item.label}
-        </Animated.Text>
-      </Animated.View>
-    </TouchableOpacity>
-  );
-}
-
 export default function BottomNav({ active, onNavigate }: Props) {
   return (
-    <View style={st.wrap}>
-      {/* top edge — thin brand line */}
-      <View style={st.edgeLine} />
+    <View 
+      className={cn(
+        "absolute bottom-0 left-0 right-0 bg-background/95 border-t border-border flex-row items-center justify-around px-2",
+        Platform.OS === 'ios' ? "pb-8 h-24" : "pb-2 h-18"
+      )}
+      style={{
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+        elevation: 20
+      }}
+    >
+      {NAV_ITEMS.map((item) => {
+        const isActive = active === item.key;
+        const Icon = item.icon;
 
-      <View style={st.row}>
-        {NAV_ITEMS.map(item => (
-          <Tab
+        return (
+          <TouchableOpacity
             key={item.key}
-            item={item}
-            isActive={item.key === active}
             onPress={() => onNavigate(item.key)}
-          />
-        ))}
-      </View>
+            className="flex-1 items-center justify-center py-2 gap-1"
+            activeOpacity={0.7}
+          >
+            <View className={cn(
+              "w-12 h-8 rounded-full items-center justify-center transition-all",
+              isActive ? "bg-primary/10" : "bg-transparent"
+            )}>
+              <Icon 
+                size={22} 
+                className={cn(isActive ? "text-primary" : "text-muted-foreground")} 
+                strokeWidth={isActive ? 2.5 : 2}
+              />
+            </View>
+            <Text className={cn(
+              "text-[10px] font-bold tracking-tight",
+              isActive ? "text-primary" : "text-muted-foreground"
+            )}>
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 }
-
-// ── palette ──────────────────────────────────────────────────
-const NavColors = {
-  primary:  '#2e55fa',
-  bg:       '#ffffff',
-  inactive: '#8b8fa8',
-  glow:    '#6080ff',
-};
-
-const st = StyleSheet.create({
-  wrap: {
-    backgroundColor: NavColors.bg,
-    paddingBottom: Platform.OS === 'ios' ? 26 : 8,
-  },
-  edgeLine: {
-    height: 2,
-    backgroundColor: NavColors.primary,
-    opacity: 0.25,
-  },
-  row: {
-    flexDirection: 'row',
-    paddingTop: 8,
-  },
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  inner: {
-    alignItems: 'center',
-    gap: 2,
-    paddingHorizontal: 6,
-    paddingTop: 4,
-  },
-  glow: {
-    position: 'absolute',
-    top: -2,
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: NavColors.glow,
-    opacity: 0,
-  },
-  icon: {
-    // handled inline via Ionicons
-  },
-  pill: {
-    height: 2.5,
-    borderRadius: 2,
-    backgroundColor: NavColors.primary,
-    marginTop: 2,
-  },
-  label: {
-    fontSize: 9,
-    fontWeight: '600',
-    color: NavColors.inactive,
-    textAlign: 'center',
-    letterSpacing: 0.2,
-    marginTop: 1,
-  },
-  labelOn: {
-    color: NavColors.primary,
-    fontWeight: '800',
-  },
-});

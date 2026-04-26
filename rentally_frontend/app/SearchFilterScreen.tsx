@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet,
-  ScrollView, SafeAreaView, TextInput, ActivityIndicator, Platform
+  View, Text, TouchableOpacity, ScrollView, SafeAreaView, TextInput, ActivityIndicator, Platform
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { 
+  ChevronLeft, 
+  X, 
+  RotateCcw, 
+  Search, 
+  Home, 
+  DollarSign, 
+  MapPin, 
+  Maximize,
+  Briefcase,
+  Calendar,
+  Clock
+} from 'lucide-react-native';
 import { Colors } from '../constants/colors';
 import { CategoryAPI, RegionAPI, Category, Region } from '../services/api';
+import { cn } from '../utils/cn';
 
 interface Props { onNavigate: (screen: string, params?: any) => void; }
 
-const PRICE_TYPES = ['monthly', 'daily', 'yearly', 'total'];
+const PRICE_TYPES = ['monthly', 'daily', 'yearly'];
 const PRICE_LABELS: Record<string, string> = {
-  monthly: 'Сарын түрээс', daily: 'Өдрийн', yearly: 'Жилийн', total: 'Нийт худалдах',
+  monthly: 'Сараар', daily: 'Өдрөөр', yearly: 'Жилээр',
 };
 
 export default function SearchFilterScreen({ onNavigate }: Props) {
@@ -31,7 +43,7 @@ export default function SearchFilterScreen({ onNavigate }: Props) {
   useEffect(() => {
     Promise.all([CategoryAPI.list(), RegionAPI.list()])
       .then(([cats, regs]) => { setCategories(cats); setRegions(regs); })
-      .catch(() => {})
+      .catch((e) => console.error('Filter load error:', e))
       .finally(() => setLoading(false));
   }, []);
 
@@ -58,186 +70,163 @@ export default function SearchFilterScreen({ onNavigate }: Props) {
   };
 
   return (
-    <SafeAreaView style={s.safe}>
-      <View style={s.topBar}>
-        <TouchableOpacity onPress={() => onNavigate('map')} style={s.topBtn}>
-          <Ionicons name="arrow-back" size={22} color={Colors.text} />
+    <SafeAreaView className="flex-1 bg-background">
+      {/* Header */}
+      <View className="flex-row items-center justify-between px-6 py-4 bg-card border-b border-border">
+        <TouchableOpacity 
+          onPress={() => onNavigate('map')}
+          className="w-10 h-10 rounded-full bg-secondary items-center justify-center"
+        >
+          <ChevronLeft size={20} className="text-foreground" />
         </TouchableOpacity>
-        <Text style={s.headerTitle}>Шүүлтүүр</Text>
+        
+        <Text className="text-base font-black uppercase tracking-widest text-foreground">Шүүлтүүр</Text>
+        
         {activeCount > 0 ? (
-          <TouchableOpacity onPress={resetAll} style={s.resetBtn}>
-            <Text style={s.resetTxt}>Арилгах ({activeCount})</Text>
+          <TouchableOpacity onPress={resetAll} className="flex-row items-center gap-1 bg-red-50 px-3 py-1.5 rounded-full">
+            <RotateCcw size={12} className="text-red-500" />
+            <Text className="text-[10px] font-black text-red-500 uppercase">{activeCount}</Text>
           </TouchableOpacity>
         ) : (
-          <View style={{ width: 40 }} />
+          <View className="w-10" />
         )}
       </View>
 
       {loading ? (
-        <View style={s.center}><ActivityIndicator color={Colors.primary} size="large" /></View>
+        <View className="flex-1 items-center justify-center"><ActivityIndicator color={Colors.primary} size="large" /></View>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.content}>
+        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerClassName="p-6 gap-6">
 
-          {/* Search Card */}
-          <View style={s.card}>
-            <View style={s.searchBar}>
-              <Ionicons name="search" size={18} color={Colors.textLight} />
-              <TextInput
-                style={s.searchInput}
-                placeholder="Хаяг, дүүрэг, байрны нэр..."
-                placeholderTextColor={Colors.textLight}
-                value={keyword}
-                onChangeText={setKeyword}
-              />
-              {keyword.length > 0 && (
-                <TouchableOpacity onPress={() => setKeyword('')}>
-                  <Ionicons name="close-circle" size={18} color={Colors.textLight} />
-                </TouchableOpacity>
-              )}
-            </View>
+            {/* Search Box */}
+          <View className="bg-card border border-border rounded-[32px] p-5 shadow-sm">
+             <View className="flex-row items-center bg-secondary/50 rounded-2xl px-4 py-3 gap-3">
+               <Search size={18} className="text-muted-foreground" />
+               <TextInput
+                 className="flex-1 text-sm font-bold text-foreground h-10"
+                 placeholder="Байрны нэр, хаяг..."
+                 placeholderTextColor="#94a3b8"
+                 value={keyword}
+                 onChangeText={setKeyword}
+               />
+               {keyword.length > 0 && (
+                 <TouchableOpacity onPress={() => setKeyword('')}>
+                    <X size={16} className="text-muted-foreground" />
+                 </TouchableOpacity>
+               )}
+             </View>
           </View>
 
-          {/* Categories from API */}
-          <View style={s.card}>
-            <Text style={s.sectionTitle}>Байрны төрөл</Text>
-            <View style={s.chipRow}>
+          {/* Categories */}
+          <Section icon={Home} title="Байрны төрөл">
+            <View className="flex-row flex-wrap gap-2">
               {categories.map(c => (
-                <TouchableOpacity
-                  key={c.id}
-                  style={[s.chip, category === String(c.id) && s.chipOn]}
-                  onPress={() => setCategory(category === String(c.id) ? '' : String(c.id))}
-                  activeOpacity={0.8}
-                >
-                  <Text style={[s.chipTxt, category === String(c.id) && s.chipTxtOn]}>{c.name}</Text>
-                </TouchableOpacity>
+                <Chip 
+                  key={c.id} 
+                  label={c.name} 
+                  active={category === String(c.id)} 
+                  onPress={() => setCategory(category === String(c.id) ? '' : String(c.id))} 
+                />
               ))}
             </View>
-          </View>
+          </Section>
 
-          {/* Price type */}
-          <View style={s.card}>
-            <Text style={s.sectionTitle}>Гэрээний төрөл</Text>
-            <View style={s.chipRow}>
+          {/* Price types */}
+          <Section icon={Calendar} title="Гэрээний төрөл">
+            <View className="flex-row flex-wrap gap-2">
               {PRICE_TYPES.map(p => (
-                <TouchableOpacity
-                  key={p}
-                  style={[s.chip, priceType === p && s.chipOn]}
-                  onPress={() => setPriceType(priceType === p ? '' : p)}
-                  activeOpacity={0.8}
-                >
-                  <Text style={[s.chipTxt, priceType === p && s.chipTxtOn]}>{PRICE_LABELS[p]}</Text>
-                </TouchableOpacity>
+                <Chip 
+                  key={p} 
+                  label={PRICE_LABELS[p]} 
+                  active={priceType === p} 
+                  onPress={() => setPriceType(priceType === p ? '' : p)} 
+                />
               ))}
             </View>
-          </View>
+          </Section>
 
           {/* Price range */}
-          <View style={s.card}>
-            <Text style={s.sectionTitle}>Үнийн хязгаар (₮)</Text>
-            <View style={s.rangeRow}>
-              <View style={s.rangeInputWrap}>
-                <TextInput style={s.rangeInput} placeholder="Доод үнэ" placeholderTextColor={Colors.textLight}
-                  value={minPrice} onChangeText={setMinPrice} keyboardType="numeric" />
+          <Section icon={DollarSign} title="Үнийн хязгаар (₮)">
+            <View className="flex-row items-center gap-3">
+              <View className="flex-1 bg-secondary/50 rounded-2xl px-4 h-14 justify-center">
+                <TextInput className="text-sm font-bold text-foreground" placeholder="Доод үнэ" keyboardType="numeric" value={minPrice} onChangeText={setMinPrice} />
               </View>
-              <Text style={s.dash}>–</Text>
-              <View style={s.rangeInputWrap}>
-                <TextInput style={s.rangeInput} placeholder="Дээд үнэ" placeholderTextColor={Colors.textLight}
-                  value={maxPrice} onChangeText={setMaxPrice} keyboardType="numeric" />
+              <Text className="text-muted-foreground font-bold">-</Text>
+              <View className="flex-1 bg-secondary/50 rounded-2xl px-4 h-14 justify-center">
+                <TextInput className="text-sm font-bold text-foreground" placeholder="Дээд үнэ" keyboardType="numeric" value={maxPrice} onChangeText={setMaxPrice} />
               </View>
             </View>
-          </View>
+          </Section>
 
-          {/* Regions from API */}
-          <View style={s.card}>
-            <Text style={s.sectionTitle}>Дүүрэг</Text>
-            <View style={s.chipRow}>
+          {/* Regions */}
+          <Section icon={MapPin} title="Дүүрэг">
+            <View className="flex-row flex-wrap gap-2">
               {regions.filter(r => !r.parent_id).map(r => (
-                <TouchableOpacity
-                  key={r.id}
-                  style={[s.chip, region === String(r.id) && s.chipOn]}
-                  onPress={() => setRegion(region === String(r.id) ? '' : String(r.id))}
-                  activeOpacity={0.8}
-                >
-                  <Text style={[s.chipTxt, region === String(r.id) && s.chipTxtOn]}>{r.name}</Text>
-                </TouchableOpacity>
+                <Chip 
+                  key={r.id} 
+                  label={r.name} 
+                  active={region === String(r.id)} 
+                  onPress={() => setRegion(region === String(r.id) ? '' : String(r.id))} 
+                />
               ))}
             </View>
-          </View>
+          </Section>
 
-          {/* Area range */}
-          <View style={s.card}>
-            <Text style={s.sectionTitle}>Талбай (м²)</Text>
-            <View style={s.rangeRow}>
-              <View style={s.rangeInputWrap}>
-                <TextInput style={s.rangeInput} placeholder="Доод м²" placeholderTextColor={Colors.textLight}
-                  value={minArea} onChangeText={setMinArea} keyboardType="numeric" />
-              </View>
-              <Text style={s.dash}>–</Text>
-              <View style={s.rangeInputWrap}>
-                <TextInput style={s.rangeInput} placeholder="Дээд м²" placeholderTextColor={Colors.textLight}
-                  value={maxArea} onChangeText={setMaxArea} keyboardType="numeric" />
-              </View>
-            </View>
-          </View>
+          {/* Area */}
+          <Section icon={Maximize} title="Талбай (м²)">
+             <View className="flex-row items-center gap-3">
+               <View className="flex-1 bg-secondary/50 rounded-2xl px-4 h-14 justify-center">
+                 <TextInput className="text-sm font-bold text-foreground" placeholder="Доод м²" keyboardType="numeric" value={minArea} onChangeText={setMinArea} />
+               </View>
+               <Text className="text-muted-foreground font-bold">-</Text>
+               <View className="flex-1 bg-secondary/50 rounded-2xl px-4 h-14 justify-center">
+                 <TextInput className="text-sm font-bold text-foreground" placeholder="Дээд м²" keyboardType="numeric" value={maxArea} onChangeText={setMaxArea} />
+               </View>
+             </View>
+          </Section>
 
-        </ScrollView>
+          </ScrollView>
       )}
 
-      <View style={s.footer}>
-        <TouchableOpacity style={s.btnApply} onPress={applyFilters} activeOpacity={0.85}>
-          <Text style={s.btnApplyTxt}>Хайлт хийх</Text>
-        </TouchableOpacity>
+      {/* Footer */}
+      <View className="p-6 bg-card border-t border-border">
+         <TouchableOpacity 
+           onPress={applyFilters}
+           activeOpacity={0.8}
+           className="bg-primary h-16 rounded-3xl items-center justify-center shadow-lg shadow-primary/20"
+         >
+           <Text className="text-white font-black text-base uppercase tracking-widest">Шүүлт хэрэглэх</Text>
+         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
 
-const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.bg },
-  content: { paddingBottom: 20 },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  
-  topBar: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 15,
-    backgroundColor: Colors.white,
-  },
-  topBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.bg, alignItems: 'center', justifyContent: 'center' },
-  headerTitle: { fontSize: 16, fontWeight: '800', color: Colors.text, textTransform: 'uppercase', letterSpacing: 0.5 },
-  resetBtn: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 12, backgroundColor: Colors.red + '10' },
-  resetTxt: { fontSize: 12, color: Colors.red, fontWeight: '700' },
+function Section({ icon: Icon, title, children }: any) {
+  return (
+    <View className="bg-card border border-border rounded-[32px] p-6 shadow-sm shadow-black/5">
+      <View className="flex-row items-center gap-2 mb-4">
+        <Icon size={16} className="text-primary" />
+        <Text className="text-xs font-black text-muted-foreground uppercase tracking-widest">{title}</Text>
+      </View>
+      {children}
+    </View>
+  );
+}
 
-  card: {
-    marginHorizontal: 20, marginTop: 15,
-    backgroundColor: Colors.white, borderRadius: 24, padding: 20,
-    ...Platform.select({
-      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.04, shadowRadius: 10 },
-      android: { elevation: 2 },
-    }),
-  },
-
-  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.bg, borderRadius: 16, paddingHorizontal: 15, paddingVertical: 12, gap: 10 },
-  searchInput: { flex: 1, fontSize: 14, color: Colors.text, fontWeight: '600' },
-
-  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: Colors.textLight, marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1 },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, backgroundColor: Colors.bg, borderWidth: 1, borderColor: 'transparent' },
-  chipOn: { backgroundColor: Colors.primary + '10', borderColor: Colors.primary },
-  chipTxt: { fontSize: 13, fontWeight: '600', color: Colors.textMuted },
-  chipTxtOn: { color: Colors.primary, fontWeight: '700' },
-
-  rangeRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  rangeInputWrap: { flex: 1, backgroundColor: Colors.bg, borderRadius: 16 },
-  rangeInput: { paddingVertical: 12, paddingHorizontal: 15, fontSize: 14, color: Colors.text, fontWeight: '600' },
-  dash: { fontSize: 18, color: Colors.textLight, fontWeight: '700' },
-
-  footer: { 
-    paddingHorizontal: 20, paddingVertical: 15, backgroundColor: Colors.white,
-    ...Platform.select({
-      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: -4 }, shadowOpacity: 0.05, shadowRadius: 10 },
-      android: { elevation: 10 },
-    }),
-  },
-  btnApply: { backgroundColor: Colors.primary, borderRadius: 24, paddingVertical: 16, alignItems: 'center' },
-  btnApplyTxt: { fontSize: 16, fontWeight: 'bold', color: Colors.white, letterSpacing: 0.5 },
-});
+function Chip({ label, active, onPress }: { label: string, active: boolean, onPress: () => void }) {
+  return (
+    <TouchableOpacity 
+      onPress={onPress}
+      activeOpacity={0.7}
+      className={cn(
+        "px-5 py-2.5 rounded-2xl border transition-all",
+        active ? "bg-primary border-primary" : "bg-secondary/50 border-transparent"
+      )}
+    >
+      <Text className={cn(
+        "text-xs font-bold",
+        active ? "text-white" : "text-foreground"
+      )}>{label}</Text>
+    </TouchableOpacity>
+  );
+}

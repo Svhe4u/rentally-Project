@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet,
+  View, Text, TouchableOpacity,
   FlatList, SafeAreaView, ActivityIndicator, RefreshControl, Image,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '../constants/colors';
+import { SquarePen, MessageSquareOff, CheckCheck, Check } from 'lucide-react-native';
 import { MessageThreadAPI, MessageThread } from '../services/api';
 import BottomNav, { TabName } from '../components/BottomNav';
 import { useAuth } from '../context/AuthContext';
+import { Colors } from '../constants/colors';
+import { cn } from '../utils/cn';
 
 interface Props {
   onNavigate: (target: TabName | string, params?: any) => void;
@@ -29,7 +30,7 @@ const formatSimpleTime = (d: string) => {
   return date.toLocaleDateString('mn-MN', { month: 'short', day: 'numeric' });
 };
 
-const AVATAR_COLORS = ['#2e55fa', '#ff6b6b', '#f0ad00', '#20c997', '#845ef7', '#ff922b'];
+const AVATAR_COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#10b981', '#8b5cf6', '#f97316'];
 const getAvatarColor = (id: number) => AVATAR_COLORS[id % AVATAR_COLORS.length];
 
 export default function MessagesScreen({ onNavigate }: Props) {
@@ -54,62 +55,84 @@ export default function MessagesScreen({ onNavigate }: Props) {
 
   useEffect(() => { load(); }, [load]);
 
-  const renderItem = ({ item }: { item: MessageThread }) => (
-    <TouchableOpacity
-      style={s.thread}
-      onPress={() => onNavigate('chat', {
-        senderId: currentUser?.id,
-        receiverId: item.partner_id,
-        listingId: item.listing_id,
-        receiverName: item.partner_name,
-      })}
-      activeOpacity={0.7}
-    >
-      {/* Avatar Container */}
-      <View style={s.avatarContainer}>
-        {item.partner_avatar ? (
-          <Image source={{ uri: item.partner_avatar }} style={s.avatar} />
-        ) : (
-          <View style={[s.avatar, { backgroundColor: getAvatarColor(item.partner_id) }]}>
-            <Text style={s.avatarLtr}>{item.partner_name?.[0]?.toUpperCase() ?? '?'}</Text>
-          </View>
-        )}
-      </View>
-
-      {/* Text Content */}
-      <View style={s.textContainer}>
-        <View style={s.row}>
-          <Text style={[s.name, item.unread_count > 0 && s.unreadText]} numberOfLines={1}>
-            {item.partner_name}
-          </Text>
-          <Text style={[s.time, item.unread_count > 0 && s.unreadTime]}>
-            {formatSimpleTime(item.last_message_created)}
-          </Text>
-        </View>
-
-        <View style={s.row}>
-          <Text style={[s.preview, item.unread_count > 0 && s.unreadText]} numberOfLines={1}>
-            {item.is_outgoing ? 'Та: ' : ''}{item.last_message_text}
-          </Text>
-          {item.unread_count > 0 && (
-            <View style={s.unreadDot} />
+  const renderItem = ({ item }: { item: MessageThread }) => {
+    const hasUnread = item.unread_count > 0;
+    
+    return (
+      <TouchableOpacity
+        className="flex-row items-center px-5 py-4"
+        onPress={() => onNavigate('chat', {
+          senderId: currentUser?.id,
+          receiverId: item.partner_id,
+          listingId: item.listing_id,
+          receiverName: item.partner_name,
+        })}
+        activeOpacity={0.7}
+      >
+        <View className="relative">
+          {item.partner_avatar ? (
+            <Image source={{ uri: item.partner_avatar }} className="w-16 h-16 rounded-full" />
+          ) : (
+            <View 
+              className="w-16 h-16 rounded-full items-center justify-center border-2 border-white" 
+              style={{ backgroundColor: getAvatarColor(item.partner_id) }}
+            >
+              <Text className="text-2xl font-black text-white">{item.partner_name?.[0]?.toUpperCase() ?? '?'}</Text>
+            </View>
           )}
+          {/* Online indicator mock */}
+          <View className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-green-500 border-2 border-white" />
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+
+        <View className="flex-1 ml-4 justify-center">
+          <View className="flex-row justify-between items-center mb-1">
+            <Text className={cn("text-base font-black tracking-tight", hasUnread ? "text-foreground" : "text-foreground/80")} numberOfLines={1}>
+              {item.partner_name}
+            </Text>
+            <Text className={cn("text-xs font-bold", hasUnread ? "text-primary" : "text-muted-foreground")}>
+              {formatSimpleTime(item.last_message_created)}
+            </Text>
+          </View>
+
+          <View className="flex-row items-center">
+            {item.is_outgoing && (
+              <View className="mr-1">
+                {hasUnread ? (
+                  <Check size={14} className="text-muted-foreground" />
+                ) : (
+                  <CheckCheck size={14} className="text-primary" />
+                )}
+              </View>
+            )}
+            <Text className={cn("text-sm flex-1", hasUnread ? "text-foreground font-black" : "text-muted-foreground font-medium")} numberOfLines={1}>
+              {item.last_message_text}
+            </Text>
+            {hasUnread && (
+              <View className="bg-primary w-5 h-5 rounded-full items-center justify-center ml-2">
+                <Text className="text-[10px] font-black text-white">{item.unread_count}</Text>
+              </View>
+            )}
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
-    <SafeAreaView style={s.safe}>
-      <View style={s.header}>
-        <Text style={s.headerTitle}>Чатууд</Text>
-        <TouchableOpacity style={s.addBtn}>
-          <Ionicons name="create-outline" size={22} color={Colors.text} />
+    <SafeAreaView className="flex-1 bg-background" style={{ flex: 1 }}>
+      {/* Header */}
+      <View className="px-5 py-4 border-b border-border flex-row items-center justify-between">
+        <View>
+          <Text className="text-2xl font-black text-foreground tracking-tight">Чатууд</Text>
+          <Text className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Таны харилцан ярианууд</Text>
+        </View>
+        <TouchableOpacity className="w-10 h-10 rounded-xl bg-secondary items-center justify-center border border-border">
+          <SquarePen size={20} className="text-foreground" />
         </TouchableOpacity>
       </View>
 
       {loading && !refreshing ? (
-        <View style={s.center}>
+        <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="small" color={Colors.primary} />
         </View>
       ) : (
@@ -117,63 +140,27 @@ export default function MessagesScreen({ onNavigate }: Props) {
           data={threads}
           keyExtractor={item => String(item.partner_id)}
           renderItem={renderItem}
-          contentContainerStyle={s.listContent}
+          className="flex-1"
+          contentContainerClassName="py-2 pb-24"
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => load(true)}
-              tintColor={Colors.primary}
-            />
+            <RefreshControl refreshing={refreshing} onRefresh={() => load(true)} tintColor={Colors.primary} />
           }
           ListEmptyComponent={
-            <View style={s.emptyBox}>
-              <Ionicons name="chatbubble-ellipses-outline" size={60} color="#eee" />
-              <Text style={s.emptyTxt}>Мессеж байхгүй байна</Text>
+            <View className="flex-1 items-center justify-center pt-32 px-10 gap-4">
+              <View className="w-20 h-20 bg-muted rounded-full items-center justify-center">
+                <MessageSquareOff size={40} className="text-muted-foreground/30" />
+              </View>
+              <Text className="text-lg font-black text-foreground text-center">Мессеж байхгүй байна</Text>
+              <Text className="text-sm font-medium text-muted-foreground text-center">
+                Түрээсийн зарууд дээр очиж эзэнтэй нь чатлаж эхлээрэй.
+              </Text>
             </View>
           }
         />
       )}
-      <BottomNav active="message" onNavigate={onNavigate} />
+      
+      <BottomNav active="messages" onNavigate={onNavigate} />
     </SafeAreaView>
   );
 }
-
-const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.white },
-  header: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingTop: 15, paddingBottom: 10,
-  },
-  headerTitle: { fontSize: 22, fontWeight: '900', color: Colors.text, textTransform: 'uppercase', letterSpacing: 0.5 },
-  addBtn: {
-    width: 36, height: 36, borderRadius: 18, 
-    backgroundColor: '#f5f5f5', alignItems: 'center', justifyContent: 'center'
-  },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  listContent: { paddingVertical: 8 },
-  
-  thread: {
-    flexDirection: 'row', alignItems: 'center',
-    paddingHorizontal: 20, paddingVertical: 10,
-  },
-  avatarContainer: { position: 'relative' },
-  avatar: {
-    width: 60, height: 60, borderRadius: 30,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  avatarLtr: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
-  
-  textContainer: { flex: 1, marginLeft: 14, justifyContent: 'center' },
-  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  name: { fontSize: 16, fontWeight: '600', color: Colors.text, marginBottom: 2 },
-  time: { fontSize: 13, color: Colors.textMuted },
-  preview: { fontSize: 14, color: Colors.textMuted, flex: 1, marginRight: 8 },
-  
-  unreadText: { fontWeight: 'bold', color: Colors.text },
-  unreadTime: { color: Colors.primary, fontWeight: '600' },
-  unreadDot: { width: 12, height: 12, borderRadius: 6, backgroundColor: Colors.primary },
-  
-  emptyBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 100 },
-  emptyTxt: { marginTop: 12, fontSize: 16, color: Colors.textMuted, fontWeight: '500' },
-});

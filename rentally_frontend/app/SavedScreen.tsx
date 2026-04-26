@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  View, Text, StyleSheet, FlatList, SafeAreaView,
-  ActivityIndicator, Alert, RefreshControl, Platform
+  View, Text, FlatList, SafeAreaView,
+  ActivityIndicator, Alert, RefreshControl, TouchableOpacity
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '../constants/colors';
+import { HeartOff, Bell } from 'lucide-react-native';
 import { FavoriteAPI, Favorite, ListingAPI } from '../services/api';
 import BottomNav, { TabName } from '../components/BottomNav';
 import ListingCard from '../components/ListingCard';
+import { Colors } from '../constants/colors';
 
 interface Props {
   onNavigate: (tab: TabName) => void;
@@ -28,15 +28,13 @@ interface FavoriteWithDetails {
   details?: { area_sqm?: number; floor_number?: number; bedrooms?: number };
   rating_avg?: number | null;
   review_count?: number;
-  region?: { name: string; parent_name?: string };
   region_name?: string;
 }
 
-export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Props) {
+export default function SavedScreen({ onNavigate, onOpenDetail }: Props) {
   const [items, setItems]     = useState<FavoriteWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [removing, setRemoving] = useState<number | null>(null);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -45,11 +43,8 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
       const favData = await FavoriteAPI.list();
       const favs: Favorite[] = (favData as any).results ?? favData ?? [];
 
-      // Enrich each favorite with full listing details
       const enriched = await Promise.allSettled(
-        favs.map(f =>
-          ListingAPI.detail(f.listing).catch(() => null)
-        )
+        favs.map(f => ListingAPI.detail(f.listing).catch(() => null))
       );
 
       const enrichedItems: FavoriteWithDetails[] = enriched
@@ -70,7 +65,6 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
             rating_avg: listing.average_rating ?? listing.rating_avg,
             review_count: listing.review_count,
             region_name: listing.region_name,
-            region: listing.region_name ? { name: listing.region_name } : listing.region,
           };
         })
         .filter(Boolean) as FavoriteWithDetails[];
@@ -82,32 +76,28 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
       setLoading(false);
       setRefreshing(false);
     }
-  }, [userId]);
+  }, []);
 
   useEffect(() => { load(); }, [load]);
 
   const handleRemove = async (id: number) => {
-    setRemoving(id);
     try {
       await FavoriteAPI.remove(id);
       setItems(prev => prev.filter(f => f.listing_id !== id));
     } catch (e: any) {
       Alert.alert('Алдаа', e.message);
-    } finally {
-      setRemoving(null);
     }
   };
 
   const renderItem = ({ item }: { item: FavoriteWithDetails }) => (
-    <View style={s.cardWrap}>
+    <View className="px-5 mb-5">
       <ListingCard
         id={item.listing_id}
         title={item.title ?? `Байр #${item.listing_id}`}
         price={Number(item.price ?? 0)}
         priceType={item.price_type ?? 'monthly'}
         address={item.address}
-        regionName={item.region_name ?? item.region?.name}
-        districtName={item.region?.parent_name}
+        regionName={item.region_name}
         imageUrl={item.images?.[0]?.image_url}
         area={item.details?.area_sqm != null ? Number(item.details.area_sqm) : undefined}
         rooms={item.details?.bedrooms != null ? Number(item.details.bedrooms) : undefined}
@@ -121,42 +111,51 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
   );
 
   return (
-    <SafeAreaView style={s.safe}>
-      <View style={s.topBar}>
-        <Text style={s.logo}>РЕНТАЛ<Text style={s.logoAccent}>ЛИ</Text></Text>
-        <View style={s.countBadge}>
-          <Text style={s.countTxt}>{items.length}</Text>
+    <SafeAreaView className="flex-1 bg-background" style={{ flex: 1 }}>
+      {/* Top Bar */}
+      <View className="bg-background px-5 py-4 border-b border-border flex-row items-center justify-between">
+        <View>
+          <Text className="text-xl font-black text-primary tracking-tight">РЕНТАЛ<Text className="text-amber-400">ЛИ</Text></Text>
+          <Text className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Таны хадгалсан байрнууд</Text>
+        </View>
+        <View className="flex-row items-center gap-3">
+          <View className="bg-primary/10 px-3 py-1.5 rounded-full">
+            <Text className="text-xs font-black text-primary">{items.length} байр</Text>
+          </View>
         </View>
       </View>
 
-      <View style={s.pageHeader}>
-        <Text style={s.headerTitle}>Хадгалсан</Text>
-      </View>
-
       {loading ? (
-        <View style={s.center}>
+        <View className="flex-1 items-center justify-center p-10">
           <ActivityIndicator size="large" color={Colors.primary} />
-          <Text style={s.loadingTxt}>Уншиж байна...</Text>
+          <Text className="mt-4 text-sm font-bold text-muted-foreground">Ачаалж байна...</Text>
         </View>
       ) : (
         <FlatList
           data={items}
           keyExtractor={item => String(item.listing_id)}
           renderItem={renderItem}
-          contentContainerStyle={s.list}
+          className="flex-1"
+          contentContainerClassName="pt-5 pb-24"
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => load(true)}
-              tintColor={Colors.primary}
-            />
+            <RefreshControl refreshing={refreshing} onRefresh={() => load(true)} tintColor={Colors.primary} />
           }
           ListEmptyComponent={
-            <View style={s.emptyBox}>
-              <Ionicons name="heart-dislike-outline" size={64} color={Colors.textLight} />
-              <Text style={s.emptyTxt}>Хадгалсан байр байхгүй</Text>
-              <Text style={s.emptySub}>Байрны зар дээр ❤️ дарж хадгалаарай</Text>
+            <View className="items-center justify-center pt-24 px-10 gap-4">
+              <View className="w-20 h-20 bg-muted rounded-full items-center justify-center">
+                <HeartOff size={40} className="text-muted-foreground/30" />
+              </View>
+              <Text className="text-lg font-black text-foreground text-center">Хадгалсан байр байхгүй</Text>
+              <Text className="text-sm font-medium text-muted-foreground text-center">
+                Байрны зар дээр зүрх дарж хадгалснаар энд гарч ирэх болно.
+              </Text>
+              <TouchableOpacity 
+                className="mt-4 bg-primary px-8 py-4 rounded-2xl"
+                onPress={() => onNavigate('home')}
+              >
+                <Text className="text-white font-black">Байр хайх</Text>
+              </TouchableOpacity>
             </View>
           }
         />
@@ -166,37 +165,3 @@ export default function SavedScreen({ onNavigate, onOpenDetail, userId = 1 }: Pr
     </SafeAreaView>
   );
 }
-
-const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.bg },
-  topBar: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 15,
-    backgroundColor: Colors.white,
-  },
-  logo: { fontSize: 20, fontWeight: '900', color: Colors.primary, letterSpacing: 1 },
-  logoAccent: { color: Colors.yellow },
-  
-  pageHeader: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: 10 },
-  headerTitle: { fontSize: 22, fontWeight: '900', color: Colors.text, textTransform: 'uppercase', letterSpacing: 0.5 },
-  
-  countBadge: {
-    backgroundColor: Colors.primary + '15',
-    paddingHorizontal: 12, paddingVertical: 6,
-    borderRadius: 14,
-  },
-  countTxt: { fontSize: 13, fontWeight: 'bold', color: Colors.primary },
-  
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
-  loadingTxt: { fontSize: 14, color: Colors.textMuted, fontWeight: '600' },
-  
-  list: { paddingHorizontal: 16, paddingBottom: 20 },
-  cardWrap: { marginBottom: 15 },
-  
-  emptyBox: {
-    flex: 1, alignItems: 'center', justifyContent: 'center',
-    paddingTop: 100, paddingHorizontal: 32, gap: 12,
-  },
-  emptyTxt:  { fontSize: 18, fontWeight: '800', color: Colors.text, textAlign: 'center' },
-  emptySub:  { fontSize: 14, color: Colors.textMuted, fontWeight: '600', textAlign: 'center' },
-});

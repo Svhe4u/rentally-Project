@@ -113,6 +113,16 @@ class ListingService:
         if filters.get('created_after'):
             queryset = queryset.filter(created_at__gte=filters['created_after'])
 
+        # Geographic bounds (Map viewport)
+        if filters.get('min_lat'):
+            queryset = queryset.filter(latitude__gte=filters['min_lat'])
+        if filters.get('max_lat'):
+            queryset = queryset.filter(latitude__lte=filters['max_lat'])
+        if filters.get('min_lng'):
+            queryset = queryset.filter(longitude__gte=filters['min_lng'])
+        if filters.get('max_lng'):
+            queryset = queryset.filter(longitude__lte=filters['max_lng'])
+
         if ordering:
             if isinstance(ordering, str):
                 queryset = queryset.order_by(ordering)

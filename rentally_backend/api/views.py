@@ -146,6 +146,10 @@ class ListingListAPIView(APIView):
             'min_area': request.query_params.get('min_area'),
             'max_area': request.query_params.get('max_area'),
             'bedrooms': request.query_params.get('bedrooms'),
+            'min_lat':  request.query_params.get('min_lat'),
+            'max_lat':  request.query_params.get('max_lat'),
+            'min_lng':  request.query_params.get('min_lng'),
+            'max_lng':  request.query_params.get('max_lng'),
         }
         ordering = request.query_params.get('ordering')
         

@@ -1,64 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, ScrollView,
-  SafeAreaView, Platform, ActivityIndicator, Alert,
+  View, Text, TouchableOpacity, ScrollView,
+  SafeAreaView, Alert,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { 
+  Settings, 
+  ChevronRight, 
+  Heart, 
+  MessageSquare, 
+  Calendar, 
+  Building2, 
+  User, 
+  ShieldCheck, 
+  Bell, 
+  HelpCircle, 
+  Info, 
+  LogOut,
+  Camera,
+  Star
+} from 'lucide-react-native';
 import { Colors } from '../constants/colors';
 import BottomNav, { TabName } from '../components/BottomNav';
 import { useAuth } from '../context/AuthContext';
 import { FavoriteAPI, MessageThreadAPI, BookingAPI } from '../services/api';
+import { cn } from '../utils/cn';
 
 interface Props {
   onNavigate: (tab: TabName) => void;
 }
 
-interface MenuItemProps {
-  icon: keyof typeof Ionicons.glyphMap;
-  iconColor?: string;
-  title: string;
-  sub?: string;
-  onPress?: () => void;
-  isDestructive?: boolean;
-}
-
-function MenuItem({ icon, iconColor = Colors.primary, title, sub, onPress, isDestructive }: MenuItemProps) {
-  const textColor = isDestructive ? Colors.red : Colors.text;
-  const bgColor = isDestructive ? Colors.red + '10' : iconColor + '18';
-  const iColor = isDestructive ? Colors.red : iconColor;
-
+function MenuItem({ icon: Icon, title, sub, onPress, isDestructive }: any) {
   return (
-    <TouchableOpacity style={m.menuItem} onPress={onPress} activeOpacity={0.7}>
-      <View style={m.menuLeft}>
-        <View style={[m.iconWrap, { backgroundColor: bgColor }]}>
-          <Ionicons name={icon} size={18} color={iColor} />
+    <TouchableOpacity 
+      className="flex-row items-center justify-between px-5 py-4" 
+      onPress={onPress} 
+      activeOpacity={0.7}
+    >
+      <View className="flex-row items-center gap-4">
+        <View className={cn(
+          "w-10 h-10 rounded-xl items-center justify-center",
+          isDestructive ? "bg-red-50" : "bg-primary/5"
+        )}>
+          <Icon size={20} className={cn(isDestructive ? "text-red-500" : "text-primary")} />
         </View>
         <View>
-          <Text style={[m.menuTitle, { color: textColor }]}>{title}</Text>
-          {sub && <Text style={m.menuSub}>{sub}</Text>}
+          <Text className={cn("text-base font-bold", isDestructive ? "text-red-500" : "text-foreground")}>{title}</Text>
+          {sub && <Text className="text-xs font-medium text-muted-foreground mt-0.5">{sub}</Text>}
         </View>
       </View>
-      <Ionicons name="chevron-forward" size={18} color={isDestructive ? Colors.red + '40' : "#ccc"} />
+      <ChevronRight size={18} className="text-muted-foreground/30" />
     </TouchableOpacity>
   );
 }
 
-interface StatItemProps {
-  icon: keyof typeof Ionicons.glyphMap;
-  iconColor: string;
-  label: string;
-  count: number;
-  onPress?: () => void;
-}
-
-function StatItem({ icon, iconColor, label, count, onPress }: StatItemProps) {
+function StatItem({ icon: Icon, label, count, onPress }: any) {
   return (
-    <TouchableOpacity style={m.statItem} onPress={onPress} activeOpacity={0.7}>
-      <View style={[m.statIconWrap, { backgroundColor: iconColor + '18' }]}>
-        <Ionicons name={icon} size={20} color={iconColor} />
+    <TouchableOpacity className="flex-1 items-center gap-2" onPress={onPress} activeOpacity={0.7}>
+      <View className="w-12 h-12 rounded-2xl bg-card items-center justify-center border border-border shadow-sm shadow-black/5">
+        <Icon size={22} className="text-primary" />
       </View>
-      <Text style={m.statCount}>{count}</Text>
-      <Text style={m.statLabel}>{label}</Text>
+      <View className="items-center">
+        <Text className="text-lg font-black text-foreground tracking-tight">{count}</Text>
+        <Text className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{label}</Text>
+      </View>
     </TouchableOpacity>
   );
 }
@@ -66,7 +70,6 @@ function StatItem({ icon, iconColor, label, count, onPress }: StatItemProps) {
 export default function ProfileScreen({ onNavigate }: Props) {
   const { user, logout } = useAuth();
   const [stats, setStats] = useState({ favorites: 0, messages: 0, bookings: 0 });
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -90,259 +93,117 @@ export default function ProfileScreen({ onNavigate }: Props) {
   }, [user]);
 
   const handleLogout = () => {
-    // Platform-specific logout confirmation for reliability
-    if (Platform.OS === 'web') {
-      const confirmed = window.confirm('Та системээс гарахдаа итгэлтэй байна уу?');
-      if (confirmed) logout();
-      return;
-    }
-
     Alert.alert(
       'Системээс гарах',
       'Та системээс гарахдаа итгэлтэй байна уу?',
       [
-        { text: 'Үгүй', style: 'cancel' },
-        { text: 'Тийм, гарах', style: 'destructive', onPress: logout }
-      ]
-    );
-  };
-
-  const handleApplyBroker = () => {
-    if (loading) return;
-    Alert.alert(
-      'Зуучлагчаар бүртгүүлэх',
-      'Та зуучлагчаар бүртгүүлж, өөрийн үл хөдлөх хөрөнгийн зарыг оруулахыг хүсэж байна уу?',
-      [
         { text: 'Буцах', style: 'cancel' },
-        {
-          text: 'Хүсэлт илгээх',
-          onPress: async () => {
-            setLoading(true);
-            try {
-              // Mocking a successful application since we don't have a full form yet
-              // In reality, this would open a form screen or call BrokerAPI.apply
-              setTimeout(() => {
-                Alert.alert('Амжилттай', 'Таны хүсэлтийг хүлээн авлаа. Бид удахгүй тантай холбогдох болно.');
-                setLoading(false);
-              }, 1500);
-            } catch (e: any) {
-              Alert.alert('Алдаа', e.message);
-              setLoading(false);
-            }
-          }
-        }
+        { text: 'Гарах', style: 'destructive', onPress: logout }
       ]
     );
-  };
-  const handleSoon = (title: string) => {
-    Alert.alert(title, 'Энэ хэсэг тун удахгүй нэмэгдэх болно. Түр хүлээнэ үү.');
   };
 
   const userInitials = user?.username?.slice(0, 2).toUpperCase() || '??';
 
   return (
-    <SafeAreaView style={m.safe}>
+    <SafeAreaView className="flex-1 bg-background" style={{ flex: 1 }}>
       <ScrollView
-        style={m.scroll}
+        className="flex-1"
+        style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={m.scrollContent}
+        contentContainerClassName="pt-6 pb-32"
       >
-
-
-        {/* User info card */}
-        <View style={m.userCard}>
-          <View style={m.avatarWrap}>
-            <View style={m.avatar}>
-              <Text style={m.avatarTxt}>{userInitials}</Text>
+        {/* User Card */}
+        <View className="mx-5 bg-card border border-border rounded-[32px] p-6 shadow-sm shadow-black/5 relative overflow-hidden">
+          <View className="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full" />
+          
+          <View className="flex-row items-center">
+            <View className="relative">
+              <View className="w-20 h-20 rounded-full bg-primary/10 items-center justify-center border-2 border-primary/20">
+                <Text className="text-3xl font-black text-primary">{userInitials}</Text>
+              </View>
+              <TouchableOpacity className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-primary border-4 border-white items-center justify-center shadow-sm">
+                <Camera size={12} color="white" strokeWidth={3} />
+              </TouchableOpacity>
             </View>
-            <View style={m.avatarBadge}>
-              <Ionicons name="camera-outline" size={10} color="#fff" />
-            </View>
-          </View>
-          <View style={m.userInfo}>
-            <Text style={m.userName}>{user?.username || 'Зочин'}</Text>
-            <Text style={m.userSub}>{user?.email || 'И-мэйл байхгүй'}</Text>
-            <View style={m.roleBadge}>
-              <Text style={m.roleTxt}>{user?.role === 'broker' ? 'Зуучлагч' : 'Хэрэглэгч'}</Text>
-            </View>
-          </View>
-          <TouchableOpacity style={m.editBtn}>
-            <Ionicons name="settings-outline" size={20} color={Colors.textMuted} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Stats */}
-        <View style={m.statCard}>
-          <StatItem icon="heart-outline" iconColor={Colors.red} label="Хадгалсан" count={stats.favorites} onPress={() => onNavigate('saved')} />
-          <StatItem icon="chatbubble-outline" iconColor="#845ef7" label="Мессеж" count={stats.messages} onPress={() => onNavigate('messages')} />
-          <StatItem icon="calendar-outline" iconColor={Colors.primary} label="Захиалга" count={stats.bookings} onPress={() => onNavigate('notifications')} />
-        </View>
-
-        {/* Broker Application Call to Action */}
-        {user?.role !== 'broker' && (
-          <TouchableOpacity style={m.brokerCta} activeOpacity={0.9} onPress={handleApplyBroker}>
-            <View style={m.brokerCtaLeft}>
-              {loading ? (
-                <ActivityIndicator color="#fff" size="small" />
-              ) : (
-                <Ionicons name="business-outline" size={24} color="#fff" />
-              )}
-              <View>
-                <Text style={m.brokerCtaTitle}>Зуучлагч болох уу?</Text>
-                <Text style={m.brokerCtaSub}>Үл хөдлөх хөрөнгөө түрээслүүлж эхлээрэй</Text>
+            
+            <View className="flex-1 ml-5">
+              <View className="flex-row items-center gap-2 mb-1">
+                <Text className="text-xl font-black text-foreground tracking-tight">{user?.username || 'Зочин'}</Text>
+                {user?.role === 'broker' && <Star size={16} fill="#f59e0b" color="#f59e0b" />}
+              </View>
+              <Text className="text-sm font-medium text-muted-foreground">{user?.email || 'И-мэйл байхгүй'}</Text>
+              <View className="bg-primary/10 px-2.5 py-1 rounded-full self-start mt-3">
+                <Text className="text-[10px] font-black text-primary uppercase tracking-wider">
+                  {user?.role === 'broker' ? 'Баталгаажсан зуучлагч' : 'Ренталли хэрэглэгч'}
+                </Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#fff" />
+          </View>
+        </View>
+
+        {/* Stats Row */}
+        <View className="mx-5 mt-8 flex-row items-center justify-between">
+          <StatItem icon={Heart} label="Хадгалсан" count={stats.favorites} onPress={() => onNavigate('saved')} />
+          <StatItem icon={MessageSquare} label="Мессеж" count={stats.messages} onPress={() => onNavigate('messages')} />
+          <StatItem icon={Calendar} label="Захиалга" count={stats.bookings} onPress={() => Alert.alert('Тун удахгүй')} />
+        </View>
+
+        {/* Broker CTA */}
+        {user?.role !== 'broker' && (
+          <TouchableOpacity 
+            className="mx-5 mt-10 bg-slate-900 rounded-[32px] p-6 flex-row items-center justify-between overflow-hidden relative" 
+            activeOpacity={0.9}
+            onPress={() => Alert.alert('Зуучлагч болох хүсэлт илгээх үү?')}
+          >
+            <View className="absolute -right-6 -top-10 w-24 h-24 bg-primary/20 rounded-full" />
+            <View className="flex-row items-center gap-4">
+              <View className="w-14 h-14 rounded-2xl bg-primary items-center justify-center shadow-lg shadow-primary/20">
+                <Building2 size={28} color="white" strokeWidth={1.5} />
+              </View>
+              <View className="flex-1 pr-4">
+                <Text className="text-white font-black text-lg tracking-tight">Зуучлагч болох уу?</Text>
+                <Text className="text-slate-400 text-xs font-medium mt-0.5">Үл хөдлөх хөрөнгөө түрээслүүлж, орлогоо нэмэгдүүл.</Text>
+              </View>
+            </View>
+            <ChevronRight size={20} color="white" />
           </TouchableOpacity>
         )}
 
-        {/* Settings Menu */}
-        <View style={m.menuCard}>
-          <Text style={m.sectionTitle}>Миний данс</Text>
-          <MenuItem 
-            icon="person-outline" 
-            title="Профайл засах" 
-            sub="Нэр, утасны дугаар шинэчлэх" 
-            onPress={() => onNavigate('editProfile')} 
-          />
-          <MenuItem 
-            icon="shield-checkmark-outline" 
-            title="Аюулгүй байдал" 
-            sub="Нууц үг солих, хамгаалалт" 
-            onPress={() => onNavigate('security')} 
-          />
-          <MenuItem 
-            icon="notifications-outline" 
-            title="Мэдэгдэл" 
-            sub="Мэдэгдлийн тохиргоо" 
-            onPress={() => onNavigate('notifications')} 
-          />
+        {/* Menu Sections */}
+        <View className="mx-5 mt-10 bg-card border border-border rounded-[32px] overflow-hidden">
+          <View className="px-5 pt-8 pb-4 border-b border-border/50">
+            <Text className="text-[11px] font-black text-muted-foreground uppercase tracking-[2px]">Миний тохиргоо</Text>
+          </View>
+          <MenuItem icon={User} title="Профайл засах" sub="Нэр, утасны дугаар шинэчлэх" />
+          <MenuItem icon={ShieldCheck} title="Аюулгүй байдал" sub="Нууц үг солих, хамгаалалт" />
+          <MenuItem icon={Bell} title="Мэдэгдэл" sub="Мэдэгдлийн тохиргоо" />
         </View>
 
-        <View style={m.menuCard}>
-          <Text style={m.sectionTitle}>Тусламж & Дэмжлэг</Text>
-          <MenuItem 
-            icon="help-circle-outline" 
-            title="Тусламжийн төв" 
-            sub="Түгээмэл асуулт хариулт" 
-            onPress={() => onNavigate('help')} 
-          />
-          <MenuItem 
-            icon="information-circle-outline" 
-            title="Бидний тухай" 
-            sub="Апп-ын мэдээлэл"
-            onPress={() => onNavigate('about')} 
-          />
-          <MenuItem 
-            icon="log-out-outline" 
-            title="Системээс гарах" 
-            isDestructive 
-            onPress={handleLogout} 
-          />
+        <View className="mx-5 mt-6 bg-card border border-border rounded-[32px] overflow-hidden">
+          <View className="px-5 pt-8 pb-4 border-b border-border/50">
+            <Text className="text-[11px] font-black text-muted-foreground uppercase tracking-[2px]">Дэмжлэг & Тусламж</Text>
+          </View>
+          <MenuItem icon={HelpCircle} title="Тусламжийн төв" sub="Түгээмэл асуулт хариулт" />
+          <MenuItem icon={Info} title="Бидний тухай" sub="Апп-ын мэдээлэл" />
+          <MenuItem icon={LogOut} title="Системээс гарах" isDestructive onPress={handleLogout} />
         </View>
 
-        {/* Footer info */}
-        <View style={m.footer}>
-          <Text style={m.version}>Rentally v1.0.4</Text>
-          <Text style={m.footerHours}>
-            Даваа–Баасан: 09:00 – 18:00
-          </Text>
-        </View>
+        {/* Settings Button */}
+        <TouchableOpacity className="mx-5 mt-6 bg-secondary h-16 rounded-[24px] border border-border items-center justify-center flex-row gap-2">
+          <Settings size={18} className="text-muted-foreground" />
+          <Text className="text-sm font-black text-muted-foreground">Нэмэлт тохиргоо</Text>
+        </TouchableOpacity>
 
-        <View style={{ height: 20 }} />
+        {/* Footer */}
+        <View className="mt-12 items-center">
+          <View className="w-12 h-1 bg-border rounded-full mb-4" />
+          <Text className="text-foreground/30 font-black tracking-[4px] text-[10px]">RENTALLY V1.0.4</Text>
+          <Text className="text-[9px] font-bold text-foreground/20 mt-1 uppercase">Cloud Property Management Systems</Text>
+        </View>
       </ScrollView>
 
       <BottomNav active="profile" onNavigate={onNavigate} />
     </SafeAreaView>
   );
 }
-
-const m = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.bg },
-  scroll: { flex: 1 },
-  scrollContent: { paddingBottom: 10 },
-  topBar: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 15,
-    backgroundColor: Colors.white,
-  },
-  logo: { fontSize: 20, fontWeight: '900', color: Colors.primary, letterSpacing: 1 },
-  logoAccent: { color: Colors.yellow },
-  topBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#fdf2f2', alignItems: 'center', justifyContent: 'center' },
-
-  userCard: {
-    flexDirection: 'row', alignItems: 'center',
-    margin: 20, padding: 20,
-    backgroundColor: Colors.white, borderRadius: 24,
-    ...Platform.select({
-      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 10 },
-      android: { elevation: 3 },
-    }),
-  },
-  avatarWrap: { position: 'relative' },
-  avatar: {
-    width: 65, height: 65, borderRadius: 32,
-    backgroundColor: Colors.primary + '10',
-    alignItems: 'center', justifyContent: 'center',
-    borderWidth: 1, borderColor: Colors.primary + '20',
-  },
-  avatarTxt: { fontSize: 22, fontWeight: 'bold', color: Colors.primary },
-  avatarBadge: {
-    position: 'absolute', bottom: 0, right: 0,
-    width: 22, height: 22, borderRadius: 11,
-    backgroundColor: Colors.primary, alignItems: 'center', justifyContent: 'center',
-    borderWidth: 2, borderColor: '#fff',
-  },
-  userInfo: { flex: 1, marginLeft: 15 },
-  userName: { fontSize: 18, fontWeight: 'bold', color: Colors.text },
-  userSub: { fontSize: 13, color: Colors.textMuted, marginTop: 2 },
-  roleBadge: {
-    alignSelf: 'flex-start', backgroundColor: Colors.bg,
-    paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, marginTop: 6,
-  },
-  roleTxt: { fontSize: 10, fontWeight: 'bold', color: Colors.primary, textTransform: 'uppercase' },
-  editBtn: { padding: 5 },
-
-  statCard: {
-    flexDirection: 'row',
-    marginHorizontal: 20, marginBottom: 20,
-    backgroundColor: Colors.white, borderRadius: 24,
-    paddingVertical: 20,
-  },
-  statItem: { flex: 1, alignItems: 'center' },
-  statIconWrap: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', marginBottom: 8 },
-  statCount: { fontSize: 17, fontWeight: 'bold', color: Colors.text },
-  statLabel: { fontSize: 11, color: Colors.textMuted, marginTop: 2 },
-
-  brokerCta: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    marginHorizontal: 20, marginBottom: 20,
-    backgroundColor: Colors.primary, borderRadius: 24,
-    padding: 20,
-  },
-  brokerCtaLeft: { flexDirection: 'row', alignItems: 'center', gap: 15 },
-  brokerCtaTitle: { fontSize: 16, fontWeight: 'bold', color: '#fff' },
-  brokerCtaSub: { fontSize: 12, color: 'rgba(255,255,255,0.8)', marginTop: 2 },
-
-  menuCard: {
-    marginHorizontal: 20, marginBottom: 20,
-    backgroundColor: Colors.white, borderRadius: 24, overflow: 'hidden',
-  },
-  sectionTitle: {
-    fontSize: 12, fontWeight: 'bold', color: Colors.textLight,
-    paddingHorizontal: 20, paddingTop: 20, paddingBottom: 10,
-    textTransform: 'uppercase', letterSpacing: 1,
-  },
-  menuItem: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 15,
-  },
-  menuLeft: { flexDirection: 'row', alignItems: 'center', gap: 15 },
-  iconWrap: { width: 38, height: 38, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-  menuTitle: { fontSize: 15, fontWeight: '600' },
-  menuSub: { fontSize: 12, color: Colors.textLight, marginTop: 2 },
-
-  footer: { alignItems: 'center', marginTop: 10, gap: 5 },
-  version: { fontSize: 12, color: Colors.textLight, fontWeight: '600' },
-  footerHours: { fontSize: 11, color: Colors.textLight },
-});

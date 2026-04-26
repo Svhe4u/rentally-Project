@@ -159,6 +159,10 @@ export const ListingAPI = {
     min_area?: string | number;
     max_area?: string | number;
     bedrooms?: string | number;
+    min_lat?: number | string;
+    max_lat?: number | string;
+    min_lng?: number | string;
+    max_lng?: number | string;
     page?: number;
     page_size?: number;
   }) => {
