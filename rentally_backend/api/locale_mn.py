@@ -40,11 +40,11 @@ MONGOLIA_CITIES = [
 
 # Ulaanbaatar districts (as sub-regions)
 ULAANBAATAR_DISTRICTS = [
-    {"id": 10, "name": "Баянзүрх", "name_en": "Bayanzürkh", "parent_id": 1},
-    {"id": 11, "name": "Сүхбаатар", "name_en": "Sükhbaatar", "parent_id": 1},
+    {"id": 10, "name": "Баянзүрх", "name_en": "Bayanzurkh", "parent_id": 1},
+    {"id": 11, "name": "Сүхбаатар", "name_en": "Sukhbaatar", "parent_id": 1},
     {"id": 12, "name": "Хан-Уул", "name_en": "Khan-Uul", "parent_id": 1},
     {"id": 13, "name": "Баянгол", "name_en": "Bayangol", "parent_id": 1},
-    {"id": 14, "name": "Сонгинохайрхан", "name_en": "Songino Khairkhan", "parent_id": 1},
+    {"id": 14, "name": "Сонгинохайрхан", "name_en": "Songino-Khairkhan", "parent_id": 1},
     {"id": 15, "name": "Чингэлтэй", "name_en": "Chingeltei", "parent_id": 1},
     {"id": 16, "name": "Налайх", "name_en": "Nalaikh", "parent_id": 1},
     {"id": 17, "name": "Багануур", "name_en": "Baganuur", "parent_id": 1},

@@ -242,7 +242,25 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
     if (!startDate || !endDate) return 0;
     return Math.ceil(Math.abs(endDate.getTime() - startDate.getTime()) / 86400000);
   };
-  const totalPrice = days() * (listing?.price ?? 0);
+  const totalPrice = (() => {
+    if (!startDate || !endDate || !listing) return 0;
+    const d = days();
+    const price = listing.price ?? 0;
+
+    // Calculate based on price type
+    switch (listing.price_type) {
+      case 'daily':
+        return d * price;
+      case 'monthly':
+        // Approximate: 1 month = 30 days
+        return Math.ceil((d / 30) * price);
+      case 'yearly':
+        // Approximate: 1 year = 365 days
+        return Math.ceil((d / 365) * price);
+      default:
+        return d * price;
+    }
+  })();
 
   const headerBg = scrollY.interpolate({
     inputRange: [HERO_H - 100, HERO_H - 50],

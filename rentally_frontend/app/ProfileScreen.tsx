@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, TouchableOpacity, ScrollView,
-  SafeAreaView, Alert,
+  SafeAreaView, Alert, TextInput, Modal, ActivityIndicator
 } from 'react-native';
-import { 
-  Settings, 
-  ChevronRight, 
-  Heart, 
-  MessageSquare, 
-  Calendar, 
-  Building2, 
-  User, 
-  ShieldCheck, 
-  Bell, 
-  HelpCircle, 
-  Info, 
+import {
+  Settings,
+  ChevronRight,
+  Heart,
+  MessageSquare,
+  Calendar,
+  Building2,
+  User,
+  ShieldCheck,
+  Bell,
+  HelpCircle,
+  Info,
   LogOut,
   Camera,
-  Star
+  Star,
+  X
 } from 'lucide-react-native';
 import { Colors } from '../constants/colors';
 import BottomNav, { TabName } from '../components/BottomNav';
 import { useAuth } from '../context/AuthContext';
-import { FavoriteAPI, MessageThreadAPI, BookingAPI } from '../services/api';
+import { FavoriteAPI, MessageThreadAPI, BookingAPI, BrokerAPI } from '../services/api';
 import { cn } from '../utils/cn';
 
 interface Props {
@@ -70,6 +71,9 @@ function StatItem({ icon: Icon, label, count, onPress }: any) {
 export default function ProfileScreen({ onNavigate }: Props) {
   const { user, logout } = useAuth();
   const [stats, setStats] = useState({ favorites: 0, messages: 0, bookings: 0 });
+  const [brokerModal, setBrokerModal] = useState(false);
+  const [brokerForm, setBrokerForm] = useState({ agency_name: '', registration_number: '', phone: '' });
+  const [brokerLoading, setBrokerLoading] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -101,6 +105,30 @@ export default function ProfileScreen({ onNavigate }: Props) {
         { text: 'Гарах', style: 'destructive', onPress: logout }
       ]
     );
+  };
+
+  const handleBrokerApply = async () => {
+    if (!brokerForm.agency_name.trim()) {
+      Alert.alert('Алдаа', 'Агентлагийн нэрийг оруулна уу');
+      return;
+    }
+
+    setBrokerLoading(true);
+    try {
+      await BrokerAPI.apply({
+        user_id: user?.id || 0,
+        agency_name: brokerForm.agency_name,
+        registration_number: brokerForm.registration_number || undefined,
+        phone: brokerForm.phone || undefined,
+      });
+      Alert.alert('Амжилтай', 'Зуучлагчийн хүсэлт илгээлээ. Админ баталсны дараа идэвхждэх болно.');
+      setBrokerModal(false);
+      setBrokerForm({ agency_name: '', registration_number: '', phone: '' });
+    } catch (e) {
+      Alert.alert('Алдаа', (e as any)?.message || 'Хүсэлт илгээхэд алдаа гарлаа');
+    } finally {
+      setBrokerLoading(false);
+    }
   };
 
   const userInitials = user?.username?.slice(0, 2).toUpperCase() || '??';
@@ -151,10 +179,10 @@ export default function ProfileScreen({ onNavigate }: Props) {
 
         {/* Broker CTA */}
         {user?.role !== 'broker' && (
-          <TouchableOpacity 
-            className="mx-5 mt-10 bg-slate-900 rounded-[32px] p-6 flex-row items-center justify-between overflow-hidden relative" 
+          <TouchableOpacity
+            className="mx-5 mt-10 bg-slate-900 rounded-[32px] p-6 flex-row items-center justify-between overflow-hidden relative"
             activeOpacity={0.9}
-            onPress={() => Alert.alert('Зуучлагч болох хүсэлт илгээх үү?')}
+            onPress={() => setBrokerModal(true)}
           >
             <View className="absolute -right-6 -top-10 w-24 h-24 bg-primary/20 rounded-full" />
             <View className="flex-row items-center gap-4">
@@ -202,6 +230,81 @@ export default function ProfileScreen({ onNavigate }: Props) {
           <Text className="text-[9px] font-bold text-foreground/20 mt-1 uppercase">Cloud Property Management Systems</Text>
         </View>
       </ScrollView>
+
+      {/* Broker Application Modal */}
+      <Modal visible={brokerModal} transparent animationType="slide">
+        <SafeAreaView className="flex-1 bg-background">
+          <View className="flex-row items-center justify-between px-5 py-4 border-b border-border">
+            <Text className="text-lg font-black text-foreground">Зуучлагч болох хүсэлт</Text>
+            <TouchableOpacity onPress={() => setBrokerModal(false)}>
+              <X size={24} color="#1e293b" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView className="flex-1 p-5 gap-6" contentContainerClassName="gap-4">
+            <View>
+              <Text className="text-sm font-black text-foreground mb-2">Агентлагийн нэр *</Text>
+              <TextInput
+                className="border border-border rounded-2xl px-4 py-3 text-sm font-bold text-foreground"
+                placeholder="Агентлагийн нэрийг оруулна уу"
+                value={brokerForm.agency_name}
+                onChangeText={(t) => setBrokerForm({ ...brokerForm, agency_name: t })}
+                placeholderTextColor="#94a3b8"
+              />
+            </View>
+
+            <View>
+              <Text className="text-sm font-black text-foreground mb-2">Бүртгэлийн дугаар</Text>
+              <TextInput
+                className="border border-border rounded-2xl px-4 py-3 text-sm font-bold text-foreground"
+                placeholder="Байгууллагын бүртгэлийн дугаар"
+                value={brokerForm.registration_number}
+                onChangeText={(t) => setBrokerForm({ ...brokerForm, registration_number: t })}
+                placeholderTextColor="#94a3b8"
+              />
+            </View>
+
+            <View>
+              <Text className="text-sm font-black text-foreground mb-2">Утасны дугаар</Text>
+              <TextInput
+                className="border border-border rounded-2xl px-4 py-3 text-sm font-bold text-foreground"
+                placeholder="+976 XXXX XXXX"
+                keyboardType="phone-pad"
+                value={brokerForm.phone}
+                onChangeText={(t) => setBrokerForm({ ...brokerForm, phone: t })}
+                placeholderTextColor="#94a3b8"
+              />
+            </View>
+
+            <View className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mt-4">
+              <Text className="text-xs font-bold text-blue-900">
+                📋 Админ баталгаажуулсны дараа та зуучлагч болон байрын жагсаалт бүртгүүлэх боломжтой болно.
+              </Text>
+            </View>
+          </ScrollView>
+
+          <View className="p-5 border-t border-border gap-3">
+            <TouchableOpacity
+              className="bg-primary h-14 rounded-2xl items-center justify-center"
+              onPress={handleBrokerApply}
+              disabled={brokerLoading}
+            >
+              {brokerLoading ? (
+                <ActivityIndicator color="white" size="small" />
+              ) : (
+                <Text className="text-white font-black text-base">ХҮСЭЛТ ИЛГЭЭХ</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-secondary h-14 rounded-2xl items-center justify-center"
+              onPress={() => setBrokerModal(false)}
+              disabled={brokerLoading}
+            >
+              <Text className="text-foreground font-black text-base">БУЦАХ</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
 
       <BottomNav active="profile" onNavigate={onNavigate} />
     </SafeAreaView>

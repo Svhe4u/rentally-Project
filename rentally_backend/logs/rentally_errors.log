@@ -55069,3 +55069,6 @@ Traceback (most recent call last):
     ...<2 lines>...
     )
 django.core.exceptions.FieldError: Unsupported lookup 'brokerprofile__company_name__icontains' for ForeignKey or join on the field not permitted.
+ERROR 2026-04-27 19:06:48,499 log 13084 31264 Internal Server Error: /api/bookings/
+ERROR 2026-04-27 19:18:26,001 log 12020 31624 Internal Server Error: /api/bookings/
+ERROR 2026-04-27 19:54:40,246 log 12020 31624 Internal Server Error: /api/bookings/

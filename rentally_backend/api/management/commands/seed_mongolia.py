@@ -45,14 +45,18 @@ class Command(BaseCommand):
 
     def _ensure_regions(self, c):
         """Insert Mongolian cities and Ulaanbaatar districts."""
+        from django.utils.text import slugify
+
         all_regions = MONGOLIA_CITIES + ULAANBAATAR_DISTRICTS
         for r in all_regions:
             c.execute("SELECT id FROM regions WHERE name = %s", [r["name"]])
             if c.fetchone():
                 continue
             parent_id = r.get("parent_id")
+            # Generate slug from English name for consistent transliteration
+            slug = slugify(r.get("name_en", r["name"]), allow_unicode=False)
             c.execute(
-                "INSERT INTO regions (name, parent_id) VALUES (%s, %s)",
-                [r["name"], parent_id],
+                "INSERT INTO regions (name, slug, parent_id) VALUES (%s, %s, %s)",
+                [r["name"], slug, parent_id],
             )
-            self.stdout.write(f"  Added region: {r['name']}")
+            self.stdout.write(f"  Added region: {r['name']} (slug: {slug})")
