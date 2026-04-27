@@ -187,11 +187,13 @@ class ListingDetailAPIView(APIView):
     """
     GET    /api/listings/<pk>/  — public
     PUT    /api/listings/<pk>/  — owner only
+    PATCH  /api/listings/<pk>/  — owner only (partial update)
     DELETE /api/listings/<pk>/  — owner only (soft delete)
     """
 
     def get_permissions(self):
-        if self.request.method in ('PUT', 'DELETE'):
+        # ADD 'PATCH' to this tuple!
+        if self.request.method in ('PUT', 'PATCH', 'DELETE'):
             return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
 
@@ -201,16 +203,25 @@ class ListingDetailAPIView(APIView):
             return APIError.not_found("Listing not found")
         return Response(ListingDetailedSerializer(listing).data)
 
+    # We can route PATCH to the same logic as PUT
+    def patch(self, request, pk):
+        return self.put(request, pk)
+
     def put(self, request, pk):
         listing = get_object_or_404(Listing, id=pk)
         if listing.owner != request.user:
             return APIError.forbidden("You can only edit your own listings")
+        
         try:
+            # ListingService.update_listing should handle partial data 
+            # (e.g., using dict.get() or hasattr())
             updated = ListingService.update_listing(listing, request.data)
             return Response(ListingSerializer(updated).data)
         except (ValueError, TypeError) as e:
             return APIError.bad_request(str(e))
-        except Exception:
+        except Exception as e:
+            # Pro-tip: Log the error so you don't get a "blind" 500
+            print(f"Update Error: {e}") 
             return APIError.server_error()
 
     def delete(self, request, pk):
@@ -392,13 +403,10 @@ class BookingListAPIView(APIView):
 
         listing = get_object_or_404(Listing, id=request.data.get('listing_id'), status='active')
 
-        try:
-            booking = BookingService.create_booking(request.user, listing, request.data)
-            return Response(BookingSerializer(booking).data, status=status.HTTP_201_CREATED)
-        except ValueError as e:
-            return APIError.bad_request(str(e))
-        except Exception:
-            return APIError.server_error()
+        # REMOVE THE TRY/EXCEPT COMPLETELY
+        # This forces the terminal to show the REAL error instead of catching it.
+        booking = BookingService.create_booking(request.user, listing, request.data)
+        return Response(BookingSerializer(booking).data, status=status.HTTP_201_CREATED)
 
 
 class BookingDetailAPIView(APIView):

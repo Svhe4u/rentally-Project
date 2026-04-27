@@ -55072,3 +55072,115 @@ django.core.exceptions.FieldError: Unsupported lookup 'brokerprofile__company_na
 ERROR 2026-04-27 19:06:48,499 log 13084 31264 Internal Server Error: /api/bookings/
 ERROR 2026-04-27 19:18:26,001 log 12020 31624 Internal Server Error: /api/bookings/
 ERROR 2026-04-27 19:54:40,246 log 12020 31624 Internal Server Error: /api/bookings/
+ERROR 2026-04-27 20:10:23,322 log 33360 33436 Internal Server Error: /api/bookings/
+ERROR 2026-04-27 20:23:09,816 log 26016 23152 Internal Server Error: /api/bookings/
+ERROR 2026-04-27 20:26:13,335 log 14156 22592 Internal Server Error: /api/bookings/
+Traceback (most recent call last):
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\base.py", line 254, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+        request, *callback_args, **callback_kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 506, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\current_thread_executor.py", line 40, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 561, in thread_handler
+    return func(*args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py", line 398, in post
+    return Response(BookingSerializer(booking).data, status=status.HTTP_201_CREATED)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 573, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 251, in data
+    self._data = self.to_representation(self.instance)
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 540, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+                            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\fields.py", line 1870, in to_representation
+    return method(value)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py", line 318, in get_days_remaining
+    if obj.end_date > now:
+       ^^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'datetime.date' and 'datetime.datetime'
+ERROR 2026-04-27 20:29:04,191 log 20828 26704 Internal Server Error: /api/bookings/
+Traceback (most recent call last):
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\base.py", line 254, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+        request, *callback_args, **callback_kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 506, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\current_thread_executor.py", line 40, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 561, in thread_handler
+    return func(*args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py", line 398, in post
+    return Response(BookingSerializer(booking).data, status=status.HTTP_201_CREATED)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 573, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 251, in data
+    self._data = self.to_representation(self.instance)
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 540, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+                            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\fields.py", line 1870, in to_representation
+    return method(value)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py", line 316, in get_days_remaining
+    today = date.today() # This returns a date object
+            ^^^^
+NameError: name 'date' is not defined

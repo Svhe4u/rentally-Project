@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from django.db.models import Avg
 from decimal import Decimal
+from datetime import date, datetime
 
 from .models import (
     UserProfile, BrokerProfile, Category, Region, Listing, ListingImage,
@@ -313,10 +314,9 @@ class BookingSerializer(serializers.ModelSerializer):
         return 0
 
     def get_days_remaining(self, obj):
-        """Хэд хоног үлдсэн."""
-        now = timezone.now()
-        if obj.end_date > now:
-            return (obj.end_date - now).days
+        today = date.today() # This returns a date object
+        if obj.start_date > today: 
+            return (obj.start_date - today).days
         return 0
 
 

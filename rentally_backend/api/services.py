@@ -15,6 +15,7 @@ from django.db import transaction
 from datetime import timedelta, date
 from decimal import Decimal, InvalidOperation
 from django.contrib.auth.models import User
+from datetime import date, datetime
 
 from .models import (
     Listing, ListingDetail, ListingFeature,
@@ -252,13 +253,13 @@ class BookingService:
 
     @staticmethod
     def _parse_date(value):
-        """Parse date string or return date object as-is."""
         if isinstance(value, date):
             return value
         if isinstance(value, str):
-            from datetime import datetime
+            # List of formats to try
             for fmt in ('%Y-%m-%d', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%dT%H:%M:%SZ'):
                 try:
+                    # Convert the parsed datetime object to a date object
                     return datetime.strptime(value, fmt).date()
                 except ValueError:
                     continue
