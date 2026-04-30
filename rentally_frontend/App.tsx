@@ -14,6 +14,7 @@ import RegisterScreen      from './app/RegisterScreen';
 import ListingDetailScreen from './app/ListingDetailScreen';
 import NotificationsScreen from './app/NotificationsScreen';
 import EditProfileScreen  from './app/EditProfileScreen';
+import MyBookingsScreen   from './app/MyBookingsScreen';
 import SecurityScreen     from './app/SecurityScreen';
 import HelpScreen         from './app/HelpScreen';
 import AboutScreen        from './app/AboutScreen';
@@ -21,7 +22,7 @@ import SearchFilterScreen from './app/SearchFilterScreen';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 
-type Screen = 'home' | 'saved' | 'map' | 'messages' | 'chat' | 'profile' | 'login' | 'register' | 'notifications' | 'editProfile' | 'security' | 'help' | 'about' | 'search_filter';
+type Screen = 'home' | 'saved' | 'map' | 'messages' | 'chat' | 'profile' | 'login' | 'register' | 'notifications' | 'editProfile' | 'security' | 'help' | 'about' | 'search_filter' | 'myBookings';
 
 export default function App() {
   return (
@@ -138,6 +139,7 @@ function AppNavigator() {
       case 'security':    return <SecurityScreen    onNavigate={navigate} />;
       case 'help':        return <HelpScreen        onNavigate={navigate} />;
       case 'about':       return <AboutScreen       onNavigate={navigate} />;
+      case 'myBookings':  return <MyBookingsScreen  onNavigate={navigate} />;
       default:          return <HomeScreen       onNavigate={navigate} onOpenDetail={openDetail} />;
     }
   };

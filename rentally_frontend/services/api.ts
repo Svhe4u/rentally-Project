@@ -458,13 +458,21 @@ export interface ListingImage {
 
 export interface Booking {
   id: number;
+  listing: number;
   listing_id: number;
+  listing_title?: string;
+  user: number;
   user_id: number;
+  user_username?: string;
   start_date: string;
   end_date: string;
+  duration_days?: number;
+  days_remaining?: number;
   total_price?: number;
   status: string;
+  notes?: string;
   created_at: string;
+  updated_at?: string;
 }
 
 export interface Review {

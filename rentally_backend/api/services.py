@@ -253,14 +253,29 @@ class BookingService:
 
     @staticmethod
     def _parse_date(value):
-        if isinstance(value, date):
+        """Parse date string and return timezone-aware datetime at 00:00."""
+        from django.utils import timezone
+
+        if isinstance(value, datetime):
+            # If already datetime, make sure it's timezone-aware
+            if timezone.is_naive(value):
+                return timezone.make_aware(value)
             return value
+
+        if isinstance(value, date) and not isinstance(value, datetime):
+            # If date object, convert to timezone-aware datetime at 00:00
+            dt = datetime.combine(value, datetime.min.time())
+            return timezone.make_aware(dt)
+
         if isinstance(value, str):
             # List of formats to try
             for fmt in ('%Y-%m-%d', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%dT%H:%M:%SZ'):
                 try:
-                    # Convert the parsed datetime object to a date object
-                    return datetime.strptime(value, fmt).date()
+                    dt = datetime.strptime(value, fmt)
+                    # Make timezone-aware
+                    if timezone.is_naive(dt):
+                        return timezone.make_aware(dt)
+                    return dt
                 except ValueError:
                     continue
         raise ValueError(f"Invalid date format: {value}. Use YYYY-MM-DD.")
@@ -280,11 +295,19 @@ class BookingService:
 
     @staticmethod
     def calculate_total_price(listing, start_date, end_date):
-        """Calculate total price for a booking."""
+        """Calculate total price for a booking, normalized by price_type."""
         nights = (end_date - start_date).days
         if nights <= 0:
             return None
-        return Decimal(nights) * listing.price
+
+        # Normalize price to daily rate based on price_type
+        daily_price = listing.price
+        if listing.price_type == 'monthly':
+            daily_price = listing.price / Decimal('30')
+        elif listing.price_type == 'yearly':
+            daily_price = listing.price / Decimal('365')
+
+        return Decimal(nights) * daily_price
 
     @staticmethod
     def create_booking(user, listing, data):
@@ -293,9 +316,9 @@ class BookingService:
         end_date = BookingService._parse_date(data.get('end_date'))
 
         if end_date <= start_date:
-            raise ValueError("end_date must be after start_date")
-        if start_date < date.today():
-            raise ValueError("start_date cannot be in the past")
+            raise ValueError("Дуусах огноо эхлэх огнооноос хойш байх ёстой.")
+        if start_date.date() < date.today():
+            raise ValueError("Эхлэх огноо өнгөрсөн өдөр байж болохгүй.")
 
         if not BookingService.check_availability(listing, start_date, end_date):
             raise ValueError("Listing is not available for the selected dates")

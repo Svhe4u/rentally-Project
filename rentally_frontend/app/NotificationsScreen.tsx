@@ -1,150 +1,409 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet,
-  FlatList, SafeAreaView, ActivityIndicator, RefreshControl,
+  View, Text, TouchableOpacity,
+  ScrollView, SafeAreaView, ActivityIndicator, RefreshControl,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '../constants/colors';
-import { BookingAPI, Booking } from '../services/api';
-import BottomNav, { TabName } from '../components/BottomNav';
+import {
+  ArrowLeft, Bell, BellOff, Calendar, CheckCircle2, XCircle,
+  Clock, MapPin, Package, ChevronRight, Trash2, AlertCircle,
+} from 'lucide-react-native';
+import { cn } from '../utils/cn';
+import { BookingAPI, MessageThreadAPI } from '../services/api';
+import type { Booking } from '../services/api';
 
 interface Props {
   onNavigate: (screen: string, params?: any) => void;
 }
 
-const STATUS_CONFIG: Record<string, { icon: keyof typeof Ionicons.glyphMap; color: string; label: string }> = {
-  pending:   { icon: 'time', color: '#F59E0B', label: 'Хүлээгдэж байна' },
-  confirmed: { icon: 'checkmark-circle', color: '#10B981', label: 'Баталгаажсан' },
-  cancelled: { icon: 'close-circle', color: Colors.red,   label: 'Цуцлагдсан' },
-  completed: { icon: 'flag', color: Colors.primary, label: 'Дууссан' },
+type NotifType = 'booking' | 'message' | 'system';
+
+interface NotificationItem {
+  id: string;
+  type: NotifType;
+  title: string;
+  body: string;
+  time: string;
+  status?: string;
+  isRead: boolean;
+  bookingId?: number;
+  listingId?: number;
+}
+
+const STATUS_MAP: Record<string, { label: string; color: string; bg: string; icon: any }> = {
+  pending:     { label: 'Хүлээгдэж буй', color: 'text-amber-600',   bg: 'bg-amber-50',   icon: Clock },
+  confirmed:   { label: 'Баталгаажсан',  color: 'text-emerald-600', bg: 'bg-emerald-50',  icon: CheckCircle2 },
+  checked_in:  { label: 'Амьдарч байна', color: 'text-blue-600',   bg: 'bg-blue-50',     icon: MapPin },
+  checked_out: { label: 'Дууссан',       color: 'text-slate-500',  bg: 'bg-slate-100',   icon: Package },
+  cancelled:   { label: 'Цуцлагдсан',   color: 'text-red-500',    bg: 'bg-red-50',      icon: XCircle },
+  completed:   { label: 'Дууссан',       color: 'text-primary',    bg: 'bg-primary/5',   icon: CheckCircle2 },
 };
 
-export default function NotificationsScreen({ onNavigate }: Props) {
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading]   = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+function formatRelativeTime(dateStr: string): string {
+  try {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffMin = Math.floor(diffMs / 60000);
+    const diffHr = Math.floor(diffMs / 3600000);
+    const diffDay = Math.floor(diffMs / 86400000);
 
-  const load = useCallback(async (isRefresh = false) => {
-    if (isRefresh) setRefreshing(true);
-    else setLoading(true);
+    if (diffMin < 1) return 'Дөнгөж сая';
+    if (diffMin < 60) return `${diffMin} мин`;
+    if (diffHr < 24) return `${diffHr} цагийн өмнө`;
+    if (diffDay < 7) return `${diffDay} өдрийн өмнө`;
+    return d.toLocaleDateString('mn-MN');
+  } catch {
+    return dateStr;
+  }
+}
+
+function formatDate(dateStr?: string): string {
+  if (!dateStr) return '—';
+  try {
+    const d = new Date(dateStr);
+    return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+  } catch {
+    return dateStr;
+  }
+}
+
+function NotificationCard({ item, onPress }: { item: NotificationItem; onPress: () => void }) {
+  const cfg = item.status ? (STATUS_MAP[item.status] || STATUS_MAP.pending) : null;
+  const StatusIcon = cfg?.icon || Bell;
+
+  const iconBg = item.type === 'booking'
+    ? (cfg?.bg || 'bg-primary/5')
+    : item.type === 'message'
+      ? 'bg-blue-50'
+      : 'bg-secondary';
+
+  const iconColor = item.type === 'booking'
+    ? (cfg?.color || 'text-primary')
+    : item.type === 'message'
+      ? 'text-blue-500'
+      : 'text-muted-foreground';
+
+  return (
+    <TouchableOpacity
+      className={cn(
+        'mx-5 mb-3 bg-card border rounded-[24px] overflow-hidden',
+        item.isRead ? 'border-border' : 'border-primary/20'
+      )}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.03,
+        shadowRadius: 6,
+        elevation: 1,
+      }}
+      activeOpacity={0.7}
+      onPress={onPress}
+    >
+      <View className="flex-row p-4 gap-3.5">
+        {/* Icon */}
+        <View className={cn('w-11 h-11 rounded-[14px] items-center justify-center flex-shrink-0', iconBg)}>
+          <StatusIcon size={20} className={iconColor} />
+        </View>
+
+        {/* Content */}
+        <View className="flex-1">
+          <View className="flex-row items-start justify-between mb-1">
+            <Text className={cn(
+              'text-sm flex-1 pr-2 tracking-tight',
+              item.isRead ? 'font-bold text-foreground' : 'font-black text-foreground'
+            )} numberOfLines={2}>
+              {item.title}
+            </Text>
+            <Text className="text-[10px] font-bold text-muted-foreground flex-shrink-0 mt-0.5">
+              {formatRelativeTime(item.time)}
+            </Text>
+          </View>
+
+          <Text className="text-xs font-medium text-muted-foreground leading-[18px] mb-2" numberOfLines={2}>
+            {item.body}
+          </Text>
+
+          {/* Status badge for bookings */}
+          {cfg && item.status && (
+            <View className="flex-row items-center gap-3">
+              <View className={cn('flex-row items-center gap-1 px-2.5 py-1 rounded-full', cfg.bg)}>
+                <StatusIcon size={12} className={cfg.color} />
+                <Text className={cn('text-[10px] font-black', cfg.color)}>{cfg.label}</Text>
+              </View>
+            </View>
+          )}
+        </View>
+
+        {/* Unread dot */}
+        {!item.isRead && (
+          <View className="w-2.5 h-2.5 rounded-full bg-primary mt-1 flex-shrink-0" />
+        )}
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+export default function NotificationsScreen({ onNavigate }: Props) {
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [filter, setFilter] = useState<'all' | 'booking' | 'message'>('all');
+
+  const loadNotifications = useCallback(async () => {
     try {
-      const data = await BookingAPI.list();
-      setBookings(data.reverse());
-    } catch {
-      // ignore
+      // Fetch bookings and messages in parallel
+      const [bookingsRes, messagesRes] = await Promise.allSettled([
+        BookingAPI.list(),
+        MessageThreadAPI.list(),
+      ]);
+
+      const notifs: NotificationItem[] = [];
+
+      // Convert bookings to notifications
+      if (bookingsRes.status === 'fulfilled') {
+        const bookingsData = bookingsRes.value as any;
+        const bookings: Booking[] = bookingsData?.results ?? bookingsData;
+        if (Array.isArray(bookings)) {
+          bookings.forEach((b) => {
+            const statusCfg = STATUS_MAP[b.status] || STATUS_MAP.pending;
+            notifs.push({
+              id: `booking-${b.id}`,
+              type: 'booking',
+              title: b.listing_title
+                ? `"${b.listing_title}" захиалга`
+                : `Захиалга #${b.id}`,
+              body: `${formatDate(b.start_date)} → ${formatDate(b.end_date)}${b.total_price ? ' · ' + Number(b.total_price).toLocaleString() + '₮' : ''}`,
+              time: b.created_at,
+              status: b.status,
+              isRead: b.status !== 'pending',
+              bookingId: b.id,
+              listingId: b.listing_id || b.listing,
+            });
+          });
+        }
+      }
+
+      // Convert message threads to notifications
+      if (messagesRes.status === 'fulfilled') {
+        const msgData = messagesRes.value as any;
+        const conversations = msgData?.conversations ?? [];
+        if (Array.isArray(conversations)) {
+          conversations.forEach((conv: any) => {
+            if (conv.unread_count > 0) {
+              notifs.push({
+                id: `msg-${conv.partner_id}`,
+                type: 'message',
+                title: `${conv.partner_name || 'Хэрэглэгч'}-аас мессеж`,
+                body: conv.last_message_text || 'Шинэ мессеж ирлээ',
+                time: conv.last_message_created,
+                isRead: false,
+              });
+            }
+          });
+        }
+      }
+
+      // Sort by time (newest first)
+      notifs.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+
+      setNotifications(notifs);
+    } catch (e) {
+      console.error('Notifications load error:', e);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   }, []);
 
-  const renderItem = ({ item }: { item: Booking }) => {
-    const cfg = STATUS_CONFIG[item.status] ?? STATUS_CONFIG.pending;
-    return (
-      <TouchableOpacity
-        style={s.card}
-        onPress={() => onNavigate('listingDetail', { listingId: item.listing_id })}
-        activeOpacity={0.85}
-      >
-        <View style={[s.iconWrap, { backgroundColor: cfg.color + '1A' }]}>
-          <Ionicons name={cfg.icon} size={24} color={cfg.color} />
-        </View>
-        <View style={s.cardBody}>
-          <View style={s.cardTop}>
-            <Text style={s.cardTitle}>Захиалга #{item.id}</Text>
-            <View style={[s.statusBadge, { backgroundColor: cfg.color + '1A' }]}>
-              <Text style={[s.statusTxt, { color: cfg.color }]}>{cfg.label}</Text>
-            </View>
-          </View>
-          <Text style={s.cardSub}>
-            Байр #{item.listing_id} · {item.start_date} – {item.end_date}
-          </Text>
-          {item.total_price && (
-            <Text style={s.cardPrice}>{Number(item.total_price).toLocaleString()}₮</Text>
-          )}
-          <Text style={s.cardTime}>
-            {new Date(item.created_at).toLocaleDateString('mn-MN')}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadNotifications();
   };
 
+  const filteredNotifs = filter === 'all'
+    ? notifications
+    : notifications.filter(n => n.type === filter);
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
+
+  const handleNotifPress = (item: NotificationItem) => {
+    if (item.type === 'booking' && item.listingId) {
+      onNavigate('myBookings');
+    } else if (item.type === 'message') {
+      onNavigate('messages');
+    }
+  };
+
+  const FILTER_TABS = [
+    { key: 'all' as const, label: 'Бүгд', count: notifications.length },
+    { key: 'booking' as const, label: 'Захиалга', count: notifications.filter(n => n.type === 'booking').length },
+    { key: 'message' as const, label: 'Мессеж', count: notifications.filter(n => n.type === 'message').length },
+  ];
+
   return (
-    <SafeAreaView style={s.safe}>
-      <View style={s.topBar}>
-        <Text style={s.logo}>РЕНТАЛ<Text style={s.logoAccent}>ЛИ</Text></Text>
-        <TouchableOpacity style={s.topBtn} onPress={() => onNavigate('profile')}>
-          <Ionicons name="notifications-outline" size={24} color={Colors.text} />
+    <SafeAreaView className="flex-1 bg-background" style={{ flex: 1 }}>
+      {/* Header */}
+      <View className="flex-row items-center justify-between px-5 py-4">
+        <TouchableOpacity
+          className="w-11 h-11 rounded-2xl bg-card border border-border items-center justify-center"
+          onPress={() => onNavigate('profile')}
+          activeOpacity={0.7}
+          style={{
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.05,
+            shadowRadius: 4,
+            elevation: 1,
+          }}
+        >
+          <ArrowLeft size={20} className="text-foreground" />
         </TouchableOpacity>
-      </View>
 
-      <View style={s.pageHeader}>
-        <Text style={s.headerTitle}>Мэдэгдэл</Text>
-      </View>
-
-      {/* Status legend */}
-      <View style={s.legend}>
-        {Object.entries(STATUS_CONFIG).map(([, cfg]) => (
-          <View key={cfg.label} style={s.legendItem}>
-            <Ionicons name={cfg.icon} size={14} color={cfg.color} />
-            <Text style={[s.legendTxt, { color: cfg.color }]}>{cfg.label}</Text>
-          </View>
-        ))}
-      </View>
-
-      {loading ? (
-        <View style={s.center}><ActivityIndicator size="large" color={Colors.primary} /></View>
-      ) : (
-        <FlatList
-          data={bookings}
-          keyExtractor={item => String(item.id)}
-          renderItem={renderItem}
-          contentContainerStyle={s.list}
-          ListEmptyComponent={
-            <View style={s.emptyBox}>
-              <Text style={s.emptyIcon}>🔔</Text>
-              <Text style={s.emptyTxt}>Мэдэгдэл байхгүй</Text>
-              <Text style={s.emptySub}>Захиалга өгсний дараа мэдэгдэл ирнэ</Text>
+        <View className="flex-row items-center gap-2">
+          <Text className="text-lg font-black text-foreground tracking-tight uppercase">
+            Мэдэгдэл
+          </Text>
+          {unreadCount > 0 && (
+            <View className="bg-primary min-w-[22px] h-[22px] rounded-full items-center justify-center px-1.5">
+              <Text className="text-[10px] font-black text-white">{unreadCount}</Text>
             </View>
+          )}
+        </View>
+
+        <View className="w-11" />
+      </View>
+
+      {/* Filter Tabs */}
+      <View className="px-5 mb-4">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 8 }}
+        >
+          {FILTER_TABS.map(tab => (
+            <TouchableOpacity
+              key={tab.key}
+              className={cn(
+                'flex-row items-center gap-1.5 px-4 py-2.5 rounded-full border',
+                filter === tab.key
+                  ? 'bg-primary border-primary'
+                  : 'bg-card border-border'
+              )}
+              onPress={() => setFilter(tab.key)}
+              activeOpacity={0.7}
+            >
+              <Text className={cn(
+                'text-xs font-black',
+                filter === tab.key ? 'text-white' : 'text-muted-foreground'
+              )}>
+                {tab.label}
+              </Text>
+              {tab.count > 0 && (
+                <View className={cn(
+                  'min-w-[18px] h-[18px] rounded-full items-center justify-center px-1',
+                  filter === tab.key ? 'bg-white/20' : 'bg-secondary'
+                )}>
+                  <Text className={cn(
+                    'text-[9px] font-black',
+                    filter === tab.key ? 'text-white' : 'text-muted-foreground'
+                  )}>
+                    {tab.count}
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      {/* Content */}
+      {loading ? (
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="#2e55fa" />
+          <Text className="text-sm font-bold text-muted-foreground mt-3">Ачаалж байна...</Text>
+        </View>
+      ) : (
+        <ScrollView
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 40 }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#2e55fa']} />
           }
-        />
+        >
+          {/* Today / Recent header */}
+          {filteredNotifs.length > 0 && (
+            <View className="flex-row items-center justify-between px-5 mb-3">
+              <Text className="text-[11px] font-black text-muted-foreground uppercase tracking-[2px]">
+                Сүүлийн мэдэгдлүүд
+              </Text>
+              <Text className="text-[11px] font-bold text-muted-foreground">
+                {filteredNotifs.length} мэдэгдэл
+              </Text>
+            </View>
+          )}
+
+          {filteredNotifs.length === 0 ? (
+            <View className="items-center justify-center py-24 px-10">
+              <View className="w-24 h-24 rounded-full bg-secondary items-center justify-center mb-6">
+                <BellOff size={40} className="text-muted-foreground" />
+              </View>
+              <Text className="text-xl font-black text-foreground text-center mb-2">
+                Мэдэгдэл байхгүй
+              </Text>
+              <Text className="text-sm font-medium text-muted-foreground text-center leading-5 max-w-[260px]">
+                {filter === 'all'
+                  ? 'Захиалга хийх эсвэл мессеж хүлээн авах үед энд мэдэгдэл ирнэ.'
+                  : filter === 'booking'
+                    ? 'Захиалгатай холбоотой мэдэгдэл байхгүй.'
+                    : 'Уншаагүй мессеж байхгүй.'
+                }
+              </Text>
+              <TouchableOpacity
+                className="mt-8 bg-primary px-8 py-3.5 rounded-2xl"
+                onPress={() => onNavigate('home')}
+                activeOpacity={0.8}
+              >
+                <Text className="text-white font-black text-sm">НҮҮР ХУУДАС</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            filteredNotifs.map(item => (
+              <NotificationCard
+                key={item.id}
+                item={item}
+                onPress={() => handleNotifPress(item)}
+              />
+            ))
+          )}
+
+          {/* Status Legend */}
+          {filteredNotifs.some(n => n.type === 'booking') && (
+            <View className="mx-5 mt-6 bg-card border border-border rounded-[24px] p-5">
+              <Text className="text-[10px] font-black text-muted-foreground uppercase tracking-[2px] mb-4">
+                Захиалгын төлөв тайлбар
+              </Text>
+              <View className="gap-3">
+                {Object.entries(STATUS_MAP).slice(0, 5).map(([key, cfg]) => {
+                  const Icon = cfg.icon;
+                  return (
+                    <View key={key} className="flex-row items-center gap-3">
+                      <View className={cn('w-8 h-8 rounded-lg items-center justify-center', cfg.bg)}>
+                        <Icon size={14} className={cfg.color} />
+                      </View>
+                      <Text className={cn('text-xs font-bold', cfg.color)}>{cfg.label}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+          )}
+        </ScrollView>
       )}
     </SafeAreaView>
   );
 }
-
-const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.bg },
-  topBar: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 15,
-    backgroundColor: Colors.white,
-  },
-  logo: { fontSize: 20, fontWeight: '900', color: Colors.primary, letterSpacing: 1 },
-  logoAccent: { color: Colors.yellow },
-  topBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: Colors.bg, alignItems: 'center', justifyContent: 'center' },
-  pageHeader: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: 10 },
-  headerTitle: { fontSize: 22, fontWeight: '900', color: Colors.text, textTransform: 'uppercase', letterSpacing: 0.5 },
-  legend:  { flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 10, backgroundColor: Colors.white, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  legendIcon: { fontSize: 14 },
-  legendTxt:  { fontSize: 11, fontWeight: '700' },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  list:   { padding: 12, gap: 10 },
-  card:   { flexDirection: 'row', gap: 12, backgroundColor: Colors.white, borderRadius: 14, padding: 14 },
-  iconWrap: { width: 46, height: 46, borderRadius: 14, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-  icon:     { fontSize: 22 },
-  cardBody: { flex: 1, gap: 4 },
-  cardTop:  { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  cardTitle: { fontSize: 14, fontWeight: '800', color: Colors.text },
-  statusBadge: { borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3 },
-  statusTxt:   { fontSize: 11, fontWeight: '800' },
-  cardSub:     { fontSize: 12, color: Colors.textMuted },
-  cardPrice:   { fontSize: 13, fontWeight: '800', color: Colors.primary },
-  cardTime:    { fontSize: 11, color: Colors.textLight },
-  emptyBox:  { flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 100, gap: 10 },
-  emptyIcon: { fontSize: 56 },
-  emptyTxt:  { fontSize: 17, fontWeight: '800', color: Colors.text },
-  emptySub:  { fontSize: 13, color: Colors.textMuted, textAlign: 'center' },
-});

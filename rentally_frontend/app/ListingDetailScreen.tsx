@@ -222,12 +222,25 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
 
   const handleBooking = async () => {
     if (!startDate || !endDate || !listing) return;
+
+    // Validate dates on frontend (do not call backend with invalid dates)
+    const todayStart = new Date();
+    todayStart.setHours(0,0,0,0);
+    if (startDate < todayStart) {
+      Alert.alert('Алдаа', 'Эхлэх огноо өнөөгийн огнооноос өмнөх байж болохгүй.');
+      return;
+    }
+    if (endDate <= startDate) {
+      Alert.alert('Алдаа', 'Дуусах огноо эхлэх огнооноос хойш байх ёстой.');
+      return;
+    }
+
     setBookingLoading(true);
     try {
       await BookingAPI.create({
         listing_id: listing.id,
-        start_date: startDate.toISOString().split('T')[0],
-        end_date: endDate.toISOString().split('T')[0],
+        start_date: startDate.toISOString(),
+        end_date: endDate.toISOString(),
       });
       setBookingOpen(false);
       Alert.alert('🎉 Амжилттай!', 'Таны түрээсийн хүсэлт илгээгдлээ. Зуучлагч удалгүй холбогдох болно.', [
@@ -601,6 +614,7 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
               <DatePicker
                  visible={showStartPicker}
                  value={startDate}
+                 minDate={new Date()}
                  onChange={(d) => { setStartDate(d); setShowStartPicker(false); }}
                  onClose={() => setShowStartPicker(false)}
               />
@@ -654,8 +668,8 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={handleBooking}
-                  disabled={!startDate || !endDate || bookingLoading}
-                  style={[styles.sheetBtn, { flex: 2, backgroundColor: '#3b82f6', opacity: (!startDate || !endDate) ? 0.5 : 1 }]}
+                  disabled={bookingLoading || !(startDate && endDate && startDate >= (new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())) && endDate > startDate)}
+                  style={[styles.sheetBtn, { flex: 2, backgroundColor: '#3b82f6', opacity: (!(startDate && endDate && startDate >= (new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())) && endDate > startDate)) ? 0.5 : 1 }]}
                 >
                   {bookingLoading
                     ? <ActivityIndicator color="#fff" />

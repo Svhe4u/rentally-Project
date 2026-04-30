@@ -286,7 +286,13 @@ class Booking(models.Model):
             duration_days = (self.end_date - self.start_date).days
             if duration_days > 0 and not self.total_price:
                 from decimal import Decimal
-                self.total_price = Decimal(duration_days) * self.listing.price
+                # Normalize price to daily rate based on price_type
+                daily_price = self.listing.price
+                if self.listing.price_type == 'monthly':
+                    daily_price = self.listing.price / Decimal('30')
+                elif self.listing.price_type == 'yearly':
+                    daily_price = self.listing.price / Decimal('365')
+                self.total_price = Decimal(duration_days) * daily_price
         self.clean()
         super().save(*args, **kwargs)
 

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
-  ScrollView, SafeAreaView, ActivityIndicator, Alert, Platform
+  ScrollView, SafeAreaView, ActivityIndicator, Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { BookingAPI } from '../services/api';
+import NotificationModal, { NotificationType } from '../components/NotificationModal';
 
 interface Props {
   onNavigate: (screen: string, params?: any) => void;
@@ -27,34 +28,69 @@ export default function BookingScreen({
   const [note, setNote]           = useState('');
   const [loading, setLoading]     = useState(false);
 
-  const months = (() => {
+  // Modal state
+  const [notificationVisible, setNotificationVisible] = useState(false);
+  const [notificationType, setNotificationType] = useState<NotificationType>('success');
+  const [notificationTitle, setNotificationTitle] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationAction, setNotificationAction] = useState<(() => void) | undefined>();
+
+  const days = (() => {
     if (!startDate || !endDate) return 0;
     const s = new Date(startDate), e = new Date(endDate);
     if (isNaN(s.getTime()) || isNaN(e.getTime()) || e <= s) return 0;
-    return Math.max(1, Math.round((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24 * 30)));
+    return Math.ceil((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24));
   })();
 
-  const totalPrice = months * pricePerMonth;
-  const canBook    = !!startDate && !!endDate && months > 0;
+  // Frontend shows estimation only - backend will calculate actual price
+  const totalPrice = Math.round(days * (pricePerMonth / 30));
+  const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+  const startDateObj = startDate ? new Date(startDate) : null;
+  if (startDateObj) startDateObj.setHours(0,0,0,0);
+  const canBook    = !!startDate && !!endDate && days > 0 && startDateObj && startDateObj >= todayStart;
 
   const handleBook = async () => {
-    if (!canBook) return;
+    if (!canBook) {
+      // Show error modal explaining why the booking can't proceed
+      const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+      const s = startDate ? new Date(startDate) : null;
+      if (s) s.setHours(0,0,0,0);
+
+      setNotificationType('error');
+      setNotificationTitle('Алдаа');
+
+      if (!startDate || !endDate) {
+        setNotificationMessage('Эхлэх болон дуусах огноог заавал сонгоно уу.');
+      } else if (s && s < todayStart) {
+        setNotificationMessage('Эхлэх огноо өнөөгийн огнооноос өмнөх байж болохгүй.');
+      } else {
+        setNotificationMessage('Дуусах огноо эхлэх огнооноос хойш байх ёстой.');
+      }
+
+      setNotificationVisible(true);
+      return;
+    }
+
     setLoading(true);
     try {
       const booking = await BookingAPI.create({
         listing_id: listingId,
-        start_date: startDate,
-        end_date: endDate,
-        total_price: totalPrice,
+        start_date: new Date(startDate).toISOString(),
+        end_date: new Date(endDate).toISOString(),
+        notes: note,
         status: 'pending',
       });
-      Alert.alert(
-        'Захиалга амжилттай',
-        `Захиалгын дугаар: #${booking.id}\nТогтоогдох хүртэл хүлээнэ үү.`,
-        [{ text: 'OK', onPress: () => onNavigate('home') }],
-      );
+      setNotificationType('success');
+      setNotificationTitle('Захиалга амжилттай');
+      setNotificationMessage(`Захиалгын дугаар: #${booking.id}\nТогтоогдох хүртэл хүлээнэ үү.`);
+      setNotificationAction(() => () => onNavigate('home'));
+      setNotificationVisible(true);
     } catch (e: any) {
-      Alert.alert('Алдаа', e.message || 'Захиалга амжилтгүй боллоо');
+      setNotificationType('error');
+      setNotificationTitle('Алдаа');
+      setNotificationMessage(e.message || 'Захиалга амжилтгүй боллоо');
+      setNotificationAction(undefined);
+      setNotificationVisible(true);
     } finally {
       setLoading(false);
     }
@@ -115,19 +151,19 @@ export default function BookingScreen({
             </View>
           </View>
 
-          {months > 0 && (
+          {days > 0 && (
             <View style={s.durationBadge}>
-              <Text style={s.durationTxt}>📅 {months} сар</Text>
+              <Text style={s.durationTxt}>📅 {days} өдөр</Text>
             </View>
           )}
         </View>
 
         {/* Price breakdown */}
-        {months > 0 && (
+        {days > 0 && (
           <View style={s.card}>
             <Text style={s.cardTitle}>Үнийн тооцоо</Text>
             {[
-              [`${pricePerMonth.toLocaleString()}₮ × ${months} сар`, `${totalPrice.toLocaleString()}₮`],
+              [`${pricePerMonth.toLocaleString()}₮ × ${days} өдөр (÷30)`, `${totalPrice.toLocaleString()}₮`],
               ['Үйлчилгээний хураамж', '0₮'],
               ['Нийт төлбөр', `${totalPrice.toLocaleString()}₮`],
             ].map(([k, v], i) => (
@@ -184,9 +220,9 @@ export default function BookingScreen({
 
       {/* Bottom button */}
       <View style={s.footer}>
-        {months > 0 && (
+        {days > 0 && (
           <View style={s.footerPrice}>
-            <Text style={s.footerPriceLabel}>Нийт төлбөр</Text>
+            <Text style={s.footerPriceLabel}>Нийт төлбөр (зөвтгөл)</Text>
             <Text style={s.footerPriceAmt}>{totalPrice.toLocaleString()}₮</Text>
           </View>
         )}
@@ -201,6 +237,17 @@ export default function BookingScreen({
             : <Text style={s.btnBookTxt}>Захиалга баталгаажуулах</Text>}
         </TouchableOpacity>
       </View>
+
+      {/* Notification Modal */}
+      <NotificationModal
+        visible={notificationVisible}
+        type={notificationType}
+        title={notificationTitle}
+        message={notificationMessage}
+        onClose={() => setNotificationVisible(false)}
+        onConfirm={notificationAction}
+        confirmText={notificationType === 'success' ? 'Өмнөх хуудаст' : 'OK'}
+      />
     </SafeAreaView>
   );
 }

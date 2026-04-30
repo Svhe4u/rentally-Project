@@ -403,10 +403,11 @@ class BookingListAPIView(APIView):
 
         listing = get_object_or_404(Listing, id=request.data.get('listing_id'), status='active')
 
-        # REMOVE THE TRY/EXCEPT COMPLETELY
-        # This forces the terminal to show the REAL error instead of catching it.
-        booking = BookingService.create_booking(request.user, listing, request.data)
-        return Response(BookingSerializer(booking).data, status=status.HTTP_201_CREATED)
+        try:
+            booking = BookingService.create_booking(request.user, listing, request.data)
+            return Response(BookingSerializer(booking).data, status=status.HTTP_201_CREATED)
+        except ValueError as e:
+            return APIError.bad_request(str(e))
 
 
 class BookingDetailAPIView(APIView):

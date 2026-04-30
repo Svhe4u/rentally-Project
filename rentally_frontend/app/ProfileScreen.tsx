@@ -174,7 +174,7 @@ export default function ProfileScreen({ onNavigate }: Props) {
         <View className="mx-5 mt-8 flex-row items-center justify-between">
           <StatItem icon={Heart} label="Хадгалсан" count={stats.favorites} onPress={() => onNavigate('saved')} />
           <StatItem icon={MessageSquare} label="Мессеж" count={stats.messages} onPress={() => onNavigate('messages')} />
-          <StatItem icon={Calendar} label="Захиалга" count={stats.bookings} onPress={() => Alert.alert('Тун удахгүй')} />
+          <StatItem icon={Calendar} label="Захиалга" count={stats.bookings} onPress={() => onNavigate('myBookings')} />
         </View>
 
         {/* Broker CTA */}
@@ -203,22 +203,22 @@ export default function ProfileScreen({ onNavigate }: Props) {
           <View className="px-5 pt-8 pb-4 border-b border-border/50">
             <Text className="text-[11px] font-black text-muted-foreground uppercase tracking-[2px]">Миний тохиргоо</Text>
           </View>
-          <MenuItem icon={User} title="Профайл засах" sub="Нэр, утасны дугаар шинэчлэх" />
-          <MenuItem icon={ShieldCheck} title="Аюулгүй байдал" sub="Нууц үг солих, хамгаалалт" />
-          <MenuItem icon={Bell} title="Мэдэгдэл" sub="Мэдэгдлийн тохиргоо" />
+          <MenuItem icon={User} title="Профайл засах" sub="Нэр, утасны дугаар шинэчлэх" onPress={() => onNavigate('editProfile')} />
+          <MenuItem icon={ShieldCheck} title="Аюулгүй байдал" sub="Нууц үг солих, хамгаалалт" onPress={() => onNavigate('security')} />
+          <MenuItem icon={Bell} title="Мэдэгдэл" sub="Мэдэгдлийн тохиргоо" onPress={() => onNavigate('notifications')} />
         </View>
 
         <View className="mx-5 mt-6 bg-card border border-border rounded-[32px] overflow-hidden">
           <View className="px-5 pt-8 pb-4 border-b border-border/50">
             <Text className="text-[11px] font-black text-muted-foreground uppercase tracking-[2px]">Дэмжлэг & Тусламж</Text>
           </View>
-          <MenuItem icon={HelpCircle} title="Тусламжийн төв" sub="Түгээмэл асуулт хариулт" />
-          <MenuItem icon={Info} title="Бидний тухай" sub="Апп-ын мэдээлэл" />
+          <MenuItem icon={HelpCircle} title="Тусламжийн төв" sub="Түгээмэл асуулт хариулт" onPress={() => onNavigate('help')} />
+          <MenuItem icon={Info} title="Бидний тухай" sub="Апп-ын мэдээлэл" onPress={() => onNavigate('about')} />
           <MenuItem icon={LogOut} title="Системээс гарах" isDestructive onPress={handleLogout} />
         </View>
 
         {/* Settings Button */}
-        <TouchableOpacity className="mx-5 mt-6 bg-secondary h-16 rounded-[24px] border border-border items-center justify-center flex-row gap-2">
+        <TouchableOpacity className="mx-5 mt-6 bg-secondary h-16 rounded-[24px] border border-border items-center justify-center flex-row gap-2" onPress={() => onNavigate('security')}>
           <Settings size={18} className="text-muted-foreground" />
           <Text className="text-sm font-black text-muted-foreground">Нэмэлт тохиргоо</Text>
         </TouchableOpacity>
