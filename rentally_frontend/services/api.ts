@@ -2,6 +2,12 @@ import { storage } from './storage';
 
 const BASE_URL = 'http://localhost:8000/api'; // Web testing
 
+let globalLogout: (() => void) | null = null;
+
+export const setLogoutCallback = (logout: () => void) => {
+  globalLogout = logout;
+};
+
 // async function request<T>(
 //   path: string,
 //   options?: RequestInit,
@@ -77,7 +83,19 @@ async function request<T>(
           throw new Error(err.detail || err.error || `HTTP ${retryRes.status}`);
         }
         return retryRes.json();
+      } else {
+        // Refresh failed, logout user
+        if (globalLogout) {
+          globalLogout();
+        }
+        throw new Error('Токен хүчингүй болсон. Дахин нэвтэрнэ үү.');
       }
+    } else {
+      // No refresh token, logout
+      if (globalLogout) {
+        globalLogout();
+      }
+      throw new Error('Токен хүчингүй болсон. Дахин нэвтэрнэ үү.');
     }
   }
 

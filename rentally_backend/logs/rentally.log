@@ -15232,3 +15232,90 @@ INFO 2026-04-30 13:25:09,377 middleware 9272 8632 GET /api/favorites/17/check/ 2
 INFO 2026-04-30 13:25:09,379 runserver 9272 23220 [mHTTP GET /api/favorites/17/check/ 200 [2.48, 127.0.0.1:59896][0m
 INFO 2026-04-30 13:25:11,182 middleware 9272 24604 GET /api/listings/ 200 - 3.978s
 INFO 2026-04-30 13:25:11,184 runserver 9272 23220 [mHTTP GET /api/listings/?owner_id=1&page_size=5 200 [3.98, 127.0.0.1:52657][0m
+INFO 2026-05-01 13:55:10,983 autoreload 920 17848 Watching for file changes with StatReloader
+INFO 2026-05-01 13:58:18,971 runserver 920 4448 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-favorite_count 200 [0.06, 127.0.0.1:57229][0m
+INFO 2026-05-01 13:58:18,975 runserver 920 4448 [mHTTP OPTIONS /api/listings/?page_size=6 200 [0.05, 127.0.0.1:51175][0m
+INFO 2026-05-01 13:58:18,981 runserver 920 4448 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-24T05%3A58%3A18.598Z 200 [0.05, 127.0.0.1:60694][0m
+INFO 2026-05-01 13:58:18,983 runserver 920 4448 [mHTTP OPTIONS /api/favorites/?page=1&page_size=100 200 [0.06, 127.0.0.1:58690][0m
+INFO 2026-05-01 13:58:18,986 runserver 920 4448 [mHTTP OPTIONS /api/categories/ 200 [0.06, 127.0.0.1:53236][0m
+INFO 2026-05-01 13:58:18,987 runserver 920 4448 [mHTTP OPTIONS /api/regions/ 200 [0.06, 127.0.0.1:52755][0m
+INFO 2026-05-01 13:58:19,151 middleware 920 21896 GET /api/categories/ 401 - 0.094s
+INFO 2026-05-01 13:58:19,155 middleware 920 6124 GET /api/listings/ 401 - 0.098s
+INFO 2026-05-01 13:58:19,155 middleware 920 8832 GET /api/regions/ 401 - 0.096s
+INFO 2026-05-01 13:58:19,155 middleware 920 13800 GET /api/listings/ 401 - 0.098s
+INFO 2026-05-01 13:58:19,157 middleware 920 10700 GET /api/favorites/ 401 - 0.091s
+INFO 2026-05-01 13:58:19,158 middleware 920 716 GET /api/listings/ 401 - 0.092s
+WARNING 2026-05-01 13:58:19,196 runserver 920 4448 [31;1mHTTP GET /api/categories/ 401 [0.19, 127.0.0.1:51175][0m
+WARNING 2026-05-01 13:58:19,198 runserver 920 4448 [31;1mHTTP GET /api/regions/ 401 [0.19, 127.0.0.1:60694][0m
+WARNING 2026-05-01 13:58:19,200 runserver 920 4448 [31;1mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-24T05%3A58%3A18.598Z 401 [0.20, 127.0.0.1:52755][0m
+WARNING 2026-05-01 13:58:19,201 runserver 920 4448 [31;1mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 401 [0.20, 127.0.0.1:57229][0m
+WARNING 2026-05-01 13:58:19,201 runserver 920 4448 [31;1mHTTP GET /api/listings/?page_size=6 401 [0.20, 127.0.0.1:53236][0m
+WARNING 2026-05-01 13:58:19,207 runserver 920 4448 [31;1mHTTP GET /api/favorites/?page=1&page_size=100 401 [0.20, 127.0.0.1:58690][0m
+INFO 2026-05-01 13:58:19,236 runserver 920 4448 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.02, 127.0.0.1:52755][0m
+INFO 2026-05-01 13:58:19,244 runserver 920 4448 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.03, 127.0.0.1:51175][0m
+INFO 2026-05-01 13:58:19,246 runserver 920 4448 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.03, 127.0.0.1:60694][0m
+INFO 2026-05-01 13:58:19,247 runserver 920 4448 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.03, 127.0.0.1:53236][0m
+INFO 2026-05-01 13:58:19,249 runserver 920 4448 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.03, 127.0.0.1:57229][0m
+INFO 2026-05-01 13:58:19,251 runserver 920 4448 [mHTTP OPTIONS /api/auth/token/refresh/ 200 [0.03, 127.0.0.1:58690][0m
+INFO 2026-05-01 13:58:19,346 middleware 920 5872 POST /api/auth/token/refresh/ 401 - 0.036s
+INFO 2026-05-01 13:58:19,346 middleware 920 12328 POST /api/auth/token/refresh/ 401 - 0.037s
+INFO 2026-05-01 13:58:19,346 middleware 920 3140 POST /api/auth/token/refresh/ 401 - 0.036s
+INFO 2026-05-01 13:58:19,348 middleware 920 15760 POST /api/auth/token/refresh/ 401 - 0.037s
+INFO 2026-05-01 13:58:19,350 middleware 920 8256 POST /api/auth/token/refresh/ 401 - 0.036s
+INFO 2026-05-01 13:58:19,350 middleware 920 14768 POST /api/auth/token/refresh/ 401 - 0.038s
+WARNING 2026-05-01 13:58:19,373 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.11, 127.0.0.1:53236][0m
+WARNING 2026-05-01 13:58:19,384 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.12, 127.0.0.1:57229][0m
+WARNING 2026-05-01 13:58:19,384 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.13, 127.0.0.1:60694][0m
+WARNING 2026-05-01 13:58:19,388 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.12, 127.0.0.1:52755][0m
+WARNING 2026-05-01 13:58:19,388 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.13, 127.0.0.1:51175][0m
+WARNING 2026-05-01 13:58:19,399 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.13, 127.0.0.1:58690][0m
+INFO 2026-05-01 13:58:31,052 runserver 920 4448 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-24T05%3A58%3A30.985Z 200 [0.06, 127.0.0.1:51175][0m
+INFO 2026-05-01 13:58:31,117 middleware 920 15792 GET /api/listings/ 401 - 0.039s
+INFO 2026-05-01 13:58:31,120 middleware 920 5368 GET /api/categories/ 401 - 0.038s
+INFO 2026-05-01 13:58:31,120 middleware 920 1160 GET /api/regions/ 401 - 0.038s
+INFO 2026-05-01 13:58:31,122 middleware 920 19164 GET /api/favorites/ 401 - 0.040s
+INFO 2026-05-01 13:58:31,122 middleware 920 14896 GET /api/listings/ 401 - 0.040s
+WARNING 2026-05-01 13:58:31,141 runserver 920 4448 [31;1mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 401 [0.15, 127.0.0.1:58690][0m
+INFO 2026-05-01 13:58:31,147 middleware 920 876 GET /api/listings/ 401 - 0.023s
+WARNING 2026-05-01 13:58:31,151 runserver 920 4448 [31;1mHTTP GET /api/categories/ 401 [0.15, 127.0.0.1:52755][0m
+WARNING 2026-05-01 13:58:31,179 runserver 920 4448 [31;1mHTTP GET /api/regions/ 401 [0.18, 127.0.0.1:53236][0m
+WARNING 2026-05-01 13:58:31,208 runserver 920 4448 [31;1mHTTP GET /api/favorites/?page=1&page_size=100 401 [0.21, 127.0.0.1:60694][0m
+WARNING 2026-05-01 13:58:31,246 runserver 920 4448 [31;1mHTTP GET /api/listings/?page_size=6 401 [0.25, 127.0.0.1:57229][0m
+WARNING 2026-05-01 13:58:31,257 runserver 920 4448 [31;1mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-24T05%3A58%3A30.985Z 401 [0.19, 127.0.0.1:51175][0m
+INFO 2026-05-01 13:58:31,325 middleware 920 21592 POST /api/auth/token/refresh/ 401 - 0.052s
+INFO 2026-05-01 13:58:31,337 middleware 920 23520 POST /api/auth/token/refresh/ 401 - 0.047s
+INFO 2026-05-01 13:58:31,360 middleware 920 17584 POST /api/auth/token/refresh/ 401 - 0.037s
+INFO 2026-05-01 13:58:31,386 middleware 920 15908 POST /api/auth/token/refresh/ 401 - 0.030s
+WARNING 2026-05-01 13:58:31,402 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.24, 127.0.0.1:58690][0m
+INFO 2026-05-01 13:58:31,431 middleware 920 18164 POST /api/auth/token/refresh/ 401 - 0.059s
+WARNING 2026-05-01 13:58:31,431 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.26, 127.0.0.1:52755][0m
+INFO 2026-05-01 13:58:31,442 middleware 920 22176 POST /api/auth/token/refresh/ 401 - 0.064s
+WARNING 2026-05-01 13:58:31,456 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.22, 127.0.0.1:53236][0m
+WARNING 2026-05-01 13:58:31,472 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.20, 127.0.0.1:51175][0m
+WARNING 2026-05-01 13:58:31,475 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.20, 127.0.0.1:57229][0m
+WARNING 2026-05-01 13:58:31,482 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.19, 127.0.0.1:60694][0m
+INFO 2026-05-01 14:04:19,589 runserver 920 4448 [mHTTP OPTIONS /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-24T06%3A04%3A19.208Z 200 [0.04, 127.0.0.1:63648][0m
+INFO 2026-05-01 14:04:19,665 middleware 920 22792 GET /api/listings/ 401 - 0.035s
+INFO 2026-05-01 14:04:19,668 middleware 920 744 GET /api/listings/ 401 - 0.034s
+INFO 2026-05-01 14:04:19,671 middleware 920 10520 GET /api/regions/ 401 - 0.031s
+INFO 2026-05-01 14:04:19,671 middleware 920 16800 GET /api/categories/ 401 - 0.030s
+INFO 2026-05-01 14:04:19,673 middleware 920 1108 GET /api/favorites/ 401 - 0.032s
+INFO 2026-05-01 14:04:19,689 middleware 920 13016 GET /api/listings/ 401 - 0.018s
+WARNING 2026-05-01 14:04:19,702 runserver 920 4448 [31;1mHTTP GET /api/listings/?page_size=6 401 [0.15, 127.0.0.1:49736][0m
+WARNING 2026-05-01 14:04:19,704 runserver 920 4448 [31;1mHTTP GET /api/listings/?page_size=6&ordering=-favorite_count 401 [0.17, 127.0.0.1:60573][0m
+WARNING 2026-05-01 14:04:19,710 runserver 920 4448 [31;1mHTTP GET /api/categories/ 401 [0.15, 127.0.0.1:55310][0m
+WARNING 2026-05-01 14:04:19,715 runserver 920 4448 [31;1mHTTP GET /api/regions/ 401 [0.16, 127.0.0.1:50959][0m
+WARNING 2026-05-01 14:04:19,721 runserver 920 4448 [31;1mHTTP GET /api/favorites/?page=1&page_size=100 401 [0.17, 127.0.0.1:60005][0m
+WARNING 2026-05-01 14:04:19,792 runserver 920 4448 [31;1mHTTP GET /api/listings/?page_size=6&ordering=-created_at&created_after=2026-04-24T06%3A04%3A19.208Z 401 [0.18, 127.0.0.1:63648][0m
+INFO 2026-05-01 14:04:19,871 middleware 920 23100 POST /api/auth/token/refresh/ 401 - 0.041s
+INFO 2026-05-01 14:04:19,871 middleware 920 2420 POST /api/auth/token/refresh/ 401 - 0.041s
+INFO 2026-05-01 14:04:19,871 middleware 920 6336 POST /api/auth/token/refresh/ 401 - 0.042s
+INFO 2026-05-01 14:04:19,871 middleware 920 17500 POST /api/auth/token/refresh/ 401 - 0.042s
+INFO 2026-05-01 14:04:19,871 middleware 920 18508 POST /api/auth/token/refresh/ 401 - 0.039s
+INFO 2026-05-01 14:04:19,891 middleware 920 16504 POST /api/auth/token/refresh/ 401 - 0.018s
+WARNING 2026-05-01 14:04:19,904 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.16, 127.0.0.1:50959][0m
+WARNING 2026-05-01 14:04:19,909 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.17, 127.0.0.1:49736][0m
+WARNING 2026-05-01 14:04:19,917 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.18, 127.0.0.1:55310][0m
+WARNING 2026-05-01 14:04:19,922 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.20, 127.0.0.1:60573][0m
+WARNING 2026-05-01 14:04:19,925 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.15, 127.0.0.1:60005][0m
+WARNING 2026-05-01 14:04:19,933 runserver 920 4448 [31;1mHTTP POST /api/auth/token/refresh/ 401 [0.12, 127.0.0.1:63648][0m

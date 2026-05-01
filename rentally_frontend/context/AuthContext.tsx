@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useReducer, useCallback, useEffect } from 'react';
-import { AuthAPI } from '../services/api';
+import { AuthAPI, setLogoutCallback } from '../services/api';
 import { storage } from '../services/storage';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -159,6 +159,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await storage.deleteItem('auth_user');
     dispatch({ type: 'LOGOUT' });
   }, []);
+
+  // Set logout callback for API service
+  useEffect(() => {
+    setLogoutCallback(logout);
+  }, [logout]);
 
   const updateUser = useCallback(async (userData: Partial<User>) => {
     dispatch({ type: 'UPDATE_USER', payload: userData });
