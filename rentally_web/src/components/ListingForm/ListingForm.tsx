@@ -93,6 +93,21 @@ export function ListingForm({
     bathrooms: undefined,
     area_sqm: undefined,
     heating_type: '',
+    payment_condition: '',
+    upfront_months: undefined,
+    deposit_months: undefined,
+    is_pet_friendly: false,
+    furnishing_status: '',
+    payment_terms: '',
+    floor_type: '',
+    window_type: '',
+    door_type: '',
+    balcony: false,
+    garage: false,
+    year_built: undefined,
+    floor_number: undefined,
+    building_floors: undefined,
+    window_count: undefined,
     features: [],
   });
 
@@ -116,6 +131,21 @@ export function ListingForm({
         bathrooms: listing.detail?.bathrooms,
         area_sqm: listing.detail?.area_sqm,
         heating_type: listing.detail?.heating_type || '',
+        payment_condition: listing.detail?.payment_condition || '',
+        upfront_months: listing.detail?.upfront_months,
+        deposit_months: listing.detail?.deposit_months,
+        is_pet_friendly: listing.detail?.is_pet_friendly || false,
+        furnishing_status: listing.detail?.furnishing_status || '',
+        payment_terms: listing.detail?.payment_terms || '',
+        floor_type: listing.detail?.floor_type || '',
+        window_type: listing.detail?.window_type || '',
+        door_type: listing.detail?.door_type || '',
+        balcony: listing.detail?.balcony || false,
+        garage: listing.detail?.garage || false,
+        year_built: listing.detail?.year_built,
+        floor_number: listing.detail?.floor_number,
+        building_floors: listing.detail?.building_floors,
+        window_count: listing.detail?.window_count,
         features: listing.features?.map(f => f.name) || [],
       });
       setImages([...(listing.images || [])].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)));
@@ -374,6 +404,196 @@ export function ListingForm({
               ))}
             </select>
           </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Баригдсан он</label>
+            <input
+              type="number"
+              className="form-input"
+              value={formData.year_built || ''}
+              onChange={e => handleChange('year_built', parseInt(e.target.value) || undefined)}
+              placeholder="e.g., 2015"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Нийт давхар</label>
+            <input
+              type="number"
+              className="form-input"
+              value={formData.building_floors || ''}
+              onChange={e => handleChange('building_floors', parseInt(e.target.value) || undefined)}
+              placeholder="e.g., 12"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Хэдэн давхарт</label>
+            <input
+              type="number"
+              className="form-input"
+              value={formData.floor_number || ''}
+              onChange={e => handleChange('floor_number', parseInt(e.target.value) || undefined)}
+              placeholder="e.g., 5"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Цонхны тоо</label>
+            <input
+              type="number"
+              className="form-input"
+              value={formData.window_count || ''}
+              onChange={e => handleChange('window_count', parseInt(e.target.value) || undefined)}
+              placeholder="e.g., 3"
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Шал</label>
+            <input
+              type="text"
+              className="form-input"
+              value={formData.floor_type || ''}
+              onChange={e => handleChange('floor_type', e.target.value)}
+              placeholder="e.g., Паркет"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Цонх</label>
+            <input
+              type="text"
+              className="form-input"
+              value={formData.window_type || ''}
+              onChange={e => handleChange('window_type', e.target.value)}
+              placeholder="e.g., Вакум"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Хаалга</label>
+            <input
+              type="text"
+              className="form-input"
+              value={formData.door_type || ''}
+              onChange={e => handleChange('door_type', e.target.value)}
+              placeholder="e.g., Бүргэд"
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group checkbox-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+            <input
+              type="checkbox"
+              id="balcony"
+              checked={formData.balcony || false}
+              onChange={e => handleChange('balcony', e.target.checked)}
+              style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#3b82f6' }}
+            />
+            <label htmlFor="balcony" className="form-label" style={{ marginBottom: 0, cursor: 'pointer' }}>Тагттай</label>
+          </div>
+
+          <div className="form-group checkbox-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+            <input
+              type="checkbox"
+              id="garage"
+              checked={formData.garage || false}
+              onChange={e => handleChange('garage', e.target.checked)}
+              style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#3b82f6' }}
+            />
+            <label htmlFor="garage" className="form-label" style={{ marginBottom: 0, cursor: 'pointer' }}>Дулаан зогсоолтой</label>
+          </div>
+        </div>
+      </div>
+
+      <div className="form-section">
+        <h4 className="form-section-title">Түрээсийн нөхцөл</h4>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Төлбөрийн нөхцөл</label>
+            <select
+              className="form-select"
+              value={formData.payment_condition || ''}
+              onChange={e => handleChange('payment_condition', e.target.value)}
+            >
+              <option value="">Сонгох</option>
+              <option value="1_plus_1">1+1 (1 сар урьдчилгаа, 1 сар барьцаа)</option>
+              <option value="3_plus_1">3+1 (3 сар урьдчилгаа, 1 сар барьцаа)</option>
+              <option value="6_plus_1">6+1 (6 сар урьдчилгаа, 1 сар барьцаа)</option>
+              <option value="monthly">Сар бүр (Барьцаатай)</option>
+              <option value="no_deposit">Барьцаагүй</option>
+              <option value="custom">Бусад (Тохиролцоно)</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Тавилга</label>
+            <select
+              className="form-select"
+              value={formData.furnishing_status || ''}
+              onChange={e => handleChange('furnishing_status', e.target.value)}
+            >
+              <option value="">Сонгох</option>
+              <option value="unfurnished">Тавилгагүй (Хоосон)</option>
+              <option value="semi_furnished">Хагас тавилгатай</option>
+              <option value="fully_furnished">Бүрэн тавилгатай</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Урьдчилж төлөх сар</label>
+            <input
+              type="number"
+              className="form-input"
+              value={formData.upfront_months || ''}
+              onChange={e => handleChange('upfront_months', parseInt(e.target.value) || undefined)}
+              placeholder="Жнь: 3"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Барьцаа сар</label>
+            <input
+              type="number"
+              className="form-input"
+              value={formData.deposit_months || ''}
+              onChange={e => handleChange('deposit_months', parseInt(e.target.value) || undefined)}
+              placeholder="Жнь: 1"
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group checkbox-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+            <input
+              type="checkbox"
+              id="is_pet_friendly"
+              checked={formData.is_pet_friendly || false}
+              onChange={e => handleChange('is_pet_friendly', e.target.checked)}
+              style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#3b82f6' }}
+            />
+            <label htmlFor="is_pet_friendly" className="form-label" style={{ marginBottom: 0, cursor: 'pointer' }}>Амьтан тэжээхийг зөвшөөрөх</label>
+          </div>
+        </div>
+
+        <div className="form-group" style={{ marginTop: '15px' }}>
+          <label className="form-label">Төлбөрийн нэмэлт тайлбар</label>
+          <input
+            type="text"
+            className="form-input"
+            value={formData.payment_terms || ''}
+            onChange={e => handleChange('payment_terms', e.target.value)}
+            placeholder="Нэмэлт нөхцөл, мэдээлэл..."
+          />
         </div>
       </div>
 

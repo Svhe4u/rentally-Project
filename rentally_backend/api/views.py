@@ -401,7 +401,12 @@ class BookingListAPIView(APIView):
         if missing:
             return APIError.bad_request(f"Required fields missing: {', '.join(missing)}")
 
-        listing = get_object_or_404(Listing, id=request.data.get('listing_id'), status='active')
+        print("DEBUG BOOKING POST:", request.data)
+        try:
+            listing = Listing.objects.get(id=request.data.get('listing_id'), status='active')
+        except Listing.DoesNotExist:
+            print("Listing not found for id:", request.data.get('listing_id'))
+            return APIError.not_found("No Listing matches the given query.")
 
         try:
             booking = BookingService.create_booking(request.user, listing, request.data)

@@ -148,7 +148,13 @@ class ListingService:
     @staticmethod
     def _apply_listing_detail(listing, data):
         """Create/update ListingDetail when detail keys are present."""
-        detail_keys = ('bedrooms', 'bathrooms', 'area_sqm', 'heating_type')
+        detail_keys = (
+            'bedrooms', 'bathrooms', 'area_sqm', 'heating_type',
+            'payment_condition', 'upfront_months', 'deposit_months',
+            'is_pet_friendly', 'furnishing_status', 'payment_terms',
+            'floor_type', 'window_type', 'door_type', 'balcony', 'garage',
+            'year_built', 'floor_number', 'building_floors', 'window_count'
+        )
         if not any(k in data for k in detail_keys):
             return
         detail, _ = ListingDetail.objects.get_or_create(listing=listing)
@@ -156,7 +162,7 @@ class ListingService:
             if k not in data:
                 continue
             val = data[k]
-            if k in ('bedrooms', 'bathrooms', 'area_sqm'):
+            if k in ('bedrooms', 'bathrooms', 'area_sqm', 'upfront_months', 'deposit_months', 'year_built', 'floor_number', 'building_floors', 'window_count'):
                 if val is None or val == '':
                     setattr(detail, k, None)
                 else:
@@ -164,9 +170,11 @@ class ListingService:
                         setattr(detail, k, int(val))
                     except (TypeError, ValueError):
                         raise ValueError(f"Invalid {k} value")
+            elif k in ('is_pet_friendly', 'balcony', 'garage'):
+                setattr(detail, k, bool(val))
             else:
-                s = str(val).strip()[:100] if val is not None else ''
-                detail.heating_type = s or None
+                s = str(val).strip() if val is not None else ''
+                setattr(detail, k, s or None)
         detail.save()
 
     @staticmethod
@@ -269,7 +277,7 @@ class BookingService:
 
         if isinstance(value, str):
             # List of formats to try
-            for fmt in ('%Y-%m-%d', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%dT%H:%M:%SZ'):
+            for fmt in ('%Y-%m-%d', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%dT%H:%M:%S.%fZ'):
                 try:
                     dt = datetime.strptime(value, fmt)
                     # Make timezone-aware

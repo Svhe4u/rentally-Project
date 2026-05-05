@@ -174,6 +174,9 @@ class ReviewCreateSerializer(serializers.Serializer):
 
 class ListingDetailSerializer(serializers.ModelSerializer):
     """Serializer for listing details."""
+    
+    total_upfront_payment = serializers.SerializerMethodField()
+    payment_condition_display = serializers.CharField(source='get_payment_condition_display', read_only=True)
 
     class Meta:
         model = ListingDetail
@@ -181,8 +184,37 @@ class ListingDetailSerializer(serializers.ModelSerializer):
             'bedrooms', 'bathrooms', 'area_sqm', 'utilities_estimated', 
             'heating_type', 'air_type', 'floor_type', 'window_type', 
             'door_type', 'balcony', 'garage', 'year_built', 
-            'floor_number', 'building_floors', 'window_count', 'payment_terms'
+            'floor_number', 'building_floors', 'window_count', 'payment_terms',
+            'payment_condition', 'payment_condition_display', 'upfront_months', 
+            'deposit_months', 'is_pet_friendly', 'furnishing_status', 'total_upfront_payment'
         ]
+
+    def get_total_upfront_payment(self, obj):
+        try:
+            price = obj.listing.price
+        except AttributeError:
+            return 0
+            
+        upfront = obj.upfront_months or 0
+        deposit = obj.deposit_months or 0
+        
+        # If upfront or deposit is explicitly provided
+        if upfront > 0 or deposit > 0:
+            return price * (upfront + deposit)
+            
+        # Fallback to payment_condition logic if months aren't explicitly provided
+        if obj.payment_condition == '1_plus_1':
+            return price * 2
+        elif obj.payment_condition == '3_plus_1':
+            return price * 4
+        elif obj.payment_condition == '6_plus_1':
+            return price * 7
+        elif obj.payment_condition == 'monthly':
+            return price * 2  # 1 month rent + 1 month deposit typically
+        elif obj.payment_condition == 'no_deposit':
+            return price
+            
+        return price
 
 
 class ListingImageSerializer(serializers.ModelSerializer):
@@ -279,10 +311,6 @@ class BookingSerializer(serializers.ModelSerializer):
     user_username = serializers.CharField(source='user.username', read_only=True)
     days_remaining = serializers.SerializerMethodField()
     duration_days = serializers.SerializerMethodField()
-    
-    # Force Date representation to avoid aware/naive DateTimeField crashes
-    start_date = serializers.DateField()
-    end_date = serializers.DateField()
 
     class Meta:
         model = Booking

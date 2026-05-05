@@ -31,6 +31,13 @@ interface Details {
   floor_number?: number; building_floors?: number; window_count?: number;
   payment_terms?: string; heating_type?: string; air_type?: string;
   utilities_estimated?: number;
+  payment_condition?: string;
+  payment_condition_display?: string;
+  upfront_months?: number;
+  deposit_months?: number;
+  is_pet_friendly?: boolean;
+  furnishing_status?: string;
+  total_upfront_payment?: number;
 }
 interface ExtraFeature { id: number; key: string; value: string; }
 interface Review {
@@ -255,24 +262,42 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
     if (!startDate || !endDate) return 0;
     return Math.ceil(Math.abs(endDate.getTime() - startDate.getTime()) / 86400000);
   };
-  const totalPrice = (() => {
-    if (!startDate || !endDate || !listing) return 0;
+  
+  const bookingSummary = (() => {
+    if (!startDate || !endDate || !listing) return null;
     const d = days();
     const price = listing.price ?? 0;
 
-    // Calculate based on price type
-    switch (listing.price_type) {
-      case 'daily':
-        return d * price;
-      case 'monthly':
-        // Approximate: 1 month = 30 days
-        return Math.ceil((d / 30) * price);
-      case 'yearly':
-        // Approximate: 1 year = 365 days
-        return Math.ceil((d / 365) * price);
-      default:
-        return d * price;
+    let rentTotal = 0;
+    let durationLabel = '';
+    let monthsSelected = 0;
+
+    if (listing.price_type === 'monthly') {
+      monthsSelected = Math.ceil(d / 30);
+      rentTotal = monthsSelected * price;
+      durationLabel = `${monthsSelected} сар`;
+    } else if (listing.price_type === 'yearly') {
+      const years = Math.ceil(d / 365);
+      monthsSelected = years * 12;
+      rentTotal = years * price;
+      durationLabel = `${years} жил`;
+    } else {
+      rentTotal = d * price;
+      durationLabel = `${d} хоног`;
     }
+
+    const depositMonths = listing.details?.deposit_months || 0;
+    const upfrontMonths = listing.details?.upfront_months || 1;
+    const depositAmount = (listing.price_type === 'monthly' || listing.price_type === 'yearly') ? depositMonths * price : 0;
+    
+    const totalPrice = rentTotal + depositAmount;
+    
+    let warning = null;
+    if ((listing.price_type === 'monthly' || listing.price_type === 'yearly') && monthsSelected < upfrontMonths) {
+      warning = `Хамгийн багадаа ${upfrontMonths} сараар түрээслэнэ.`;
+    }
+
+    return { rentTotal, depositAmount, totalPrice, durationLabel, warning, monthsSelected, depositMonths, upfrontMonths };
   })();
 
   const headerBg = scrollY.interpolate({
@@ -453,6 +478,16 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
                   {listing.details?.year_built   && <SpecBadge label="Баригдсан он"  value={`${listing.details.year_built}`} />}
                   <SpecBadge label="Тагт"  value={listing.details?.balcony ? 'Тийм ✓' : 'Үгүй'} />
                   <SpecBadge label="Гараж" value={listing.details?.garage  ? 'Тийм ✓' : 'Үгүй'} />
+                  <SpecBadge label="Амьтан" value={listing.details?.is_pet_friendly ? 'Зөвшөөрнө' : 'Үгүй'} />
+                  {listing.details?.furnishing_status && (
+                    <SpecBadge 
+                      label="Тавилга" 
+                      value={
+                        listing.details.furnishing_status === 'unfurnished' ? 'Хоосон' :
+                        listing.details.furnishing_status === 'semi_furnished' ? 'Хагас' : 'Бүрэн'
+                      } 
+                    />
+                  )}
                 </View>
 
                 {/* ── Extra Features / Amenities ── */}
@@ -469,15 +504,44 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
                   </View>
                 </>}
 
-                {/* ── Payment Terms ── */}
-                {listing.details?.payment_terms && (
-                  <View style={styles.darkCard}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                      <CreditCard size={14} color="rgba(255,255,255,0.5)" />
-                      <Text style={styles.darkCardLabel}>Төлбөрийн нөхцөл</Text>
+                {/* ── Rental Terms & Payment ── */}
+                {(listing.details?.payment_condition_display || listing.details?.payment_terms || listing.details?.total_upfront_payment) && (
+                  <>
+                    <SectionLabel>Түрээсийн нөхцөл</SectionLabel>
+                    <View style={styles.darkCard}>
+                      
+                      {listing.details?.total_upfront_payment ? (
+                        <View style={{ marginBottom: 16, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.1)' }}>
+                          <Text style={styles.darkCardLabel}>ЭХНИЙ ТӨЛБӨР (БАРЬЦАА ОРСОН ДҮН)</Text>
+                          <Text style={{ fontSize: 24, color: '#fff', fontWeight: '900', marginTop: 4 }}>
+                            {fmt(listing.details.total_upfront_payment)} ₮
+                          </Text>
+                          {listing.details.upfront_months != null && listing.details.deposit_months != null && (
+                            <Text style={{ fontSize: 12, color: '#94a3b8', marginTop: 4 }}>
+                              {listing.details.upfront_months} сарын түрээс + {listing.details.deposit_months} сарын барьцаа
+                            </Text>
+                          )}
+                        </View>
+                      ) : null}
+
+                      {listing.details?.payment_condition_display && (
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                          <CreditCard size={16} color="#3b82f6" />
+                          <View>
+                            <Text style={{ fontSize: 11, color: '#94a3b8', fontWeight: '700' }}>НӨХЦӨЛ</Text>
+                            <Text style={{ fontSize: 14, color: '#fff', fontWeight: '700' }}>{listing.details.payment_condition_display}</Text>
+                          </View>
+                        </View>
+                      )}
+
+                      {listing.details?.payment_terms && (
+                        <View style={{ marginTop: 8 }}>
+                          <Text style={{ fontSize: 11, color: '#94a3b8', fontWeight: '700', marginBottom: 4 }}>НЭМЭЛТ ТАЙЛБАР</Text>
+                          <Text style={styles.darkCardText}>{listing.details.payment_terms}</Text>
+                        </View>
+                      )}
                     </View>
-                    <Text style={styles.darkCardText}>{listing.details.payment_terms}</Text>
-                  </View>
+                  </>
                 )}
 
                 {/* ── Utility Estimate ── */}
@@ -649,16 +713,27 @@ export default function ListingDetailScreen({ visible, listingId, onClose }: Pro
               </View>
 
               {/* Total */}
-              {startDate && endDate && (
-                <View style={styles.totalRow}>
+              {startDate && endDate && bookingSummary && (
+                <View style={[styles.totalRow, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, backgroundColor: '#eff6ff', padding: 16, borderRadius: 20 }]}>
                   <View>
-                    <Text style={{ fontSize: 10, fontWeight: '900', color: '#3b82f6', letterSpacing: 1 }}>НИЙТ ДҮН</Text>
-                    <Text style={{ fontSize: 22, fontWeight: '900', color: '#3b82f6' }}>{fmt(totalPrice)} ₮</Text>
+                    <Text style={{ fontSize: 10, fontWeight: '900', color: '#3b82f6', letterSpacing: 1, marginBottom: 4 }}>ЭХНИЙ ТӨЛБӨР (НИЙТ)</Text>
+                    <Text style={{ fontSize: 22, fontWeight: '900', color: '#3b82f6' }}>{fmt(bookingSummary.totalPrice)} ₮</Text>
+                    {(bookingSummary.depositAmount > 0 || bookingSummary.upfrontMonths > 1) && (
+                      <Text style={{ fontSize: 10, color: '#3b82f6', marginTop: 4, fontWeight: '600' }}>
+                        {bookingSummary.monthsSelected} сар: {fmt(bookingSummary.rentTotal)} ₮ + Барьцаа: {fmt(bookingSummary.depositAmount)} ₮
+                      </Text>
+                    )}
                   </View>
                   <View style={{ alignItems: 'flex-end' }}>
-                    <Text style={{ fontSize: 12, fontWeight: '700', color: '#64748b' }}>{days()} хоног</Text>
-                    <Text style={{ fontSize: 10, color: '#94a3b8' }}>Татвар багтсан</Text>
+                    <Text style={{ fontSize: 13, fontWeight: '800', color: '#1e3a8a' }}>{bookingSummary.durationLabel}</Text>
+                    <Text style={{ fontSize: 10, color: '#60a5fa', fontWeight: '600', marginTop: 2 }}>{days()} хоног</Text>
                   </View>
+                </View>
+              )}
+
+              {bookingSummary?.warning && (
+                <View style={{ backgroundColor: '#fef2f2', padding: 12, borderRadius: 12, marginBottom: 16, borderWidth: 1, borderColor: '#fecaca' }}>
+                  <Text style={{ color: '#ef4444', fontSize: 12, fontWeight: '700', textAlign: 'center' }}>⚠️ {bookingSummary.warning}</Text>
                 </View>
               )}
 

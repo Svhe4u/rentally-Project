@@ -74,6 +74,23 @@ export interface ListingDetail {
   utilities_estimated?: number;
   heating_type?: string;
   air_type?: string;
+  floor_type?: string;
+  window_type?: string;
+  door_type?: string;
+  balcony?: boolean;
+  garage?: boolean;
+  year_built?: number;
+  floor_number?: number;
+  building_floors?: number;
+  window_count?: number;
+  payment_terms?: string;
+  payment_condition?: string;
+  payment_condition_display?: string;
+  upfront_months?: number;
+  deposit_months?: number;
+  is_pet_friendly?: boolean;
+  furnishing_status?: string;
+  total_upfront_payment?: number;
 }
 
 export interface ListingFeature {
@@ -123,6 +140,21 @@ export interface ListingFormData {
   bathrooms?: number;
   area_sqm?: number;
   heating_type?: string;
+  floor_type?: string;
+  window_type?: string;
+  door_type?: string;
+  balcony?: boolean;
+  garage?: boolean;
+  year_built?: number;
+  floor_number?: number;
+  building_floors?: number;
+  window_count?: number;
+  payment_terms?: string;
+  payment_condition?: string;
+  upfront_months?: number;
+  deposit_months?: number;
+  is_pet_friendly?: boolean;
+  furnishing_status?: string;
   features?: string[];
   status?: ListingStatus;
 }

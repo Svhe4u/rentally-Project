@@ -45,12 +45,12 @@ export default function LoginScreen({ onNavigate }: Props) {
       >
         {/* Header/Close */}
         <View className="p-4">
-          <TouchableOpacity 
+          {/* <TouchableOpacity 
             className="w-10 h-10 items-center justify-center rounded-full bg-secondary" 
             onPress={() => onNavigate('home')}
           >
             <ChevronLeft size={24} className="text-foreground" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Logo Area */}

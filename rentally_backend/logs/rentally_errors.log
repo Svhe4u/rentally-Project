@@ -55352,3 +55352,401 @@ Traceback (most recent call last):
   File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py", line 306, in create_booking
     raise ValueError("start_date cannot be in the past")
 ValueError: start_date cannot be in the past
+ERROR 2026-05-05 19:17:03,332 log 26360 25872 Internal Server Error: /api/listings/8/
+Traceback (most recent call last):
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column api_listingdetail.payment_condition does not exist
+LINE 1: ...ndow_count", "api_listingdetail"."payment_terms", "api_listi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\base.py", line 254, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+        request, *callback_args, **callback_kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 506, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\current_thread_executor.py", line 40, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 561, in thread_handler
+    return func(*args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py", line 201, in get
+    listing = ListingService.get_listing_detail(pk)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py", line 141, in get_listing_detail
+    ).select_related('owner', 'category', 'region', 'detail').get(id=listing_id)
+                                                              ~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\models\query.py", line 635, in get
+    num = len(clone)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\models\query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\models\query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\models\query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column api_listingdetail.payment_condition does not exist
+LINE 1: ...ndow_count", "api_listingdetail"."payment_terms", "api_listi...
+                                                             ^
+
+ERROR 2026-05-05 19:17:03,356 log 26360 25380 Internal Server Error: /api/listings/14/
+Traceback (most recent call last):
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column api_listingdetail.payment_condition does not exist
+LINE 1: ...ndow_count", "api_listingdetail"."payment_terms", "api_listi...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\base.py", line 254, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+        request, *callback_args, **callback_kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 506, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\current_thread_executor.py", line 40, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 561, in thread_handler
+    return func(*args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py", line 201, in get
+    listing = ListingService.get_listing_detail(pk)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\services.py", line 141, in get_listing_detail
+    ).select_related('owner', 'category', 'region', 'detail').get(id=listing_id)
+                                                              ~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\models\query.py", line 635, in get
+    num = len(clone)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\models\query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\models\query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\models\query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column api_listingdetail.payment_condition does not exist
+LINE 1: ...ndow_count", "api_listingdetail"."payment_terms", "api_listi...
+                                                             ^
+
+ERROR 2026-05-05 20:00:56,404 log 24100 28848 Internal Server Error: /api/bookings/
+Traceback (most recent call last):
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\base.py", line 254, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+        request, *callback_args, **callback_kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 506, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\current_thread_executor.py", line 40, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 561, in thread_handler
+    return func(*args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py", line 413, in post
+    return Response(BookingSerializer(booking).data, status=status.HTTP_201_CREATED)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 573, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 251, in data
+    self._data = self.to_representation(self.instance)
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 540, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+                            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\fields.py", line 1272, in to_representation
+    assert not isinstance(value, datetime.datetime), (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Expected a `date`, but got a `datetime`. Refusing to coerce, as this may mean losing timezone information. Use a custom read-only field and deal with timezone issues explicitly.
+ERROR 2026-05-05 20:01:20,218 log 24100 28848 Internal Server Error: /api/bookings/
+Traceback (most recent call last):
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\base.py", line 254, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+        request, *callback_args, **callback_kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 506, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\current_thread_executor.py", line 40, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 561, in thread_handler
+    return func(*args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py", line 413, in post
+    return Response(BookingSerializer(booking).data, status=status.HTTP_201_CREATED)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 573, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 251, in data
+    self._data = self.to_representation(self.instance)
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 540, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+                            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\fields.py", line 1272, in to_representation
+    assert not isinstance(value, datetime.datetime), (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Expected a `date`, but got a `datetime`. Refusing to coerce, as this may mean losing timezone information. Use a custom read-only field and deal with timezone issues explicitly.
+ERROR 2026-05-05 20:01:53,176 log 24100 28848 Internal Server Error: /api/bookings/
+Traceback (most recent call last):
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\base.py", line 254, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+        request, *callback_args, **callback_kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 506, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\current_thread_executor.py", line 40, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 561, in thread_handler
+    return func(*args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py", line 413, in post
+    return Response(BookingSerializer(booking).data, status=status.HTTP_201_CREATED)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 573, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 251, in data
+    self._data = self.to_representation(self.instance)
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 540, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+                            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\fields.py", line 1272, in to_representation
+    assert not isinstance(value, datetime.datetime), (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Expected a `date`, but got a `datetime`. Refusing to coerce, as this may mean losing timezone information. Use a custom read-only field and deal with timezone issues explicitly.
+ERROR 2026-05-05 20:06:46,003 log 26520 27328 Internal Server Error: /api/bookings/
+Traceback (most recent call last):
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 557, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\core\handlers\base.py", line 254, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+        request, *callback_args, **callback_kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 506, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\current_thread_executor.py", line 40, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\asgiref\sync.py", line 561, in thread_handler
+    return func(*args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\views.py", line 413, in post
+    return Response(BookingSerializer(booking).data, status=status.HTTP_201_CREATED)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 573, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 251, in data
+    self._data = self.to_representation(self.instance)
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\serializers.py", line 540, in to_representation
+    ret[field.field_name] = field.to_representation(attribute)
+                            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Newtech\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\rest_framework\fields.py", line 1870, in to_representation
+    return method(value)
+  File "C:\Users\Newtech\Documents\GitHub\rentally-Project\rentally_backend\api\serializers.py", line 346, in get_days_remaining
+    if obj.start_date > today:
+       ^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'datetime.datetime' and 'datetime.date'

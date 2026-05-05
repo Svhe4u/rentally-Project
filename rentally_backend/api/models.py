@@ -198,6 +198,21 @@ class ListingImage(models.Model):
 class ListingDetail(models.Model):
     """Detailed specs for listings (bedrooms, bathrooms, utilities)."""
 
+    PAYMENT_CONDITION_CHOICES = [
+        ('1_plus_1', '1+1 (1 сар урьдчилгаа, 1 сар барьцаа)'),
+        ('3_plus_1', '3+1 (3 сар урьдчилгаа, 1 сар барьцаа)'),
+        ('6_plus_1', '6+1 (6 сар урьдчилгаа, 1 сар барьцаа)'),
+        ('monthly', 'Сар бүр (Барьцаатай)'),
+        ('no_deposit', 'Барьцаагүй'),
+        ('custom', 'Бусад (Тохиролцоно)'),
+    ]
+
+    FURNISHING_CHOICES = [
+        ('unfurnished', 'Тавилгагүй (Хоосон)'),
+        ('semi_furnished', 'Хагас тавилгатай'),
+        ('fully_furnished', 'Бүрэн тавилгатай'),
+    ]
+
     listing = models.OneToOneField(Listing, on_delete=models.CASCADE, related_name='detail')
 
     bedrooms = models.PositiveIntegerField(blank=True, null=True)
@@ -214,6 +229,13 @@ class ListingDetail(models.Model):
     building_floors = models.PositiveSmallIntegerField(blank=True, null=True)
     window_count = models.PositiveSmallIntegerField(blank=True, null=True)
     payment_terms = models.TextField(blank=True, null=True)
+
+    # Түрээсийн нөхцөлүүд
+    payment_condition = models.CharField(max_length=50, choices=PAYMENT_CONDITION_CHOICES, blank=True, null=True)
+    upfront_months = models.PositiveSmallIntegerField(blank=True, null=True, help_text="Урьдчилж төлөх сарын тоо")
+    deposit_months = models.PositiveSmallIntegerField(blank=True, null=True, help_text="Барьцаа сарын тоо")
+    is_pet_friendly = models.BooleanField(default=False)
+    furnishing_status = models.CharField(max_length=20, choices=FURNISHING_CHOICES, blank=True, null=True)
 
     utilities_estimated = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)])
     heating_type = models.CharField(max_length=100, blank=True, null=True)
